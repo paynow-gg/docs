@@ -3,7 +3,7 @@
 
 Represents a product in the store.
 
-## Product Structure
+### Product Structure
 
 <Properties>
   <Property name="id" type="flake">
@@ -15,7 +15,7 @@ Represents a product in the store.
   <Property name="slug" type="string">
     the url-safe identifier for the product, unique to the store
   </Property>
-  <Property name="image_url" type="string">
+  <Property name="image_url" type="?string">
     a url to the thumbnail image for the product
   </Property>
   <Property name="name" type="string">
@@ -40,7 +40,7 @@ Represents a product in the store.
     the interval scale at which this product will renew when subscribed.
     Can be one of `day`, `week`, `month`, `year`
   </Property>
-  <Property name="stock?" type="stock limit object">
+  <Property name="stock" type="?stock limit object">
     the latest stock availability/limits for this product.
     May not always be present if the store has this information disabled for customer view.
   </Property>
@@ -88,3 +88,41 @@ Represents a product in the store.
 
 ---
 
+## List all products {{ tag: 'GET', label: '/v1/store/products' }}
+
+<Row>
+  <Col>
+    Returns an array of all products.
+  </Col>
+  <Col sticky>
+  
+    ```json {{ title: 'Response' }}
+    [
+        {
+            "id": "117390520375844864",
+            "store_id": "94688451781206016",
+            "slug": "super-special-kit",
+            "image_url": "https://example.paynow.gg/image.webp",
+            "name": "Super Special Kit",
+            "description": "Become the envy of your friends with this super special kit. Batteries not included.",
+            "price": 699,
+            "allow_one_time_purchase": true,
+            "allow_subscription": false,
+            "subscription_interval_value": 1,
+            "subscription_interval_scale": "month",
+            "stock": null,
+            "tags": [
+                {
+                    "id": "103968177980973056",
+                    "slug": "kits",
+                    "name": "Kits"
+                }
+            ],
+            "created_at": "2023-04-12T20:50:23.069562Z",
+            "updated_at": "2023-04-13T21:48:26.264271Z"
+        },
+        . . .
+    ]
+    ```
+  </Col>
+</Row>
