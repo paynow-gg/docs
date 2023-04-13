@@ -11,10 +11,6 @@
             "href":"/quickstart"
          },
          {
-            "title":"SDKs",
-            "href":"/sdks"
-         },
-         {
             "title":"Authentication",
             "href":"/authentication"
          },
@@ -26,35 +22,15 @@
             "title":"Errors",
             "href":"/errors"
          },
-         {
-            "title":"Webhooks",
-            "href":"/webhooks"
-         }
       ]
    },
    {
       "title":"Resources",
       "links":[
          {
-            "title":"Contacts",
-            "href":"/contacts"
+            "title":"Products",
+            "href":"/products"
          },
-         {
-            "title":"Conversations",
-            "href":"/conversations"
-         },
-         {
-            "title":"Messages",
-            "href":"/messages"
-         },
-         {
-            "title":"Groups",
-            "href":"/groups"
-         },
-         {
-            "title":"Attachments",
-            "href":"/attachments"
-         }
       ]
    }
 ]
