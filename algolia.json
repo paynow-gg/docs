@@ -8,7 +8,7 @@
     "lvl3": "main h4",
     "lvl4": "main h5",
     "lvl5": "main h6,li code",
-    "lvl6": "article p,section p,section ol,code span",
-    "text": "article p,section p,section ol,code span"
+    "lvl6": "article p,section p,section ol",
+    "text": "article p,section p,section ol"
   }
 }
