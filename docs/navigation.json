@@ -56,5 +56,23 @@
             "href":"/attachments"
          }
       ]
+   },
+   {
+      "title":"Management Resources",
+      "links":[
+         {
+            "title":"Product",
+            "href":"/store-resources/product"
+         }
+      ]
+   },
+   {
+      "title":"Store Resources",
+      "links":[
+         {
+            "title":"Product",
+            "href":"/store-resources/product"
+         }
+      ]
    }
 ]
