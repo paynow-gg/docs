@@ -21,16 +21,7 @@
          {
             "title":"Errors",
             "href":"/errors"
-         },
-      ]
-   },
-   {
-      "title":"Resources",
-      "links":[
-         {
-            "title":"Products",
-            "href":"/products"
-         },
+         }
       ]
    },
    {
