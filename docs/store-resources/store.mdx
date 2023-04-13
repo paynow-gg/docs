@@ -1,0 +1,86 @@
+<Row>
+  <Col>
+    # Store
+
+    The Store object contains the information about your store such as currency and other configuration values.
+  </Col>
+  <Col sticky>
+  
+    ```bash {{ title: 'Endpoints' }}
+      GET /store
+    ```
+  </Col>
+</Row>
+
+---
+
+<Row>
+  <Col>
+    ## The Store object
+
+    <Properties>
+      <Property name="id" type="flake">
+        id of the store
+      </Property>
+      <Property name="slug" type="string">
+        the unique url-safe identifier for the store
+      </Property>
+      <Property name="name" type="string">
+        the name of the store
+      </Property>
+      <Property name="game" type="enum">
+        the game that this store's products apply to.
+        Can be one of: `rust`
+      </Property>
+      <Property name="currency" type="string">
+        the currency that this store uses for all of its pricing
+      </Property>
+      <Property name="logo_url" type="?string">
+        a url to the main brand logo image for the store
+      </Property>
+      <Property name="logo_square_url" type="?string">
+        a url to the square logo image for the store
+      </Property>
+    </Properties>
+  </Col>
+  <Col sticky>
+    ```json {{ title: 'The Store object' }}
+    {
+        "id": "94688451781206016",
+        "slug": "best-store-ever",
+        "name": "The BEST Store",
+        "game": "rust",
+        "currency": "USD",
+        "logo_url": "https://example.paynow.gg/logo.webp",
+        "logo_square_url": "https://example.paynow.gg/logo_square.webp"
+    }
+    ```
+  </Col>
+</Row>
+
+---
+
+<Row>
+  <Col>
+    ## Get Store {{ tag: 'GET', label: '/store' }}
+
+    Returns the Store object for the current customer.
+
+    ### Returns
+    Returns a Store object.
+
+  </Col>
+  <Col sticky>
+    ```json {{ title: 'Response' }}
+    {
+        "id": "94688451781206016",
+        "slug": "best-store-ever",
+        "name": "The BEST Store",
+        "game": "rust",
+        "currency": "USD",
+        "logo_url": "https://example.paynow.gg/logo.webp",
+        "logo_square_url": "https://example.paynow.gg/logo_square.webp"
+    }
+    ```
+  </Col>
+</Row>

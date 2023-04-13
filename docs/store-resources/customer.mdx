@@ -1,0 +1,108 @@
+<Row>
+  <Col>
+    # Customer
+
+    A Customer represents a user in your store.
+  </Col>
+  <Col sticky>
+  
+    ```bash {{ title: 'Endpoints' }}
+      GET /store/customer
+    ```
+  </Col>
+</Row>
+
+---
+
+<Row>
+  <Col>
+    ## The Customer object
+
+    <Properties>
+      <Property name="id" type="flake">
+        id of the customer
+      </Property>
+      <Property name="store_id" type="flake">
+        id of the store this customer belongs to
+      </Property>
+      <Property name="steam_id" type="?string">
+        the SteamID64 of this customer
+      </Property>
+      <Property name="steam" type="?steam profile object">
+        the basic Steam profile information for this customer
+      </Property>
+      <Property name="name" type="?string">
+        the name of the customer
+      </Property>
+      <Property name="created_at" type="timestamp">
+        timestamp of when the product was created.
+      </Property>
+      <Property name="updated_at" type="?timestamp">
+        timestamp of when the product was last updated.
+      </Property>
+    </Properties>
+
+    ### Steam Profile Structure
+
+    <Properties>
+      <Property name="id" type="string">
+        the profile's SteamID64
+      </Property>
+      <Property name="name" type="?string">
+        the profile's display name
+      </Property>
+      <Property name="avatar_url" type="?string">
+        the profile's avatar url
+      </Property>
+    </Properties>
+  </Col>
+
+  <Col sticky>
+    ```json {{ title: 'The Customer object' }}
+    {
+        "id": "150352880618967040",
+        "store_id": "94688451781206016",
+        "steam_id": "76561197960287930",
+        "steam": {
+            "id": "76561197960287930",
+            "name": "Rabscuttle",
+            "avatar_url": "https://avatars.akamai.steamstatic.com/c5d56249ee5d28a07db4ac9f7f60af961fab5426_full.jpg"
+        },
+        "name": "Rabscuttle",
+        "created_at": "2023-04-13T19:51:02.162046Z",
+        "updated_at": "2023-04-13T19:55:13.122010Z"
+    }
+    ```
+  </Col>
+</Row>
+
+---
+
+<Row>
+  <Col>
+    ## Get Current Customer {{ tag: 'GET', label: '/store/customer' }}
+
+    Returns the Customer object for the currently authenticated customer.
+
+    ### Returns
+    Returns a Customer object.
+
+  </Col>
+  <Col sticky>
+    ```json {{ title: 'Response' }}
+    {
+        "id": "150352880618967040",
+        "store_id": "94688451781206016",
+        "steam_id": "76561197960287930",
+        "steam": {
+            "id": "76561197960287930",
+            "name": "Rabscuttle",
+            "avatar_url": "https://avatars.akamai.steamstatic.com/c5d56249ee5d28a07db4ac9f7f60af961fab5426_full.jpg"
+        },
+        "name": "Rabscuttle",
+        "created_at": "2023-04-13T19:51:02.162046Z",
+        "updated_at": "2023-04-13T19:55:13.122010Z"
+    }
+    ```
+  </Col>
+</Row>

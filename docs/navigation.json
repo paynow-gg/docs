@@ -37,6 +37,14 @@
       "title":"Store Resources",
       "links":[
          {
+            "title":"Store",
+            "href":"/store-resources/store"
+         },
+         {
+            "title":"Customer",
+            "href":"/store-resources/customer"
+         },
+         {
             "title":"Product",
             "href":"/store-resources/product"
          }
