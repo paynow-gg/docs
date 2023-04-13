@@ -1,3 +1,33 @@
-# Index
+import { Resources } from '@/components/Resources'
+import { HeroPattern } from '@/components/HeroPattern'
 
-Testing index
+export const sections = [
+  { title: 'Guides', id: 'guides' },
+  { title: 'Resources', id: 'resources' },
+]
+
+<HeroPattern />
+
+# API Documentation
+
+Welcome to the official PayNow API documentation! {{ className: 'lead' }}
+
+<div className="not-prose mb-16 mt-6 flex gap-3">
+  <Button href="/quickstart" arrow="right" children="Quickstart" />
+  <Button href="/authentication" variant="outline" children="Authentication" />
+</div>
+
+## Getting started {{ anchor: false }}
+
+To get started, create a new API Key in your [dashboard](https://paynow.gg/dashboard/api-keys), then read about how to make requests for the resources you need to access using our REST APIs. {{ className: 'lead' }}
+
+<div className="not-prose">
+  <Button
+    href="/authentication"
+    variant="text"
+    arrow="right"
+    children="Get your API key"
+  />
+</div>
+
+<Resources />
