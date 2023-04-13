@@ -29,7 +29,7 @@
       "links":[
          {
             "title":"Product",
-            "href":"/store-resources/product"
+            "href":"/management-resources/product"
          }
       ]
    },
