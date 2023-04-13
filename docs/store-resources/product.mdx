@@ -141,7 +141,7 @@
 
 <Row>
   <Col>
-    Fetches all Products in the store.
+    Returns all Products in the store.
 
     ### Returns
     Returns an array of Product objects.
@@ -181,6 +181,52 @@
       {...},
       {...}
     ]
+    ```
+  </Col>
+</Row>
+
+---
+
+## Get Product {{ tag: 'GET', label: '/store/products/{product.id || product.slug}' }}
+
+<Row>
+  <Col>
+    Returns a Product located by its `id` or `slug` field.
+
+    ### Returns
+    Returns a Product if a valid identifier was provided.
+
+  </Col>
+  <Col sticky>
+    ```json {{ title: 'Response' }}
+    {
+      "id": "117390520375844864",
+      "store_id": "94688451781206016",
+      "slug": "super-special-kit",
+      "image_url": "https://example.paynow.gg/image.webp",
+      "name": "Super Special Kit",
+      "description": "Become the envy of your friends with this super special kit. Batteries not included.",
+      "price": 699,
+      "allow_one_time_purchase": true,
+      "allow_subscription": true,
+      "subscription_interval_value": 1,
+      "subscription_interval_scale": "month",
+      "stock": {
+        "store_limited": true,
+        "store_available": 420,
+        "customer_limited": false,
+        "customer_available": 0
+      },
+      "tags": [
+          {
+              "id": "103968177980973056",
+              "slug": "kits",
+              "name": "Kits"
+          }
+      ],
+      "created_at": "2023-04-12T20:50:23.069562Z",
+      "updated_at": "2023-04-13T21:48:26.264271Z"
+  }
     ```
   </Col>
 </Row>
