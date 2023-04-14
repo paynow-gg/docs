@@ -1,0 +1,35 @@
+# Errors
+
+The PayNow API uses a simple strucutre for errors.
+
+## Error Response
+
+<Row>
+  <Col>
+    <Fields>
+      <Field name="status" type="integer">
+        the HTTP status code for this error
+      </Field>
+      <Field name="code" type="string">
+        the type of error
+      </Field>
+      <Field name="message" type="string">
+        the error's message
+      </Field>
+    </Fields>
+
+    ### Note
+    In catastrophic cases, you might not get any of these values in response.
+
+  </Col>
+
+  <Col sticky>
+    ```json {{ title: 'Example Error Response' }}
+    {
+      "status": 400,
+      "code": "InvalidInput",
+      "message": "cannot parse Steam ID from string: clearlynotasteamid"
+    }
+    ```
+  </Col>
+</Row>

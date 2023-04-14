@@ -4,7 +4,7 @@
   <Col>
     A store in PayNow is the most important entity as it encapsulates almost all other entities.
     All products, customers, orders, payouts, etc. are isolated to each individual store.
-    Stores are owned by a single [user](user).
+    Stores are owned by a single [user](management-resources/user).
 
 
     *It's all about the store.*
@@ -78,7 +78,7 @@
 
     ## Store Member Structure
 
-    Members are identified by the underlying [user](user)'s ID.
+    Members are identified by the underlying [user](management-resources/user)'s ID.
 
     <Fields>
       <Field name="user" type="user" typeHref="user">
@@ -143,7 +143,7 @@
 
 <Row>
   <Col>
-    Creates a new store owned by the currently authenticated [user](user).
+    Creates a new store owned by the currently authenticated [user](management-resources/user).
 
     <Fields parameters>
       <Field name="slug" type="string" optional>
@@ -260,7 +260,7 @@
 
 <Row>
   <Col>
-    Returns all of the stores that the currently authenticated [user](user) is a member of.
+    Returns all of the stores that the currently authenticated [user](management-resources/user) is a member of.
 
     ### Returns
     Returns an array of [stores](#the-store-object).

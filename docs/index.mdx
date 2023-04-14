@@ -1,23 +1,41 @@
 
-# API Documentation
+# Welcome
 
 Welcome to the official PayNow API documentation! {{ className: 'lead' }}
 
+PayNow is still in beta and all features/implementations are subject to change.
+
+To stay up to date, join the [official PayNow Discord](https://discord.gg/paynow)
+
 <div className="not-prose mb-16 mt-6 flex gap-3">
-  <Button href="/quickstart" arrow="right" children="Quickstart" />
+  <Button href="/gateway" arrow="right" children="Quickstart" />
   <Button href="/authentication" variant="outline" children="Authentication" />
 </div>
 
 ## Getting started {{ anchor: false }}
 
-To get started, create a new API Key in your [dashboard](https://paynow.gg/dashboard/api-keys), then read about how to make requests for the resources you need to access using our REST APIs. {{ className: 'lead' }}
+There are two sets of routes for PayNow.
+The first set includes the management routes, which let you manage your store remotely (create products, customers, etc.).
+The second group includes the storefront routes, which allows your customers access the data for your store from your custom store implementation.
+
+To get started with the management API, create a new API Key in your [dashboard](https://paynow.gg/dashboard/api-keys). {{ className: 'lead' }}
 
 <div className="not-prose">
   <Button
     href="/authentication"
     variant="text"
     arrow="right"
-    children="Get your API key"
+    children="How to use your API key"
   />
 </div>
 
+To get started with the storefront API, create a new customer token in your [dashboard](https://paynow.gg/dashboard/customers). {{ className: 'lead' }}
+
+<div className="not-prose">
+  <Button
+    href="/authentication"
+    variant="text"
+    arrow="right"
+    children="How to use your Customer's token"
+  />
+</div>

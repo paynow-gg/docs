@@ -7,16 +7,12 @@
             "href":"/"
          },
          {
-            "title":"Quickstart",
-            "href":"/quickstart"
+            "title":"Gateway",
+            "href":"/gateway"
          },
          {
             "title":"Authentication",
             "href":"/authentication"
-         },
-         {
-            "title":"Pagination",
-            "href":"/pagination"
          },
          {
             "title":"Errors",
