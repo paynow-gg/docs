@@ -1,0 +1,195 @@
+# Cart
+
+<Row>
+	<Col>
+		A cart represents a customer's virtual shopping cart.
+	</Col>
+	<Col sticky>
+		<Endpoints>
+			<Endpoint method="GET" href="#get-current-cart" url="/store/cart" />
+			<Endpoint method="DELETE" href="#empty-current-cart" url="/store/cart" />
+			<Endpoint method="PUT" href="#set-cart-lines" url="/store/cart/lines" />
+		</Endpoints>
+	</Col>
+</Row>
+
+---
+
+## The Cart object
+
+<Row>
+	<Col>
+		<Fields>
+			<Field name="store_id" type="flake">
+				id of the store this cart belongs to
+			</Field>
+			<Field name="customer_id" type="flake">
+				id of the customer this cart belongs to
+			</Field>
+			<Field name="total" type="integer">
+				sum of all line prices in this cart
+			</Field>
+			<Field name="lines" type="cart_line array" typeHref="#cart-line-object-structure">
+				list of items in cart
+			</Field>
+		</Fields>
+
+		## Cart Line object structure
+
+		<Fields>
+			<Field name="product_id" type="flake">
+				id of the product
+			</Field>
+			<Field name="name" type="string">
+				name of the product
+			</Field>
+			<Field name="slug" type="string">
+				url-safe identifier of the product
+			</Field>
+			<Field name="price" type="integer">
+				the price of this line in zero-decimal format (where "$10.00" is 1000)
+			</Field>
+			<Field name="quantity" type="integer">
+				the quantity (count) of products in this line
+			</Field>
+		</Fields>
+	</Col>
+
+	<Col sticky>
+		```json {{ title: 'The Cart object' }}
+		{
+			"store_id": "94688451781206016",
+			"customer_id": "97394129868165120",
+			"lines": [
+				{
+					"product_id": "124249183568797696",
+					"slug": "banana",
+					"name": "Banana",
+					"price": 117,
+					"quantity": 2
+				},
+				{
+					"product_id": "117390520375844864",
+					"slug": "super-special-kit",
+					"name": "Super Special Kit",
+					"price": 499,
+					"quantity": 1
+				},
+				{
+					"product_id": "95146937015078912",
+					"slug": "blender",
+					"name": "A blender. It blends stuff.",
+					"price": 1999,
+					"quantity": 6
+				}
+			],
+			"total": 12727
+		}
+		```
+	</Col>
+</Row>
+
+---
+
+
+## Get Current Cart {{ tag: 'GET' }}
+
+<Row>
+	<Col>
+		Returns the cart for the currently authenticated customer.
+
+		### Returns
+		Returns a [cart](#the-cart-object).
+	</Col>
+	<Col sticky>
+		<Endpoints request>
+			<Endpoint method="GET" url="/store/cart" />
+		</Endpoints>
+
+		```json {{ title: 'Response' }}
+		{
+			"store_id": "94688451781206016",
+			"customer_id": "97394129868165120",
+			"lines": [
+				{
+					"product_id": "124249183568797696",
+					"slug": "banana",
+					"name": "Banana",
+					"price": 117,
+					"quantity": 2
+				},
+				{
+					"product_id": "117390520375844864",
+					"slug": "super-special-kit",
+					"name": "Super Special Kit",
+					"price": 499,
+					"quantity": 1
+				},
+				{
+					"product_id": "95146937015078912",
+					"slug": "blender",
+					"name": "A blender. It blends stuff.",
+					"price": 1999,
+					"quantity": 6
+				}
+			],
+			"total": 12727
+		}
+		```
+	</Col>
+</Row>
+
+---
+
+
+## Empty Current Cart {{ tag: 'DELETE' }}
+
+<Row>
+	<Col>
+		Empties the cart for the currently authenticated customer.
+
+		### Returns
+		Returns `HTTP 204`
+	</Col>
+	<Col sticky>
+		<Endpoints request>
+			<Endpoint method="DELETE" url="/store/cart" />
+		</Endpoints>
+
+		```json {{ title: 'Response' }}
+		HTTP 204
+		```
+	</Col>
+</Row>
+
+---
+
+## Set Cart Lines {{ tag: 'PUT' }}
+
+<Row>
+	<Col>
+		Creates or updates a cart line of the currently authenticated customer.
+
+		<Fields query parameters>
+			<Field name="product_id" type="flake">
+				id of the product
+			</Field>
+			<Field name="quantity" type="integer">
+				the quantity (count) of products in this line
+			</Field>
+		</Fields>
+
+		### Returns
+		Returns `HTTP 204`
+
+	</Col>
+	<Col sticky>
+		<Endpoints request>
+			<Endpoint method="PUT" url="/stores/cart/lines" />
+		</Endpoints>
+
+		```json {{ title: 'Response' }}
+		HTTP 204
+		```
+	</Col>
+</Row>

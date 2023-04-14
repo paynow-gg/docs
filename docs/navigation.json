@@ -59,6 +59,10 @@
       {
         "title": "Product",
         "href": "/store-resources/product"
+      },
+      {
+        "title": "Cart",
+        "href": "/store-resources/cart"
       }
     ]
   }
