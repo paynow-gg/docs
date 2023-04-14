@@ -1,0 +1,21 @@
+# Services
+
+PayNow utilizes the microservices architecture.
+
+Microservices is an approach used in software development to break large applications into smaller and manageable services.
+This allows for quick and efficient updates and modifications without affecting the whole system.
+It also makes the application more flexible, scalable, and resilient to failures.
+
+## Why are there multiple APIs for the same resources?
+
+In a microservice architecture, different services (pieces of code that do specific tasks) communicate with each other.
+
+Sometimes, different services need to use the same resources (like data or functions), but they may need to use them in slightly different ways or for different purposes. To make this possible, each service will have its own API that exposes only the parts of the resource it needs, and is optimized for its specific needs.
+
+So, if you're looking at documentation for an API, you might see that there are multiple APIs for the same resource. This is because different services need to use that resource in different ways, so they have their own APIs that make it easy for them to do what they need to do. Having multiple APIs helps each service work independently and efficiently, while still being able to communicate with the other services it needs to.
+
+*Example*:
+
+The Storefront Service is an API meant for public use by stores. When communicating with the Storefront Service from your front-end (client-side) application, a [customer token](/authentication#types-of-tokens) is used for authentication.
+
+On the other hand, the Management Service API is meant for store management and is only accessible via an [API token](/authentication#types-of-tokens) (or an internal User token) that has been granted access to the Store team (organization).

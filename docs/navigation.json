@@ -1,61 +1,65 @@
 [
-   {
-      "title":"Guides",
-      "links":[
-         {
-            "title":"Introduction",
-            "href":"/"
-         },
-         {
-            "title":"Gateway",
-            "href":"/gateway"
-         },
-         {
-            "title":"Authentication",
-            "href":"/authentication"
-         },
-         {
-            "title":"Errors",
-            "href":"/errors"
-         }
-      ]
-   },
-   {
-      "title":"Management Resources",
-      "links":[
-         {
-            "title":"User",
-            "href":"/management-resources/user"
-         },
-         {
-            "title":"Store",
-            "href":"/management-resources/store"
-         },
-         {
-            "title":"Customer",
-            "href":"/management-resources/customer"
-         },
-         {
-            "title":"Product",
-            "href":"/management-resources/product"
-         }
-      ]
-   },
-   {
-      "title":"Store Resources",
-      "links":[
-         {
-            "title":"Store",
-            "href":"/store-resources/store"
-         },
-         {
-            "title":"Customer",
-            "href":"/store-resources/customer"
-         },
-         {
-            "title":"Product",
-            "href":"/store-resources/product"
-         }
-      ]
-   }
+  {
+    "title": "Guides",
+    "links": [
+      {
+        "title": "Introduction",
+        "href": "/"
+      },
+      {
+        "title": "Gateway",
+        "href": "/gateway"
+      },
+      {
+        "title": "Authentication",
+        "href": "/authentication"
+      },
+      {
+        "title": "Errors",
+        "href": "/errors"
+      },
+      {
+        "title": "Services",
+        "href": "/services"
+      }
+    ]
+  },
+  {
+    "title": "Management Resources",
+    "links": [
+      {
+        "title": "User",
+        "href": "/management-resources/user"
+      },
+      {
+        "title": "Store",
+        "href": "/management-resources/store"
+      },
+      {
+        "title": "Customer",
+        "href": "/management-resources/customer"
+      },
+      {
+        "title": "Product",
+        "href": "/management-resources/product"
+      }
+    ]
+  },
+  {
+    "title": "Storefront Resources",
+    "links": [
+      {
+        "title": "Store",
+        "href": "/store-resources/store"
+      },
+      {
+        "title": "Customer",
+        "href": "/store-resources/customer"
+      },
+      {
+        "title": "Product",
+        "href": "/store-resources/product"
+      }
+    ]
+  }
 ]
