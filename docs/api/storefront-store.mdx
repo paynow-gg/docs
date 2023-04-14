@@ -47,9 +47,6 @@
     </Fields>
   </Col>
   <Col sticky>
-    <Endpoints request>
-        <Endpoint method="GET" url="/store" />
-    </Endpoints>
 
     ```json {{ title: 'The Store object' }}
     {
@@ -78,6 +75,10 @@
 
   </Col>
   <Col sticky>
+    <Endpoints request perms={[ {id: 'store_read'} ]}>
+		<Endpoint method="GET" url="/store" />
+    </Endpoints>
+
     ```json {{ title: 'Response' }}
     {
         "id": "94688451781206016",

@@ -148,7 +148,7 @@
 
   </Col>
   <Col sticky>
-    <Endpoints request>
+    <Endpoints request perms={[ {id: 'product_read'} ]}>
         <Endpoint method="GET" url="/store/products" />
     </Endpoints>
 
@@ -202,7 +202,7 @@
 
   </Col>
   <Col sticky>
-    <Endpoints request>
+    <Endpoints request perms={[ {id: 'product_read'} ]}>
         <Endpoint method="GET" url="/store/products/{product.id}" />
         <Endpoint method="GET" url="/store/products/{product.slug}" />
     </Endpoints>
