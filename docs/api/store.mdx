@@ -7,7 +7,7 @@
     Stores are owned by a single [user](api/user).
 
     To access the store's information using a [customer token](api/customer#customer-tokens),
-    use the [Storefront Store API](api/storefront-store).
+    use the [Storefront Store API](store-resources/store).
 
 
     *It's all about the store.*
@@ -226,7 +226,7 @@
     Returns the updated [store](#the-store-object).
   </Col>
   <Col sticky>
-    <Endpoints request>
+    <Endpoints request perms={[ {id: 'store_update'} ]}>
         <Endpoint method="PATCH" url="/stores/{store.id}" />
     </Endpoints>
 
@@ -318,7 +318,7 @@
 
   </Col>
   <Col sticky>
-    <Endpoints request>
+    <Endpoints request perms={[ {id: 'store_read'} ]}>
         <Endpoint method="GET" url="/stores/{store.id}" />
     </Endpoints>
 
@@ -362,7 +362,7 @@
 
   </Col>
   <Col sticky>
-    <Endpoints request>
+    <Endpoints request perms={[ {id: 'store_read'} ]}>
         <Endpoint method="GET" url="/stores/{store.id}/members" />
     </Endpoints>
 
@@ -400,7 +400,7 @@
 
   </Col>
   <Col sticky>
-    <Endpoints request>
+    <Endpoints request perms={[ {id: 'store_read'} ]}>
         <Endpoint method="GET" url="/stores/{store.id}/members/{user.id}" />
     </Endpoints>
 
@@ -455,7 +455,7 @@
 
   </Col>
   <Col sticky>
-    <Endpoints request>
+    <Endpoints request perms={[ {id: 'store_update'} ]}>
         <Endpoint method="POST" url="/stores/{store.id}/members/{user.id}/set-role" />
     </Endpoints>
 

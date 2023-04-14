@@ -24,10 +24,6 @@
         "href": "/api/store"
       },
       {
-        "title": "API Key",
-        "href": "/api/api-key"
-      },
-      {
         "title": "Customer",
         "href": "/api/customer"
       },

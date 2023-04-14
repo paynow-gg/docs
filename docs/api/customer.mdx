@@ -143,7 +143,7 @@
     Returns the newly created [customer](#the-customer-object).
   </Col>
   <Col sticky>
-    <Endpoints request>
+    <Endpoints request perms={[ {id: 'customer_create'} ]}>
         <Endpoint method="POST" url="/stores/{store.id}/customers" />
     </Endpoints>
 
@@ -184,7 +184,7 @@
     Returns an array of [customers](#the-customer-object).
   </Col>
   <Col sticky>
-    <Endpoints request>
+    <Endpoints request perms={[ {id: 'customer_read'} ]}>
         <Endpoint method="GET" url="/stores/{store.id}/customers" />
     </Endpoints>
 
@@ -245,7 +245,7 @@
 
   </Col>
   <Col sticky>
-    <Endpoints request>
+    <Endpoints request perms={[ {id: 'customer_read'} ]} >
         <Endpoint method="GET" url="/stores/{store.id}/customers/lookup" />
     </Endpoints>
 
@@ -292,7 +292,7 @@
     Returns a [customer](#the-customer-object).
   </Col>
   <Col sticky>
-    <Endpoints request>
+    <Endpoints request perms={[ {id: 'customer_read'} ]}>
         <Endpoint method="GET" url="/stores/{store.id}/customers/{customer.id}" />
     </Endpoints>
 
@@ -354,7 +354,7 @@
     Returns the updated [customer](#the-customer-object).
   </Col>
   <Col sticky>
-    <Endpoints request>
+    <Endpoints request perms={[ {id: 'customer_update'} ]}>
         <Endpoint method="PATCH" url="/stores/{store.id}/customers/{customer.id}" />
     </Endpoints>
 
@@ -416,7 +416,7 @@ Select a customer and then click "Create token".
     Returns an object containing a `token` field.
   </Col>
   <Col sticky>
-    <Endpoints request>
+    <Endpoints request perms={[ {id: 'customer_update'} ]}>
         <Endpoint method="POST" url="/stores/{store.id}/customers/{customer.id}/tokens" />
     </Endpoints>
 
@@ -440,7 +440,7 @@ Select a customer and then click "Create token".
     Returns `HTTP 204`
   </Col>
   <Col sticky>
-    <Endpoints request>
+    <Endpoints request perms={[ {id: 'customer_update'} ]}>
         <Endpoint method="DELETE" url="/stores/{store.id}/customers/{customer.id}/tokens" />
     </Endpoints>
 
@@ -462,7 +462,7 @@ Select a customer and then click "Create token".
     Returns `HTTP 204`
   </Col>
   <Col sticky>
-    <Endpoints request>
+    <Endpoints request perms={[ {id: 'store_update'}, {id: 'customer_update'} ]}>
         <Endpoint method="DELETE" url="/stores/{store.id}/customers/tokens" />
     </Endpoints>
 
@@ -652,7 +652,7 @@ Select a customer and then click "Create token".
     Returns an array of [inventory items](#the-inventoryitem-object).
   </Col>
   <Col sticky>
-    <Endpoints request>
+    <Endpoints request perms={[ {id: 'customer_inventory_manage'} ]}>
         <Endpoint method="GET" url="/stores/{store.id}/customers/{customer.id}/inventory" />
     </Endpoints>
 
@@ -753,7 +753,7 @@ Select a customer and then click "Create token".
     Returns an array of the newly created [inventory items](#the-inventoryitem-object).
   </Col>
   <Col sticky>
-    <Endpoints request>
+    <Endpoints request perms={[ {id: 'customer_inventory_manage'} ]}>
         <Endpoint method="POST" url="/stores/{store.id}/customers/{customer.id}/inventory" />
     </Endpoints>
 
@@ -822,7 +822,7 @@ Select a customer and then click "Create token".
     Returns `HTTP 204`
   </Col>
   <Col sticky>
-    <Endpoints request>
+    <Endpoints request perms={[ {id: 'customer_inventory_manage'} ]}>
         <Endpoint method="DELETE" url="/stores/{store.id}/customers/inventory/{item.id}" />
     </Endpoints>
 

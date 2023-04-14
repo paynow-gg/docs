@@ -43,7 +43,7 @@ In order to support the different types of actors in our system, we have develop
 
 ### API Key
 
-[API keys](api/api-key) are used to automate the management of a [store](api/store).
+API keys are used to automate the management of a [store](api/store).
 Whether it's pulling metrics, editing products, or generating customer tokens, API key are the correct way to
 modify a store and its entities in a headless manner.
 
@@ -54,7 +54,7 @@ API keys can only be managed by a user.
 ### Customer
 
 [Customers](api/customer) are the users of a store.
-Customer tokens can generated with an [API request](api/customer#create-customer-token) by a [User](api/user) or [API Key](api/api-key).
+Customer tokens can generated with an [API request](api/customer#create-customer-token) by a [User](api/user) or API Key.
 These tokens allow a customer to access the resources of store they belong to, and manage their own customer account.
 
 
@@ -76,7 +76,7 @@ Select a customer and then click "Create token".
 ### Game Server
 
 [Game Servers](api/gameserver) represent the individual servers that you host.
-Game Server tokens can be generated with an API request by a [User](api/user) or [API Key](api/api-key).
+Game Server tokens can be generated with an API request by a [User](api/user) or API Key.
 
 These are more restricted than API Keys because they can only access certain routes responsible for processing commands in-game.
 

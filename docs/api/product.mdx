@@ -392,7 +392,7 @@
     Returns the newly created [product](#the-product-object).
   </Col>
   <Col sticky>
-    <Endpoints request>
+    <Endpoints request perms={[ {id: 'product_create'} ]}>
         <Endpoint method="POST" url="/stores/{store.id}/products" />
     </Endpoints>
 
@@ -474,7 +474,7 @@
     Returns an array of [products](#the-product-object).
   </Col>
   <Col sticky>
-    <Endpoints request>
+    <Endpoints request perms={[ {id: 'product_read'} ]}>
         <Endpoint method="GET" url="/stores/{store.id}/products" />
     </Endpoints>
 
@@ -560,7 +560,7 @@
     Returns a [product](#the-product-object).
   </Col>
   <Col sticky>
-    <Endpoints request>
+    <Endpoints request perms={[ {id: 'product_read'} ]}>
         <Endpoint method="GET" url="/stores/{store.id}/products/{product.id}" />
     </Endpoints>
 
@@ -750,7 +750,7 @@
     Returns the updated [product](#the-product-object).
   </Col>
   <Col sticky>
-    <Endpoints request>
+    <Endpoints request perms={[ {id: 'product_update'} ]}>
         <Endpoint method="PATCH" url="/stores/{store.id}/products/{product.id}" />
     </Endpoints>
 
@@ -838,7 +838,7 @@
     Returns `HTTP 204`
   </Col>
   <Col sticky>
-    <Endpoints request>
+    <Endpoints request perms={[ {id: 'product_delete'} ]}>
         <Endpoint method="DELETE" url="/stores/{store.id}/products/{product.id}" />
     </Endpoints>
 
