@@ -8,8 +8,8 @@
     Any time you edit a product's name, price, or other settings, it assigns the product a new `version_id`.
     This is used to preserve the historical configurations of the product when used in command delivery and subscription renewals.
 
-    To access product information using a [customer token](management-resources/customer#customer-tokens),
-    use the [Storefront Product API](store-resources/product).
+    To access product information using a [customer token](api/customer#customer-tokens),
+    use the [Storefront Product API](api/storefront-product).
   </Col>
   <Col sticky>
     <Endpoints>
@@ -122,7 +122,7 @@
 
     ## Stock Limit Structure
 
-    Stock Limits can apply at the [store](management-resources/store) and [customer](management-resources/customer) level.
+    Stock Limits can apply at the [store](api/store) and [customer](api/customer) level.
     When applied at the store level, the limit is enforced for all customers.
     At the customer level, it is applied to just one customer.
 
@@ -156,7 +156,7 @@
 
     ## Partial Tag Structure
 
-    Contains a partial set fields that refer to a [tag](management-resources/tag)
+    Contains a partial set fields that refer to a [tag](api/tag)
 
     <Fields>
       <Field name="id" type="flake">
@@ -172,7 +172,7 @@
 
     ## Partial Game Server Structure
 
-    Contains a partial set fields that refer to a [game server](management-resources/gameserver)
+    Contains a partial set fields that refer to a [game server](api/gameserver)
 
     <Fields>
       <Field name="id" type="flake">
@@ -287,7 +287,7 @@
     <Fields parameters>
       <Field name="slug" type="string" optional>
         the url-safe slug used to identify this product (3 - 36 characters).
-        Must be unique to the [store](management-resources/store).
+        Must be unique to the [store](api/store).
         Spaces will be converted to dashes, and all disallowed characters will be stripped.
         If left null, this will be auto generated from `name`.
       </Field>
@@ -338,7 +338,7 @@
         </Enums>
       </Field>
       <Field name="store_stock_limit.enabled" type="boolean" optional default={false}>
-        whether the stock should be limited across the entire [store](management-resources/store)
+        whether the stock should be limited across the entire [store](api/store)
       </Field>
       <Field name="store_stock_limit.quantity" type="integer" optional default={10}>
         the number of units to limit the store's stock
@@ -356,7 +356,7 @@
         </Enums>
       </Field>
       <Field name="customer_stock_limit.enabled" type="boolean" optional default={false}>
-        whether the stock should be limited for each individual customer [customer](management-resources/customer)
+        whether the stock should be limited for each individual customer [customer](api/customer)
       </Field>
       <Field name="customer_stock_limit.quantity" type="integer" optional default={10}>
         the number of units to limit the customer's stock
@@ -378,10 +378,10 @@
         If this is `false`, then the stock limiter will increase the available stock when an item expires.
       </Field>
       <Field name="tags" type="[]flake" optional>
-        an array of IDs specifying which [tags](management-resources/tag) to apply to this product
+        an array of IDs specifying which [tags](api/tag) to apply to this product
       </Field>
       <Field name="gameservers" type="[]flake" optional>
-        an array of IDs specifying which [game servers](management-resources/gameserver) this product's commands should run on
+        an array of IDs specifying which [game servers](api/gameserver) this product's commands should run on
       </Field>
       <Field name="commands" type="[]product command" typeHref="#product-command-structure" optional>
         an array of product commands that will be executed at different stages of this product's lifecycle.
@@ -645,7 +645,7 @@
     <Fields parameters>
       <Field name="slug" type="string" optional>
         the url-safe slug used to identify this product (3 - 36 characters).
-        Must be unique to the [store](management-resources/store).
+        Must be unique to the [store](api/store).
         Spaces will be converted to dashes, and all disallowed characters will be stripped.
         If left null, this will be auto generated from `name`.
       </Field>
@@ -696,7 +696,7 @@
         </Enums>
       </Field>
       <Field name="store_stock_limit.enabled" type="boolean" optional default={false}>
-        whether the stock should be limited across the entire [store](management-resources/store)
+        whether the stock should be limited across the entire [store](api/store)
       </Field>
       <Field name="store_stock_limit.quantity" type="integer" optional default={10}>
         the number of units to limit the store's stock
@@ -714,7 +714,7 @@
         </Enums>
       </Field>
       <Field name="customer_stock_limit.enabled" type="boolean" optional default={false}>
-        whether the stock should be limited for each individual customer [customer](management-resources/customer)
+        whether the stock should be limited for each individual customer [customer](api/customer)
       </Field>
       <Field name="customer_stock_limit.quantity" type="integer" optional default={10}>
         the number of units to limit the customer's stock
@@ -736,10 +736,10 @@
         If this is `false`, then the stock limiter will increase the available stock when an item expires.
       </Field>
       <Field name="tags" type="[]flake" optional>
-        an array of IDs specifying which [tags](management-resources/tag) to apply to this product
+        an array of IDs specifying which [tags](api/tag) to apply to this product
       </Field>
       <Field name="gameservers" type="[]flake" optional>
-        an array of IDs specifying which [game servers](management-resources/gameserver) this product's commands should run on
+        an array of IDs specifying which [game servers](api/gameserver) this product's commands should run on
       </Field>
       <Field name="commands" type="[]product command" typeHref="#product-command-structure" optional>
         an array of product commands that will be executed at different stages of this product's lifecycle.

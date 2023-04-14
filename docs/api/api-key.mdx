@@ -1,0 +1,23 @@
+# API Key
+
+<Row>
+  <Col>
+    An API Key lets you programatically manage your [store](api/store) without going through the dashboard.
+
+    API keys can be created in the [API Keys section on the dashboard](https://paynow.gg/dashboard/api-keys).
+    
+    Only the [user authentication](reference#types-of-authentication) can call the API Key routes.
+  </Col>
+  <Col sticky>
+    <Endpoints>
+        <Endpoint method="POST" href="#create-api-key" url="/stores/{store.id}/apikeys" />
+        <Endpoint method="GET" href="#get-api-keys" url="/stores/{store.id}/apikeys" />
+        <Endpoint method="GET" href="#get-api-key" url="/stores/{store.id}/apikeys/{apikey.id}" />
+        <Endpoint method="PATCH" href="#update-api-key" url="/stores/{store.id}/apikeys/{apikey.id}" />
+        <Endpoint method="POST" href="#reset-api-key-token" url="/stores/{store.id}/apikeys/{apikey.id}/reset-token" />
+        <Endpoint method="DELETE" href="#delete-api-key" url="/stores/{store.id}/apikeys/{apikey.id}" />
+    </Endpoints>
+  </Col>
+</Row>
+
+---

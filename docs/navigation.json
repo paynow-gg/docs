@@ -7,20 +7,8 @@
         "href": "/"
       },
       {
-        "title": "Gateway",
-        "href": "/gateway"
-      },
-      {
-        "title": "Authentication",
-        "href": "/authentication"
-      },
-      {
-        "title": "Errors",
-        "href": "/errors"
-      },
-      {
-        "title": "Services",
-        "href": "/services"
+        "title": "Reference",
+        "href": "/reference"
       }
     ]
   },
@@ -29,19 +17,23 @@
     "links": [
       {
         "title": "User",
-        "href": "/management-resources/user"
+        "href": "/api/user"
       },
       {
         "title": "Store",
-        "href": "/management-resources/store"
+        "href": "/api/store"
+      },
+      {
+        "title": "API Key",
+        "href": "/api/api-key"
       },
       {
         "title": "Customer",
-        "href": "/management-resources/customer"
+        "href": "/api/customer"
       },
       {
         "title": "Product",
-        "href": "/management-resources/product"
+        "href": "/api/product"
       }
     ]
   },
@@ -50,19 +42,19 @@
     "links": [
       {
         "title": "Store",
-        "href": "/store-resources/store"
+        "href": "/api/storefront-store"
       },
       {
         "title": "Customer",
-        "href": "/store-resources/customer"
+        "href": "/api/storefront-customer"
       },
       {
         "title": "Product",
-        "href": "/store-resources/product"
+        "href": "/api/storefront-product"
       },
       {
         "title": "Cart",
-        "href": "/store-resources/cart"
+        "href": "/api/storefront-cart"
       }
     ]
   }
