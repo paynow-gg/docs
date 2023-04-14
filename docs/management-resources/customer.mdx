@@ -1,0 +1,450 @@
+# Customer
+
+<Row>
+  <Col>
+    A customer in PayNow represents a user on your store.
+  </Col>
+  <Col sticky>
+    <Endpoints>
+        <Endpoint method="POST" href="#create-customer" url="/stores/{store.id}/customers" />
+        <Endpoint method="GET" href="#get-customers" url="/stores/{store.id}/customers" />
+        <Endpoint method="GET" href="#lookup-customer" url="/stores/{store.id}/customers/lookup" />
+        <Endpoint method="DELETE" href="#invalidate-all-tokens" url="/stores/{store.id}/customers/tokens" />
+        <Endpoint method="GET" href="#get-customer" url="/stores/{store.id}/customers/{customer.id}" />
+        <Endpoint method="PATCH" href="#update-customer" url="/stores/{store.id}/customers/{customer.id}" />
+        <Endpoint method="POST" href="#create-customer-token" url="/stores/{store.id}/customers/{customer.id}/tokens" />
+        <Endpoint method="DELETE" href="#invalidate-customer-tokens" url="/stores/{store.id}/customers/{customer.id}/tokens" />
+    </Endpoints>
+  </Col>
+</Row>
+
+---
+
+## The Customer object
+
+<Row>
+  <Col>
+    <Fields>
+      <Field name="id" type="flake">
+        id of the customer
+      </Field>
+      <Field name="store_id" type="flake">
+        id of the store this customer belongs to
+      </Field>
+      <Field name="steam_id" type="string" nullable>
+        the SteamID64 of this customer
+      </Field>
+      <Field name="steam" type="steam profile" typeHref="#steam-profile-structure" nullable>
+        the basic Steam profile information for this customer
+      </Field>
+      <Field name="name" type="string" nullable>
+        the name of the customer
+      </Field>
+      <Field name="metadata" type="object" nullable>
+        a key value object containing arbitrary data for this customer
+      </Field>
+      <Field name="created_by" type="user" typeHref="user#the-user-object" nullable>
+        the user that created this customer.
+        `null` when the customer was created by logging in to a hosted store.
+      </Field>
+      <Field name="created_at" type="timestamp">
+        timestamp of when the customer was created
+      </Field>
+      <Field name="updated_by" type="user" typeHref="user#the-user-object" nullable>
+        the user that most recently updated this customer
+      </Field>
+      <Field name="updated_at" type="timestamp" nullable>
+        timestamp of when the customer was last updated
+      </Field>
+    </Fields>
+
+    ## Steam Profile Structure
+
+    <Fields>
+      <Field name="id" type="string">
+        the profile's SteamID64
+      </Field>
+      <Field name="name" type="string" nullable>
+        the profile's display name
+      </Field>
+      <Field name="avatar_url" type="string" nullable>
+        the profile's avatar url
+      </Field>
+    </Fields>
+  </Col>
+  <Col sticky>
+    ```json {{ title: 'The Customer object' }}
+    {
+      "id": "150352880618967040",
+      "store_id": "94688451781206016",
+      "steam_id": "76561197960287930",
+      "steam": {
+        "id": "76561197960287930",
+        "name": "Rabscuttle",
+        "avatar_url": "https://avatars.akamai.steamstatic.com/c5d56249ee5d28a07db4ac9f7f60af961fab5426_full.jpg"
+      },
+      "name": "Rabscuttle",
+      "metadata": {
+        "example_key": "example value"
+      },
+      "created_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "created_at": "2023-04-13T19:51:02.162046Z",
+      "updated_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "updated_at": "2023-04-14T06:11:18.8643Z"
+    }
+    ```
+  </Col>
+</Row>
+
+---
+
+## Create Customer {{ tag: 'POST' }}
+
+<Row>
+  <Col>
+    Creates a new customer.
+
+    All fields are optional, which lets you create completely blank customers that can be edited for future use.
+
+    <Fields parameters>
+      <Field name="steam_id" type="string" optional>
+        the SteamID64 for this customer.
+        Must be unique to the [store](management-resources/store).
+      </Field>
+      <Field name="name" type="string" optional>
+        the name of the customer (1 - 50 characters)
+      </Field>
+      <Field name="metadata" type="object" optional>
+        the metadata for this customer.
+        Must be an object with no more than 50 keys.
+        Key names can be up to 40 characters, and values can be up to 500 characters.
+      </Field>
+    </Fields>
+
+    ### Returns
+    Returns the newly created [customer](#the-customer-object).
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="POST" url="/stores/{store.id}/customers" />
+    </Endpoints>
+
+    ```json {{ title: 'Response' }}
+    {
+      "id": "150510813361217536",
+      "store_id": "94688451781206016",
+      "steam_id": "76561199479391297",
+      "steam": {
+        "id": "76561197960287930",
+        "name": "Rabscuttle",
+        "avatar_url": "https://avatars.akamai.steamstatic.com/c5d56249ee5d28a07db4ac9f7f60af961fab5426_full.jpg"
+      },
+      "name": null,
+      "metadata": null,
+      "created_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "created_at": "2023-04-14T06:18:36.261990401Z",
+      "updated_by": null,
+      "updated_at": null
+    }
+    ```
+  </Col>
+</Row>
+
+---
+
+## Get Customers {{ tag: 'GET' }}
+
+<Row>
+  <Col>
+    Returns all of the customers in the store.
+
+    ### Returns
+    Returns an array of [customers](#the-customer-object).
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="GET" url="/stores/{store.id}/customers" />
+    </Endpoints>
+
+    ```json {{ title: 'Response' }}
+    [
+      {
+        "id": "150352880618967040",
+        "store_id": "94688451781206016",
+        "steam_id": "76561197960287930",
+        "steam": {
+          "id": "76561197960287930",
+          "name": "Rabscuttle",
+          "avatar_url": "https://avatars.akamai.steamstatic.com/c5d56249ee5d28a07db4ac9f7f60af961fab5426_full.jpg"
+        },
+        "name": "Rabscuttle",
+        "metadata": {
+          "example_key": "example value"
+        },
+        "created_by": {
+          "id": "11084680073842688",
+          "first_name": "Example",
+          "last_name": "Exampleson"
+        },
+        "created_at": "2023-04-13T19:51:02.162046Z",
+        "updated_by": {
+          "id": "11084680073842688",
+          "first_name": "Example",
+          "last_name": "Exampleson"
+        },
+        "updated_at": "2023-04-14T06:11:18.8643Z"
+      },
+      {...},
+      {...}
+    ]
+    ```
+  </Col>
+</Row>
+
+---
+
+## Lookup Customer {{ tag: 'GET' }}
+
+<Row>
+  <Col>
+    Returns a customer by its PayNow ID or alternative identifier.
+
+    <Fields query parameters>
+      <Field name="id" type="flake" optional>
+        a PayNow customer ID
+      </Field>
+      <Field name="steam_id" type="string" optional>
+        a SteamID64
+      </Field>
+    </Fields>
+
+    ### Returns
+    Returns a [customer](#the-customer-object) if a valid ID was provided.
+
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="GET" url="/stores/{store.id}/customers/lookup" />
+    </Endpoints>
+
+    ```json {{ title: 'Response' }}
+    {
+      "id": "150352880618967040",
+      "store_id": "94688451781206016",
+      "steam_id": "76561197960287930",
+      "steam": {
+        "id": "76561197960287930",
+        "name": "Rabscuttle",
+        "avatar_url": "https://avatars.akamai.steamstatic.com/c5d56249ee5d28a07db4ac9f7f60af961fab5426_full.jpg"
+      },
+      "name": "Rabscuttle",
+      "metadata": {
+        "example_key": "example value"
+      },
+      "created_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "created_at": "2023-04-13T19:51:02.162046Z",
+      "updated_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "updated_at": "2023-04-14T06:11:18.8643Z"
+    }
+    ```
+  </Col>
+</Row>
+
+---
+
+## Invalidate All Tokens {{ tag: 'DELETE' }}
+
+<Row>
+  <Col>
+    Invalidates all customer tokens across the entire [store](management-resources/store), effectively logging them out.
+
+    ### Returns
+    Returns `HTTP 204`
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="DELETE" url="/stores/{store.id}/customers/tokens" />
+    </Endpoints>
+
+    ```json {{ title: 'Response' }}
+    HTTP 204
+    ```
+  </Col>
+</Row>
+
+---
+
+## Get Customer {{ tag: 'GET' }}
+
+<Row>
+  <Col>
+    Returns a customer by ID.
+
+    ### Returns
+    Returns a [customer](#the-customer-object).
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="GET" url="/stores/{store.id}/customers/{customer.id}" />
+    </Endpoints>
+
+    ```json {{ title: 'Response' }}
+    {
+      "id": "150352880618967040",
+      "store_id": "94688451781206016",
+      "steam_id": "76561197960287930",
+      "steam": {
+        "id": "76561197960287930",
+        "name": "Rabscuttle",
+        "avatar_url": "https://avatars.akamai.steamstatic.com/c5d56249ee5d28a07db4ac9f7f60af961fab5426_full.jpg"
+      },
+      "name": "Rabscuttle",
+      "metadata": {
+        "example_key": "example value"
+      },
+      "created_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "created_at": "2023-04-13T19:51:02.162046Z",
+      "updated_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "updated_at": "2023-04-14T06:11:18.8643Z"
+    }
+    ```
+  </Col>
+</Row>
+
+---
+
+## Update Customer {{ tag: 'PATCH' }}
+
+<Row>
+  <Col>
+    Updates a customer.
+
+    <Fields parameters>
+      <Field name="steam_id" type="string" optional>
+        the SteamID64 for this customer.
+        Must be unique to the [store](management-resources/store).
+      </Field>
+      <Field name="name" type="string" optional>
+        the name of the customer (1 - 50 characters)
+      </Field>
+      <Field name="metadata" type="object" optional>
+        the metadata for this customer.
+        Must be an object with no more than 50 keys.
+        Key names can be up to 40 characters, and values can be up to 500 characters.
+      </Field>
+    </Fields>
+
+    ### Returns
+    Returns the updated [customer](#the-customer-object).
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="PATCH" url="/stores/{store.id}/customers/{customer.id}" />
+    </Endpoints>
+
+    ```json {{ title: 'Response' }}
+    {
+      "id": "150352880618967040",
+      "store_id": "94688451781206016",
+      "steam_id": "76561197960287930",
+      "steam": {
+        "id": "76561197960287930",
+        "name": "Rabscuttle",
+        "avatar_url": "https://avatars.akamai.steamstatic.com/c5d56249ee5d28a07db4ac9f7f60af961fab5426_full.jpg"
+      },
+      "name": "Rabscuttle",
+      "metadata": {
+        "example_key": "example value"
+      },
+      "created_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "created_at": "2023-04-13T19:51:02.162046Z",
+      "updated_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "updated_at": "2023-04-14T06:11:18.8643Z"
+    }
+    ```
+  </Col>
+</Row>
+
+---
+
+## Create Customer Token {{ tag: 'POST' }}
+
+<Row>
+  <Col>
+    Creates a new token for a customer.
+
+    This token can be used to perform actions on the store as that customer.
+
+    ### Returns
+    Returns an object containing a `token` field.
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="POST" url="/stores/{store.id}/customers/{customer.id}/tokens" />
+    </Endpoints>
+
+    ```json {{ title: 'Response' }}
+    {
+      "token": "bDtsioCAvqriRbuvBA4fjqjbBApAzJo3jQ4w39LtroUfQcBkFaDAHGWdGxpMGRpkRFBf6w6"
+    }
+    ```
+  </Col>
+</Row>
+
+---
+
+## Invalidate Customer Tokens {{ tag: 'DELETE' }}
+
+<Row>
+  <Col>
+    Invalidates all tokens created for a single customer, effectively logging them out.
+
+    ### Returns
+    Returns `HTTP 204`
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="DELETE" url="/stores/{store.id}/customers/{customer.id}/tokens" />
+    </Endpoints>
+
+    ```json {{ title: 'Response' }}
+    HTTP 204
+    ```
+  </Col>
+</Row>

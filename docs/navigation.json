@@ -30,6 +30,10 @@
          {
             "title":"Store",
             "href":"/management-resources/store"
+         },
+         {
+            "title":"Customer",
+            "href":"/management-resources/customer"
          }
       ]
    },
