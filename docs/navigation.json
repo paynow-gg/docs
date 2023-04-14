@@ -28,8 +28,12 @@
       "title":"Management Resources",
       "links":[
          {
-            "title":"Product",
-            "href":"/management-resources/product"
+            "title":"User",
+            "href":"/management-resources/user"
+         },
+         {
+            "title":"Store",
+            "href":"/management-resources/store"
          }
       ]
    },

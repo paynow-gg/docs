@@ -5,10 +5,9 @@
     The Store object contains the information about your store such as currency and other configuration values.
   </Col>
   <Col sticky>
-  
-    ```bash {{ title: 'Endpoints' }}
-      GET /store
-    ```
+    <Endpoints>
+        <Endpoint method="GET" href="#get-store" url="/store" />
+    </Endpoints>
   </Col>
 </Row>
 
@@ -18,32 +17,38 @@
 
 <Row>
   <Col>
-    <Properties>
-      <Property name="id" type="flake">
+    <Fields>
+      <Field name="id" type="flake">
         id of the store
-      </Property>
-      <Property name="slug" type="string">
+      </Field>
+      <Field name="slug" type="string">
         the unique url-safe identifier for the store
-      </Property>
-      <Property name="name" type="string">
+      </Field>
+      <Field name="name" type="string">
         the name of the store
-      </Property>
-      <Property name="game" type="enum">
-        the game that this store's products apply to.
-        Can be one of: `rust`
-      </Property>
-      <Property name="currency" type="string">
+      </Field>
+      <Field name="game" type="enum">
+        the game of the store
+        <Enums>
+          <Enum value="rust" />
+        </Enums>
+      </Field>
+      <Field name="currency" type="string">
         the currency that this store uses for all of its pricing
-      </Property>
-      <Property name="logo_url" type="?string">
+      </Field>
+      <Field name="logo_url" type="string" nullable>
         a url to the main brand logo image for the store
-      </Property>
-      <Property name="logo_square_url" type="?string">
+      </Field>
+      <Field name="logo_square_url" type="string" nullable>
         a url to the square logo image for the store
-      </Property>
-    </Properties>
+      </Field>
+    </Fields>
   </Col>
   <Col sticky>
+    <Endpoints request>
+        <Endpoint method="GET" url="/store" />
+    </Endpoints>
+
     ```json {{ title: 'The Store object' }}
     {
         "id": "94688451781206016",
@@ -60,7 +65,7 @@
 
 ---
 
-## Get Store {{ tag: 'GET', label: '/store' }}
+## Get Store {{ tag: 'GET' }}
 
 <Row>
   <Col>

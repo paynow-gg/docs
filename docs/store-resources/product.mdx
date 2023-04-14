@@ -6,11 +6,11 @@
     They have a name, price, thumbnail, and many other properties you can use to enhance your store's display.
   </Col>
   <Col sticky>
-  
-    ```bash {{ title: 'Endpoints' }}
-      GET /store/products
-      GET /store/products/{product.id || product.slug}
-    ```
+    <Endpoints>
+        <Endpoint method="GET" href="#get-products" url="/store/products" />
+        <Endpoint method="GET" href="#get-product" url="/store/products/{product.id}" />
+        <Endpoint method="GET" href="#get-product" url="/store/products/{product.slug}" />
+    </Endpoints>
   </Col>
 </Row>
 
@@ -20,86 +20,86 @@
 
 <Row>
   <Col>
-    <Properties>
-      <Property name="id" type="flake">
+    <Fields>
+      <Field name="id" type="flake">
         id of the product
-      </Property>
-      <Property name="store_id" type="flake">
+      </Field>
+      <Field name="store_id" type="flake">
         id of the store this product belongs to
-      </Property>
-      <Property name="slug" type="string">
+      </Field>
+      <Field name="slug" type="string">
         the url-safe identifier for the product, unique to the store
-      </Property>
-      <Property name="image_url" type="?string">
+      </Field>
+      <Field name="image_url" type="string" nullable>
         a url to the thumbnail image for the product
-      </Property>
-      <Property name="name" type="string">
+      </Field>
+      <Field name="name" type="string">
         the name of the product
-      </Property>
-      <Property name="description" type="string">
+      </Field>
+      <Field name="description" type="string">
         the full-length description of the product
-      </Property>
-      <Property name="price" type="integer">
+      </Field>
+      <Field name="price" type="integer">
         the price of this product in zero-decimal format (where "$10.00" is `1000`)
-      </Property>
-      <Property name="allow_one_time_purchase" type="boolean">
+      </Field>
+      <Field name="allow_one_time_purchase" type="boolean">
         whether this product can be purchased one time (without subscribing)
-      </Property>
-      <Property name="allow_subscription" type="boolean">
+      </Field>
+      <Field name="allow_subscription" type="boolean">
         whether this product can be subscribed to
-      </Property>
-      <Property name="subscription_interval_value" type="integer">
+      </Field>
+      <Field name="subscription_interval_value" type="integer">
         the interval value at which this product will renew when subscribed
-      </Property>
-      <Property name="subscription_interval_scale" type="enum">
+      </Field>
+      <Field name="subscription_interval_scale" type="enum">
         the interval scale at which this product will renew when subscribed.
         Can be one of `day`, `week`, `month`, `year`
-      </Property>
-      <Property name="stock" type="?stock limit object">
+      </Field>
+      <Field name="stock" type="stock limit" typeHref="#stock-limit-structure" nullable>
         the latest stock availability/limits for this product.
-        May not always be present if the store has this information disabled for customer view.
-      </Property>
-      <Property name="tags" type="product tag array">
+        Will be `null` if the store has this information disabled for customer view.
+      </Field>
+      <Field name="tags" type="product tag" typeHref="#stock-limit-structure" array>
         an array of tags that this product belongs to
-      </Property>
-      <Property name="created_at" type="timestamp">
-        timestamp of when the product was created.
-      </Property>
-      <Property name="updated_at" type="?timestamp">
-        timestamp of when the product was last updated.
-      </Property>
-    </Properties>
+      </Field>
+      <Field name="created_at" type="timestamp">
+        timestamp of when the product was created
+      </Field>
+      <Field name="updated_at" type="timestamp" nullable>
+        timestamp of when the product was last updated
+      </Field>
+    </Fields>
 
-    ### Stock Limit Structure
+    ## Stock Limit Structure
 
-    <Properties>
-      <Property name="store_limited" type="boolean">
+    <Fields>
+      <Field name="store_limited" type="boolean">
         whether the product's stock is limited across the entire store
-      </Property>
-      <Property name="store_available" type="integer">
+      </Field>
+      <Field name="store_available" type="integer">
         the number of units available for the entire store. `0` if store limits are disabled.
-      </Property>
-      <Property name="customer_limited" type="boolean">
+      </Field>
+      <Field name="customer_limited" type="boolean">
         whether the product's stock is limited for just one customer
-      </Property>
-      <Property name="customer_available" type="integer">
+      </Field>
+      <Field name="customer_available" type="integer">
         the number of units available for the current customer. `0` if customer limits are disabled.
-      </Property>
-    </Properties>
+      </Field>
+    </Fields>
 
-    ### Product Tag Structure
+    ## Product Tag Structure
 
-    <Properties>
-      <Property name="id" type="flake">
+    <Fields>
+      <Field name="id" type="flake">
         id of the tag
-      </Property>
-      <Property name="slug" type="string">
+      </Field>
+      <Field name="slug" type="string">
         the url-safe identifier for the tag, unique to the store
-      </Property>
-      <Property name="name" type="string">
+      </Field>
+      <Field name="name" type="string">
         the name the tag
-      </Property>
-    </Properties>
+      </Field>
+    </Fields>
   </Col>
   <Col sticky>
     ```json {{ title: 'The Product object' }}
@@ -137,7 +137,7 @@
 
 ---
 
-## List all Products {{ tag: 'GET', label: '/store/products' }}
+## Get Products {{ tag: 'GET' }}
 
 <Row>
   <Col>
@@ -148,6 +148,10 @@
 
   </Col>
   <Col sticky>
+    <Endpoints request>
+        <Endpoint method="GET" url="/store/products" />
+    </Endpoints>
+
     ```json {{ title: 'Response' }}
     [
         {
@@ -187,7 +191,7 @@
 
 ---
 
-## Get Product {{ tag: 'GET', label: '/store/products/{product.id || product.slug}' }}
+## Get Product {{ tag: 'GET' }}
 
 <Row>
   <Col>
@@ -198,6 +202,11 @@
 
   </Col>
   <Col sticky>
+    <Endpoints request>
+        <Endpoint method="GET" url="/store/products/{product.id}" />
+        <Endpoint method="GET" url="/store/products/{product.slug}" />
+    </Endpoints>
+
     ```json {{ title: 'Response' }}
     {
       "id": "117390520375844864",

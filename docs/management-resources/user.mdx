@@ -1,0 +1,80 @@
+# User
+
+<Row>
+  <Col>
+    Users are a core entity in PayNow. They can create stores, receive payouts, and everything in between.
+  </Col>
+  <Col sticky>
+    <Endpoints>
+        <Endpoint method="GET" href="#get-current-user" url="/users/@me" />
+    </Endpoints>
+  </Col>
+</Row>
+
+---
+
+## The User object
+
+<Row>
+  <Col>
+    <Fields>
+      <Field name="id" type="flake">
+        id of the user
+      </Field>
+      <Field name="email" type="string" nullable>
+        email of the user.
+        Visible only to the current user, and only
+        on the [get current user](#get-current-user) route.
+      </Field>
+      <Field name="first_name" type="string">
+        first name of the user
+      </Field>
+      <Field name="last_name" type="string">
+        last name of the user
+      </Field>
+      <Field name="created_at" type="timestamp">
+        timestamp of when the product was created
+      </Field>
+    </Fields>
+  </Col>
+  <Col sticky>
+    ```json {{ title: 'The User object' }}
+    {
+        "id": "11084680073842688",
+        "email": "example@paynow.gg",
+        "first_name": "Example",
+        "last_name": "Exampleson",
+        "created_at": "2023-04-13T01:26:04Z"
+    }
+    ```
+  </Col>
+</Row>
+
+---
+
+## Get Current User {{ tag: 'GET' }}
+
+<Row>
+  <Col>
+    Returns the currently authenticated user.
+
+    ### Returns
+    Returns a User object.
+
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="GET" url="/users/@me" />
+    </Endpoints>
+
+    ```json {{ title: 'Response' }}
+    {
+        "id": "11084680073842688",
+        "email": "example@paynow.gg",
+        "first_name": "Example",
+        "last_name": "Exampleson",
+        "created_at": "2023-04-13T01:26:04Z"
+    }
+    ```
+  </Col>
+</Row>

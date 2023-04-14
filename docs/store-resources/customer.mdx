@@ -5,10 +5,9 @@
     A Customer represents a user in your store.
   </Col>
   <Col sticky>
-  
-    ```bash {{ title: 'Endpoints' }}
-      GET /store/customer
-    ```
+    <Endpoints>
+        <Endpoint method="GET" href="#get-current-customer" url="/store/customer" />
+    </Endpoints>
   </Col>
 </Row>
 
@@ -18,43 +17,43 @@
 
 <Row>
   <Col>
-    <Properties>
-      <Property name="id" type="flake">
+    <Fields>
+      <Field name="id" type="flake">
         id of the customer
-      </Property>
-      <Property name="store_id" type="flake">
+      </Field>
+      <Field name="store_id" type="flake">
         id of the store this customer belongs to
-      </Property>
-      <Property name="steam_id" type="?string">
+      </Field>
+      <Field name="steam_id" type="string" nullable>
         the SteamID64 of this customer
-      </Property>
-      <Property name="steam" type="?steam profile object">
+      </Field>
+      <Field name="steam" type="steam profile" typeHref="#steam-profile-structure" nullable>
         the basic Steam profile information for this customer
-      </Property>
-      <Property name="name" type="?string">
+      </Field>
+      <Field name="name" type="string" nullable>
         the name of the customer
-      </Property>
-      <Property name="created_at" type="timestamp">
+      </Field>
+      <Field name="created_at" type="timestamp">
         timestamp of when the product was created.
-      </Property>
-      <Property name="updated_at" type="?timestamp">
-        timestamp of when the product was last updated.
-      </Property>
-    </Properties>
+      </Field>
+      <Field name="updated_at" type="timestamp" nullable>
+        timestamp of when the product was last updated
+      </Field>
+    </Fields>
 
-    ### Steam Profile Structure
+    ## Steam Profile Structure
 
-    <Properties>
-      <Property name="id" type="string">
+    <Fields>
+      <Field name="id" type="string">
         the profile's SteamID64
-      </Property>
-      <Property name="name" type="?string">
+      </Field>
+      <Field name="name" type="string" nullable>
         the profile's display name
-      </Property>
-      <Property name="avatar_url" type="?string">
+      </Field>
+      <Field name="avatar_url" type="string" nullable>
         the profile's avatar url
-      </Property>
-    </Properties>
+      </Field>
+    </Fields>
   </Col>
 
   <Col sticky>
@@ -78,7 +77,7 @@
 
 ---
 
-## Get Current Customer {{ tag: 'GET', label: '/store/customer' }}
+## Get Current Customer {{ tag: 'GET' }}
 
 <Row>
   <Col>
@@ -89,6 +88,10 @@
 
   </Col>
   <Col sticky>
+    <Endpoints request>
+        <Endpoint method="GET" url="/store/customer" />
+    </Endpoints>
+
     ```json {{ title: 'Response' }}
     {
         "id": "150352880618967040",
