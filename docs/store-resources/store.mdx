@@ -73,7 +73,7 @@
 
   </Col>
   <Col sticky>
-    <Endpoints request perms="store_read">
+    <Endpoints request perms={[ {id: 'store_read'} ]}>
 		<Endpoint method="GET" url="/store" />
     </Endpoints>
 
