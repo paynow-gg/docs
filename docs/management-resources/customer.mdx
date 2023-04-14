@@ -3,17 +3,25 @@
 <Row>
   <Col>
     A customer in PayNow represents a user on your store.
+
+    To access the current customer's information using a [customer token](management-resources/customer#create-customer-token),
+    use the [Storefront Customer API](store-resources/customer).
   </Col>
   <Col sticky>
     <Endpoints>
         <Endpoint method="POST" href="#create-customer" url="/stores/{store.id}/customers" />
         <Endpoint method="GET" href="#get-customers" url="/stores/{store.id}/customers" />
         <Endpoint method="GET" href="#lookup-customer" url="/stores/{store.id}/customers/lookup" />
-        <Endpoint method="DELETE" href="#invalidate-all-tokens" url="/stores/{store.id}/customers/tokens" />
         <Endpoint method="GET" href="#get-customer" url="/stores/{store.id}/customers/{customer.id}" />
         <Endpoint method="PATCH" href="#update-customer" url="/stores/{store.id}/customers/{customer.id}" />
+
+        <Endpoint method="DELETE" href="#invalidate-all-tokens" url="/stores/{store.id}/customers/tokens" />
         <Endpoint method="POST" href="#create-customer-token" url="/stores/{store.id}/customers/{customer.id}/tokens" />
         <Endpoint method="DELETE" href="#invalidate-customer-tokens" url="/stores/{store.id}/customers/{customer.id}/tokens" />
+
+        <Endpoint method="GET" href="#get-customer-inventory" url="/stores/{store.id}/customers/{customer.id}/inventory" />
+        <Endpoint method="POST" href="#assign-inventory-item" url="/stores/{store.id}/customers/{customer.id}/inventory" />
+        <Endpoint method="POST" href="#revoke-inventory-item" url="/stores/{store.id}/customers/{customer.id}/inventory/{item.id}" />
     </Endpoints>
   </Col>
 </Row>
@@ -272,28 +280,6 @@
 
 ---
 
-## Invalidate All Tokens {{ tag: 'DELETE' }}
-
-<Row>
-  <Col>
-    Invalidates all customer tokens across the entire [store](management-resources/store), effectively logging them out.
-
-    ### Returns
-    Returns `HTTP 204`
-  </Col>
-  <Col sticky>
-    <Endpoints request>
-        <Endpoint method="DELETE" url="/stores/{store.id}/customers/tokens" />
-    </Endpoints>
-
-    ```json {{ title: 'Response' }}
-    HTTP 204
-    ```
-  </Col>
-</Row>
-
----
-
 ## Get Customer {{ tag: 'GET' }}
 
 <Row>
@@ -403,6 +389,16 @@
 
 ---
 
+## Customer Tokens
+
+Customer tokens are used to access the [Storefront API](store-resources/store) resources.
+
+They can be used to remotely access the API for fetching [store](store-resources/store) and [product](store-resources/product) information in a customer context.
+
+Customer tokens don't expire by default, but they can be manually invalidated either per customer or for all customers across the whole store.
+
+---
+
 ## Create Customer Token {{ tag: 'POST' }}
 
 <Row>
@@ -441,6 +437,388 @@
   <Col sticky>
     <Endpoints request>
         <Endpoint method="DELETE" url="/stores/{store.id}/customers/{customer.id}/tokens" />
+    </Endpoints>
+
+    ```json {{ title: 'Response' }}
+    HTTP 204
+    ```
+  </Col>
+</Row>
+
+---
+
+## Invalidate All Tokens {{ tag: 'DELETE' }}
+
+<Row>
+  <Col>
+    Invalidates all customer tokens across the entire [store](management-resources/store), effectively logging them all out.
+
+    ### Returns
+    Returns `HTTP 204`
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="DELETE" url="/stores/{store.id}/customers/tokens" />
+    </Endpoints>
+
+    ```json {{ title: 'Response' }}
+    HTTP 204
+    ```
+  </Col>
+</Row>
+
+---
+
+## The InventoryItem object
+
+<Row>
+  <Col>
+    <Fields>
+      <Field name="id" type="flake">
+        id of the item
+      </Field>
+      <Field name="store_id" type="flake">
+        id of the store this item belongs to
+      </Field>
+      <Field name="customer" type="customer" typeHref="#the-customer-object">
+        the customer who owns this item
+      </Field>
+      <Field name="order_customer" type="customer" typeHref="#the-customer-object" nullable>
+        the customer who ordered this item
+      </Field>
+      <Field name="order_id" type="flake" nullable>
+        id of the order that is related to this item
+      </Field>
+      <Field name="order_line_id" type="flake" nullable>
+        id of the order line that is related to this item
+      </Field>
+      <Field name="quantity_index" type="integer" nullable>
+        the quantity index of this item.
+        Used if the order line contained multiple units.
+      </Field>
+      <Field name="product" type="partial product" typeHref="#partial-product-structure">
+        the product this inventory item represents
+      </Field>
+      <Field name="state" type="enum">
+        the name of the customer
+        <Enums vertical>
+          <Enum value="usable">item has been assigned, but has not been used yet</Enum>
+          <Enum value="active">item is active</Enum>
+          <Enum value="used">item has been used</Enum>
+          <Enum value="revoked">item has been revoked</Enum>
+        </Enums>
+      </Field>
+      <Field name="expirable" type="boolean">
+        whether this item has a duration and can expire
+      </Field>
+      <Field name="gift" type="boolean">
+        whether this item was a gift
+      </Field>
+      <Field name="added_at" type="timestamp">
+        timestamp of when this item was added to the customer's inventory
+      </Field>
+      <Field name="added_by" type="user" typeHref="user#the-user-object" nullable>
+        the user that added this item to the customer's inventory.
+        `null` when the item was added from an order.
+      </Field>
+      <Field name="active_at" type="timestamp" nullable>
+        timestamp of when this item was activated.
+        Is populated after the item becomes `active`.
+      </Field>
+      <Field name="expires_at" type="timestamp" nullable>
+        timestamp of when this item will expire.
+        Is populated after the item becomes `active`.
+      </Field>
+      <Field name="removed_at" type="timestamp" nullable>
+        timestamp of when this item was removed.
+        Is populated after the item becomes `used`.
+      </Field>
+      <Field name="revoked_at" type="timestamp" nullable>
+        timestamp of when this item was revoked.
+        Is populated after the item becomes `revoked`.
+      </Field>
+      <Field name="revoke_reason" type="enum" nullable>
+        the reason this item was revoked
+        <Enums vertical>
+          <Enum value="admin">a store admin decided to manually revoke the item</Enum>
+          <Enum value="refund">the item was refunded from the original order</Enum>
+          <Enum value="chargeback">the customer initiated a chargeback</Enum>
+        </Enums>
+      </Field>
+      <Field name="revoked_by" type="user" typeHref="user#the-user-object" nullable>
+        the user who revoked this item
+      </Field>
+    </Fields>
+
+    ## Partial Product Structure
+
+    Contains a partial set fields that refer to a [product](management-resources/product)
+
+    <Fields>
+      <Field name="id" type="flake">
+        id of the product
+      </Field>
+      <Field name="store_id" type="flake">
+        the id of the store that this product belongs to
+      </Field>
+      <Field name="version_id" type="flake">
+        version id of the product
+      </Field>
+      <Field name="slug" type="string">
+        the url-safe identifier for the product, unique to the store
+      </Field>
+      <Field name="name" type="string">
+        the name the product
+      </Field>
+    </Fields>
+  </Col>
+  <Col sticky>
+    ```json {{ title: 'The InventoryItem object' }}
+    {
+      "id": "149643503939362817",
+      "store_id": "94688451781206016",
+      "customer": {
+        "id": "150352880618967040",
+        "store_id": "94688451781206016",
+        "steam_id": "76561197960287930",
+        "steam": {
+          "id": "76561197960287930",
+          "name": "Rabscuttle",
+          "avatar_url": "https://avatars.akamai.steamstatic.com/c5d56249ee5d28a07db4ac9f7f60af961fab5426_full.jpg"
+        },
+        "name": "Rabscuttle",
+        "metadata": {
+          "example_key": "example value"
+        },
+        "created_at": "2023-04-10T19:51:02.162046Z",
+        "updated_at": "2023-04-11T06:11:18.8643Z"
+      },
+      "order_customer": {
+        "id": "150352880618967040",
+        "store_id": "94688451781206016",
+        "steam_id": "76561197960287930",
+        "steam": {
+          "id": "76561197960287930",
+          "name": "Rabscuttle",
+          "avatar_url": "https://avatars.akamai.steamstatic.com/c5d56249ee5d28a07db4ac9f7f60af961fab5426_full.jpg"
+        },
+        "name": "Rabscuttle",
+        "metadata": {
+          "example_key": "example value"
+        },
+        "created_at": "2023-04-10T19:51:02.162046Z",
+        "updated_at": "2023-04-11T06:11:18.8643Z"
+      },
+      "order_id": "149643389770407936",
+      "order_line_id": "149643389770407937",
+      "quantity_index": 1,
+      "product": {
+        "id": "124249183568797696",
+        "store_id": "94688451781206016",
+        "version_id": "147121000780144640",
+        "slug": "banana",
+        "name": "Banana"
+      },
+      "state": "used",
+      "expirable": true,
+      "gift": false,
+      "added_at": "2023-04-11T20:52:13.659206Z",
+      "added_by": null,
+      "active_at": "2023-04-11T21:52:53.66545Z",
+      "expires_at": "2023-04-11T22:52:53.66545Z",
+      "removed_at": "2023-04-11T22:53:55.763216Z",
+      "revoked_at": null,
+      "revoke_reason": null,
+      "revoked_by": null
+    }
+    ```
+  </Col>
+</Row>
+
+---
+
+## Get Customer Inventory {{ tag: 'GET' }}
+
+<Row>
+  <Col>
+    Returns all of the items in the customer's inventory.
+
+    ### Returns
+    Returns an array of [inventory items](#the-inventoryitem-object).
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="GET" url="/stores/{store.id}/customers/{customer.id}/inventory" />
+    </Endpoints>
+
+    ```json {{ title: 'Response' }}
+    [
+      {
+        "id": "149643503939362817",
+        "store_id": "94688451781206016",
+        "customer": {
+          "id": "150352880618967040",
+          "store_id": "94688451781206016",
+          "steam_id": "76561197960287930",
+          "steam": {
+            "id": "76561197960287930",
+            "name": "Rabscuttle",
+            "avatar_url": "https://avatars.akamai.steamstatic.com/c5d56249ee5d28a07db4ac9f7f60af961fab5426_full.jpg"
+          },
+          "name": "Rabscuttle",
+          "metadata": {
+            "example_key": "example value"
+          },
+          "created_at": "2023-04-10T19:51:02.162046Z",
+          "updated_at": "2023-04-11T06:11:18.8643Z"
+        },
+        "order_customer": {
+          "id": "150352880618967040",
+          "store_id": "94688451781206016",
+          "steam_id": "76561197960287930",
+          "steam": {
+            "id": "76561197960287930",
+            "name": "Rabscuttle",
+            "avatar_url": "https://avatars.akamai.steamstatic.com/c5d56249ee5d28a07db4ac9f7f60af961fab5426_full.jpg"
+          },
+          "name": "Rabscuttle",
+          "metadata": {
+            "example_key": "example value"
+          },
+          "created_at": "2023-04-10T19:51:02.162046Z",
+          "updated_at": "2023-04-11T06:11:18.8643Z"
+        },
+        "order_id": "149643389770407936",
+        "order_line_id": "149643389770407937",
+        "quantity_index": 1,
+        "product": {
+          "id": "124249183568797696",
+          "store_id": "94688451781206016",
+          "version_id": "147121000780144640",
+          "slug": "banana",
+          "name": "Banana"
+        },
+        "state": "used",
+        "expirable": true,
+        "gift": false,
+        "added_at": "2023-04-11T20:52:13.659206Z",
+        "added_by": null,
+        "active_at": "2023-04-11T21:52:53.66545Z",
+        "expires_at": "2023-04-11T22:52:53.66545Z",
+        "removed_at": "2023-04-11T22:53:55.763216Z",
+        "revoked_at": null,
+        "revoke_reason": null,
+        "revoked_by": null
+      },
+      {...},
+      {...}
+    ]
+    ```
+  </Col>
+</Row>
+
+---
+
+## Assign Inventory Item {{ tag: 'POST' }}
+
+<Row>
+  <Col>
+    Assigns a product to a customer's inventory.
+
+    Must provide either `product_id` or `product_version_id`.
+    Will return multiple items if `quantity` is greater than `1`.
+
+    Does not affect stock limits.
+
+    <Fields parameters>
+      <Field name="product_id" type="flake" optional>
+        the id of the product to assign.
+      </Field>
+      <Field name="product_version_id" type="flake" optional>
+        the id of the product version to assign.
+
+        Used to assign a specific version of a product.
+      </Field>
+      <Field name="quantity" type="integer" optional default={1}>
+        the number of units to add (1 - 20 limit)
+      </Field>
+    </Fields>
+
+    ### Returns
+    Returns an array of the newly created [inventory items](#the-inventoryitem-object).
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="POST" url="/stores/{store.id}/customers/{customer.id}/inventory" />
+    </Endpoints>
+
+    ```json {{ title: 'Response' }}
+    [
+      {
+        "id": "150548885075402752",
+        "store_id": "94688451781206016",
+        "customer": {
+          "id": "150352880618967040",
+          "store_id": "94688451781206016",
+          "steam_id": "76561197960287930",
+          "steam": {
+            "id": "76561197960287930",
+            "name": "Rabscuttle",
+            "avatar_url": "https://avatars.akamai.steamstatic.com/c5d56249ee5d28a07db4ac9f7f60af961fab5426_full.jpg"
+          },
+          "name": "Rabscuttle",
+          "metadata": {
+            "example_key": "example value"
+          },
+          "created_at": "2023-04-13T19:51:02.162046Z",
+          "updated_at": "2023-04-14T06:11:18.8643Z"
+        },
+        "order_customer": null,
+        "order_id": null,
+        "order_line_id": null,
+        "quantity_index": null,
+        "product": {
+          "id": "124249183568797696",
+          "store_id": "94688451781206016",
+          "version_id": "149702205245493248",
+          "slug": "banana",
+          "name": "Banana"
+        },
+        "state": "usable",
+        "expirable": true,
+        "gift": false,
+        "added_at": "2023-04-14T08:49:53.265720572Z",
+        "added_by": {
+          "id": "11084680073842688",
+          "first_name": "Example",
+          "last_name": "Exampleson"
+        },
+        "active_at": null,
+        "expires_at": null,
+        "removed_at": null,
+        "revoked_at": null,
+        "revoke_reason": null,
+        "revoked_by": null
+      }
+    ]
+    ```
+  </Col>
+</Row>
+
+---
+
+## Revoke Inventory Item {{ tag: 'DELETE' }}
+
+<Row>
+  <Col>
+    Revokes an item from the customer's inventory.
+
+    ### Returns
+    Returns `HTTP 204`
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="DELETE" url="/stores/{store.id}/customers/inventory/{item.id}" />
     </Endpoints>
 
     ```json {{ title: 'Response' }}

@@ -1,0 +1,850 @@
+# Product
+
+<Row>
+  <Col>
+    Products are what your customers see when they visit your store.
+    They have a name, price, thumbnail, and many other properties you can use to enhance your store's display.
+
+    Any time you edit a product's name, price, or other settings, it assigns the product a new `version_id`.
+    This is used to preserve the historical configurations of the product when used in command delivery and subscription renewals.
+
+    To access product information using a [customer token](management-resources/customer#create-customer-token),
+    use the [Storefront Product API](store-resources/product).
+  </Col>
+  <Col sticky>
+    <Endpoints>
+        <Endpoint method="POST" href="#create-product" url="/stores/{store.id}/products" />
+        <Endpoint method="GET" href="#get-products" url="/stores/{store.id}/products" />
+        <Endpoint method="GET" href="#get-product" url="/stores/{store.id}/products/{product.id}" />
+        <Endpoint method="PATCH" href="#update-product" url="/stores/{store.id}/products/{product.id}" />
+        <Endpoint method="DELETE" href="#delete-product" url="/stores/{store.id}/products/{product.id}" />
+    </Endpoints>
+  </Col>
+</Row>
+
+---
+
+## The Product object
+
+<Row>
+  <Col>
+    <Fields>
+      <Field name="id" type="flake">
+        id of the product
+      </Field>
+      <Field name="store_id" type="flake">
+        id of the store the product belongs to
+      </Field>
+      <Field name="version_id" type="flake">
+        id for the version of the product
+      </Field>
+      <Field name="image_url" type="string" nullable>
+        the url for the product image
+      </Field>
+      <Field name="slug" type="string">
+        the url-safe identifier for the product, unique to the store
+      </Field>
+      <Field name="name" type="string">
+        the name of the product
+      </Field>
+      <Field name="description" type="string">
+        the full-length description of the product.
+        This can be in any format the store prefers.
+      </Field>
+      <Field name="price" type="integer">
+        the price of this product in zero-decimal format (where "$10.00" is `1000`)
+      </Field>
+      <Field name="allow_one_time_purchase" type="boolean">
+        whether this product can be purchased one time (without subscribing)
+      </Field>
+      <Field name="allow_subscription" type="boolean">
+        whether this product can be subscribed to
+      </Field>
+      <Field name="subscription_interval_value" type="integer">
+        the interval value at which this product will renew when subscribed
+      </Field>
+      <Field name="subscription_interval_scale" type="enum">
+        the interval scale at which this product will renew when subscribed.
+        <Enums>
+          <Enum value="day"/>
+          <Enum value="week"/>
+          <Enum value="month"/>
+          <Enum value="year"/>
+        </Enums>
+      </Field>
+      <Field name="remove_after_enabled" type="boolean">
+        whether this product should be auto-removed from the customer's inventory after the configured time.
+      </Field>
+      <Field name="remove_after_time_value" type="integer">
+        the time value at which this product will be removed
+      </Field>
+      <Field name="remove_after_time_scale" type="enum">
+        the time scale at which this product will be automatically removed.
+        <Enums>
+          <Enum value="day"/>
+          <Enum value="week"/>
+          <Enum value="month"/>
+          <Enum value="year"/>
+        </Enums>
+      </Field>
+      <Field name="store_stock_limit" type="stock limit" typeHref="#stock-limit-structure">
+        the stock configuration for this product. The configured limits are applied across the entire store.
+      </Field>
+      <Field name="user_stock_limit" type="stock limit" typeHref="#stock-limit-structure">
+        the stock configuration for this product. The configured limits are applied to one customer.
+      </Field>
+      <Field name="stock_limit_do_not_include_removed" type="boolean">
+        whether the stock limiter should not include items that have been removed from a customer's inventory.
+        If this is `false`, then the stock limiter will increase the available stock when an item expires.
+      </Field>
+      <Field name="tags" type="partial tag" typeHref="#partial-tag-structure">
+        an array of tags used to describe this product
+      </Field>
+      <Field name="gameservers" type="partial game server" typeHref="#partial-game-server-structure">
+        an array of game servers that this product's commands should run on
+      </Field>
+      <Field name="commands" type="product command" typeHref="#product-command-structure">
+        an array of game servers that this product's commands should run on
+      </Field>
+      <Field name="created_by" type="user" typeHref="user#the-user-object">
+        the user that created this product.
+      </Field>
+      <Field name="created_at" type="timestamp">
+        timestamp of when the product was created
+      </Field>
+      <Field name="updated_by" type="user" typeHref="user#the-user-object" nullable>
+        the user that most recently updated this product.
+      </Field>
+      <Field name="updated_at" type="timestamp" nullable>
+        timestamp of when the product was last updated
+      </Field>
+    </Fields>
+
+    ## Stock Limit Structure
+
+    Stock Limits can apply at the [store](management-resources/store) and [customer](management-resources/customer) level.
+    When applied at the store level, the limit is enforced for all customers.
+    At the customer level, it is applied to just one customer.
+
+    The values can be understood in the following sentence:
+
+    ```yaml
+    "Limit the store's stock to 500 units every 2 weeks"
+    [enabled: true] [quantity: 500] [time_value: 2] [time_scale: weeks]
+    ```
+
+    <Fields>
+      <Field name="enabled" type="boolean">
+        whether the limit is enabled
+      </Field>
+      <Field name="quantity" type="integer">
+        the number of units to be made available
+      </Field>
+      <Field name="time_value" type="integer">
+        the time value used for the stock limit
+      </Field>
+      <Field name="time_scale" type="enum">
+        the time scale at which this product will be limited.
+        <Enums>
+          <Enum value="day"/>
+          <Enum value="week"/>
+          <Enum value="month"/>
+          <Enum value="year"/>
+        </Enums>
+      </Field>
+    </Fields>
+
+    ## Partial Tag Structure
+
+    Contains a partial set fields that refer to a [tag](management-resources/tag)
+
+    <Fields>
+      <Field name="id" type="flake">
+        id of the tag
+      </Field>
+      <Field name="slug" type="string">
+        the url-safe identifier for the tag, unique to the store
+      </Field>
+      <Field name="name" type="string">
+        the name the tag
+      </Field>
+    </Fields>
+
+    ## Partial Game Server Structure
+
+    Contains a partial set fields that refer to a [game server](management-resources/gameserver)
+
+    <Fields>
+      <Field name="id" type="flake">
+        id of the game server
+      </Field>
+      <Field name="name" type="string">
+        the name the game server
+      </Field>
+    </Fields>
+
+    ## Product Command Structure
+
+    Contains information about a command.
+    Commands are executed at different stages of the product's lifecycle.
+
+    <Fields>
+      <Field name="stage" type="enum">
+        the stage when this command should run.
+        <Enums vertical>
+          <Enum value="on_purchase">runs when the product gets added to the customer's inventory</Enum>
+          <Enum value="on_expire">runs when the product is removed from the customer's inventory</Enum>
+          <Enum value="on_renew">runs when a subscription to this product renews</Enum>
+          <Enum value="on_refund">runs when this product is refunded</Enum>
+          <Enum value="on_chargeback">runs when the customer initiates a chargeback on the original purchase</Enum>
+        </Enums>
+      </Field>
+      <Field name="content" type="string">
+        the content of the command.
+        Can be replaced with variable templating.
+      </Field>
+    </Fields>
+  </Col>
+  <Col sticky>
+    ```json {{ title: 'The Product object' }}
+    {
+      "id": "150519474611560448",
+      "store_id": "94688451781206016",
+      "version_id": "150519521570988032",
+      "image_url": "https://example.paynow.gg/product-image.webp",
+      "slug": "blender",
+      "name": "Blender",
+      "description": "A blender. It blends stuff.",
+      "price": 23499,
+      "allow_one_time_purchase": true,
+      "allow_subscription": true,
+      "subscription_interval_value": 1,
+      "subscription_interval_scale": "month",
+      "remove_after_enabled": true,
+      "remove_after_time_value": 1,
+      "remove_after_time_scale": "month",
+      "store_stock_limit": {
+        "enabled": true,
+        "quantity": 500,
+        "time_value": 1,
+        "time_scale": "month"
+      },
+      "user_stock_limit": {
+        "enabled": true,
+        "quantity": 1,
+        "time_value": 1,
+        "time_scale": "day"
+      },
+      "stock_limit_do_not_include_removed": true,
+      "tags": [
+        {
+            "id": "124248382326706176",
+            "slug": "food",
+            "name": "Food"
+        }
+      ],
+      "gameservers": [
+        {
+            "id": "108003582208380928",
+            "name": "test"
+        }
+      ],
+      "commands": [
+        {
+          "stage": "on_purchase",
+          "content": "give {customer.steam.id} 1 blender"
+        },
+        {
+          "stage": "on_expire",
+          "content": "give {customer.steam.id} 1 blender"
+        }
+      ],
+      "created_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "created_at": "2023-04-14T06:53:01.265316Z",
+      "updated_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "updated_at": "2023-04-14T06:53:12.460717Z"
+    }
+    ```
+  </Col>
+</Row>
+
+---
+
+## Create Product {{ tag: 'POST' }}
+
+<Row>
+  <Col>
+    Creates a new product.
+
+    <Fields parameters>
+      <Field name="slug" type="string" optional>
+        the url-safe slug used to identify this product (3 - 36 characters).
+        Must be unique to the [store](management-resources/store).
+        Spaces will be converted to dashes, and all disallowed characters will be stripped.
+        If left null, this will be auto generated from `name`.
+      </Field>
+      <Field name="name" type="string" required>
+        the name of the product (1 - 42 characters)
+      </Field>
+      <Field name="description" type="string" required>
+        the description of the product (1 - 10,000 characters)
+        This can be in any format your store prefers, such as `text`, `html`, etc.
+      </Field>
+      <Field name="price" type="integer" required>
+        the price for this product.
+        Prices are in zero-decimal format (where $10.00 is `1000`).
+
+        Price must be exactly `0` (free), or between `50` ($0.50) and `500000` ($5,000.00)
+      </Field>
+      <Field name="allow_one_time_purchase" type="boolean" optional default={true}>
+        whether this product can be purchased one time (without subscribing)
+      </Field>
+      <Field name="allow_subscription" type="boolean" optional default={false}>
+        whether this product can be subscribed to
+      </Field>
+      <Field name="subscription_interval_value" type="integer" optional default={1}>
+        the interval value at which this product will renew when subscribed
+      </Field>
+      <Field name="subscription_interval_scale" type="enum" optional default="month">
+        the interval scale at which this product will renew when subscribed.
+        <Enums>
+          <Enum value="day"/>
+          <Enum value="week"/>
+          <Enum value="month"/>
+          <Enum value="year"/>
+        </Enums>
+      </Field>
+      <Field name="remove_after_enabled" type="boolean" optional default={false}>
+        whether this product should be auto-removed from the customer's inventory after the configured time.
+      </Field>
+      <Field name="remove_after_time_value" type="integer" optional default={1}>
+        the time value at which this product will be removed
+      </Field>
+      <Field name="remove_after_time_scale" type="enum" optional default="month">
+        the time scale at which this product will be automatically removed.
+        <Enums>
+          <Enum value="day"/>
+          <Enum value="week"/>
+          <Enum value="month"/>
+          <Enum value="year"/>
+        </Enums>
+      </Field>
+      <Field name="store_stock_limit.enabled" type="boolean" optional default={false}>
+        whether the stock should be limited across the entire [store](management-resources/store)
+      </Field>
+      <Field name="store_stock_limit.quantity" type="integer" optional default={10}>
+        the number of units to limit the store's stock
+      </Field>
+      <Field name="store_stock_limit.time_value" type="integer" optional default={1}>
+        the time value to limit this store's stock
+      </Field>
+      <Field name="store_stock_limit.time_scale" type="enum" optional default="month">
+        the time scale to limit this store's stock.
+        <Enums>
+          <Enum value="day"/>
+          <Enum value="week"/>
+          <Enum value="month"/>
+          <Enum value="year"/>
+        </Enums>
+      </Field>
+      <Field name="customer_stock_limit.enabled" type="boolean" optional default={false}>
+        whether the stock should be limited for each individual customer [customer](management-resources/customer)
+      </Field>
+      <Field name="customer_stock_limit.quantity" type="integer" optional default={10}>
+        the number of units to limit the customer's stock
+      </Field>
+      <Field name="customer_stock_limit.time_value" type="integer" optional default={1}>
+        the time value to limit this customer's stock
+      </Field>
+      <Field name="customer_stock_limit.time_scale" type="enum" optional default="month">
+        the time scale to limit this customer's stock.
+        <Enums>
+          <Enum value="day"/>
+          <Enum value="week"/>
+          <Enum value="month"/>
+          <Enum value="year"/>
+        </Enums>
+      </Field>
+      <Field name="stock_limit_do_not_include_removed" type="boolean" optional default={false}>
+        whether the stock limiter should not include items that have been removed from a customer's inventory.
+        If this is `false`, then the stock limiter will increase the available stock when an item expires.
+      </Field>
+      <Field name="tags" type="[]flake" optional>
+        an array of IDs specifying which [tags](management-resources/tag) to apply to this product
+      </Field>
+      <Field name="gameservers" type="[]flake" optional>
+        an array of IDs specifying which [game servers](management-resources/gameserver) this product's commands should run on
+      </Field>
+      <Field name="commands" type="[]product command" typeHref="#product-command-structure" optional>
+        an array of product commands that will be executed at different stages of this product's lifecycle.
+      </Field>
+    </Fields>
+
+    ### Returns
+    Returns the newly created [product](#the-product-object).
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="POST" url="/stores/{store.id}/products" />
+    </Endpoints>
+
+    ```json {{ title: 'Response' }}
+    {
+      "id": "150519474611560448",
+      "store_id": "94688451781206016",
+      "version_id": "150519521570988032",
+      "image_url": "https://example.paynow.gg/product-image.webp",
+      "slug": "blender",
+      "name": "Blender",
+      "description": "A blender. It blends stuff.",
+      "price": 23499,
+      "allow_one_time_purchase": true,
+      "allow_subscription": true,
+      "subscription_interval_value": 1,
+      "subscription_interval_scale": "month",
+      "remove_after_enabled": true,
+      "remove_after_time_value": 1,
+      "remove_after_time_scale": "month",
+      "store_stock_limit": {
+        "enabled": true,
+        "quantity": 500,
+        "time_value": 1,
+        "time_scale": "month"
+      },
+      "user_stock_limit": {
+        "enabled": true,
+        "quantity": 1,
+        "time_value": 1,
+        "time_scale": "day"
+      },
+      "stock_limit_do_not_include_removed": true,
+      "tags": [
+        {
+            "id": "124248382326706176",
+            "slug": "food",
+            "name": "Food"
+        }
+      ],
+      "gameservers": [
+        {
+            "id": "108003582208380928",
+            "name": "test"
+        }
+      ],
+      "commands": [
+        {
+          "stage": "on_purchase",
+          "content": "give {customer.steam.id} 1 blender"
+        },
+        {
+          "stage": "on_expire",
+          "content": "give {customer.steam.id} 1 blender"
+        }
+      ],
+      "created_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "created_at": "2023-04-14T06:53:01.265316Z",
+      "updated_by": null,
+      "updated_at": null
+    }
+    ```
+  </Col>
+</Row>
+
+---
+
+## Get Products {{ tag: 'GET' }}
+
+<Row>
+  <Col>
+    Returns all of the products in the store.
+
+    ### Returns
+    Returns an array of [products](#the-product-object).
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="GET" url="/stores/{store.id}/products" />
+    </Endpoints>
+
+    ```json {{ title: 'Response' }}
+    [
+      {
+        "id": "150519474611560448",
+        "store_id": "94688451781206016",
+        "version_id": "150519521570988032",
+        "image_url": "https://example.paynow.gg/product-image.webp",
+        "slug": "blender",
+        "name": "Blender",
+        "description": "A blender. It blends stuff.",
+        "price": 23499,
+        "allow_one_time_purchase": true,
+        "allow_subscription": true,
+        "subscription_interval_value": 1,
+        "subscription_interval_scale": "month",
+        "remove_after_enabled": true,
+        "remove_after_time_value": 1,
+        "remove_after_time_scale": "month",
+        "store_stock_limit": {
+          "enabled": true,
+          "quantity": 500,
+          "time_value": 1,
+          "time_scale": "month"
+        },
+        "user_stock_limit": {
+          "enabled": true,
+          "quantity": 1,
+          "time_value": 1,
+          "time_scale": "day"
+        },
+        "stock_limit_do_not_include_removed": true,
+        "tags": [
+          {
+              "id": "124248382326706176",
+              "slug": "food",
+              "name": "Food"
+          }
+        ],
+        "gameservers": [
+          {
+              "id": "108003582208380928",
+              "name": "test"
+          }
+        ],
+        "commands": [
+          {
+            "stage": "on_purchase",
+            "content": "give {customer.steam.id} 1 blender"
+          }
+        ],
+        "created_by": {
+          "id": "11084680073842688",
+          "first_name": "Example",
+          "last_name": "Exampleson"
+        },
+        "created_at": "2023-04-14T06:53:01.265316Z",
+        "updated_by": {
+          "id": "11084680073842688",
+          "first_name": "Example",
+          "last_name": "Exampleson"
+        },
+        "updated_at": "2023-04-14T06:53:12.460717Z"
+      },
+      {...},
+      {...}
+    ]
+    ```
+  </Col>
+</Row>
+
+---
+
+## Get Product {{ tag: 'GET' }}
+
+<Row>
+  <Col>
+    Returns a product by ID.
+
+    ### Returns
+    Returns a [product](#the-product-object).
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="GET" url="/stores/{store.id}/products/{product.id}" />
+    </Endpoints>
+
+    ```json {{ title: 'Response' }}
+    {
+      "id": "150519474611560448",
+      "store_id": "94688451781206016",
+      "version_id": "150519521570988032",
+      "image_url": "https://example.paynow.gg/product-image.webp",
+      "slug": "blender",
+      "name": "Blender",
+      "description": "A blender. It blends stuff.",
+      "price": 23499,
+      "allow_one_time_purchase": true,
+      "allow_subscription": true,
+      "subscription_interval_value": 1,
+      "subscription_interval_scale": "month",
+      "remove_after_enabled": true,
+      "remove_after_time_value": 1,
+      "remove_after_time_scale": "month",
+      "store_stock_limit": {
+        "enabled": true,
+        "quantity": 500,
+        "time_value": 1,
+        "time_scale": "month"
+      },
+      "user_stock_limit": {
+        "enabled": true,
+        "quantity": 1,
+        "time_value": 1,
+        "time_scale": "day"
+      },
+      "stock_limit_do_not_include_removed": true,
+      "tags": [
+        {
+            "id": "124248382326706176",
+            "slug": "food",
+            "name": "Food"
+        }
+      ],
+      "gameservers": [
+        {
+            "id": "108003582208380928",
+            "name": "test"
+        }
+      ],
+      "commands": [
+        {
+          "stage": "on_purchase",
+          "content": "give {customer.steam.id} 1 blender"
+        },
+        {
+          "stage": "on_expire",
+          "content": "give {customer.steam.id} 1 blender"
+        }
+      ],
+      "created_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "created_at": "2023-04-14T06:53:01.265316Z",
+      "updated_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "updated_at": "2023-04-14T06:53:12.460717Z"
+    }
+    ```
+  </Col>
+</Row>
+
+---
+
+## Update Product {{ tag: 'PATCH' }}
+
+<Row>
+  <Col>
+    Updates a product.
+
+    <Fields parameters>
+      <Field name="slug" type="string" optional>
+        the url-safe slug used to identify this product (3 - 36 characters).
+        Must be unique to the [store](management-resources/store).
+        Spaces will be converted to dashes, and all disallowed characters will be stripped.
+        If left null, this will be auto generated from `name`.
+      </Field>
+      <Field name="name" type="string" optional>
+        the name of the product (1 - 42 characters)
+      </Field>
+      <Field name="description" type="string" optional>
+        the description of the product (1 - 10,000 characters)
+        This can be in any format your store prefers, such as `text`, `html`, etc.
+      </Field>
+      <Field name="price" type="integer" optional>
+        the price for this product.
+        Prices are in zero-decimal format (where $10.00 is `1000`).
+
+        Price must be exactly `0` (free), or between `50` ($0.50) and `500000` ($5,000.00)
+      </Field>
+      <Field name="allow_one_time_purchase" type="boolean" optional default={true}>
+        whether this product can be purchased one time (without subscribing)
+      </Field>
+      <Field name="allow_subscription" type="boolean" optional default={false}>
+        whether this product can be subscribed to
+      </Field>
+      <Field name="subscription_interval_value" type="integer" optional default={1}>
+        the interval value at which this product will renew when subscribed
+      </Field>
+      <Field name="subscription_interval_scale" type="enum" optional default="month">
+        the interval scale at which this product will renew when subscribed.
+        <Enums>
+          <Enum value="day"/>
+          <Enum value="week"/>
+          <Enum value="month"/>
+          <Enum value="year"/>
+        </Enums>
+      </Field>
+      <Field name="remove_after_enabled" type="boolean" optional default={false}>
+        whether this product should be auto-removed from the customer's inventory after the configured time.
+      </Field>
+      <Field name="remove_after_time_value" type="integer" optional default={1}>
+        the time value at which this product will be removed
+      </Field>
+      <Field name="remove_after_time_scale" type="enum" optional default="month">
+        the time scale at which this product will be automatically removed.
+        <Enums>
+          <Enum value="day"/>
+          <Enum value="week"/>
+          <Enum value="month"/>
+          <Enum value="year"/>
+        </Enums>
+      </Field>
+      <Field name="store_stock_limit.enabled" type="boolean" optional default={false}>
+        whether the stock should be limited across the entire [store](management-resources/store)
+      </Field>
+      <Field name="store_stock_limit.quantity" type="integer" optional default={10}>
+        the number of units to limit the store's stock
+      </Field>
+      <Field name="store_stock_limit.time_value" type="integer" optional default={1}>
+        the time value to limit this store's stock
+      </Field>
+      <Field name="store_stock_limit.time_scale" type="enum" optional default="month">
+        the time scale to limit this store's stock.
+        <Enums>
+          <Enum value="day"/>
+          <Enum value="week"/>
+          <Enum value="month"/>
+          <Enum value="year"/>
+        </Enums>
+      </Field>
+      <Field name="customer_stock_limit.enabled" type="boolean" optional default={false}>
+        whether the stock should be limited for each individual customer [customer](management-resources/customer)
+      </Field>
+      <Field name="customer_stock_limit.quantity" type="integer" optional default={10}>
+        the number of units to limit the customer's stock
+      </Field>
+      <Field name="customer_stock_limit.time_value" type="integer" optional default={1}>
+        the time value to limit this customer's stock
+      </Field>
+      <Field name="customer_stock_limit.time_scale" type="enum" optional default="month">
+        the time scale to limit this customer's stock.
+        <Enums>
+          <Enum value="day"/>
+          <Enum value="week"/>
+          <Enum value="month"/>
+          <Enum value="year"/>
+        </Enums>
+      </Field>
+      <Field name="stock_limit_do_not_include_removed" type="boolean" optional default={false}>
+        whether the stock limiter should not include items that have been removed from a customer's inventory.
+        If this is `false`, then the stock limiter will increase the available stock when an item expires.
+      </Field>
+      <Field name="tags" type="[]flake" optional>
+        an array of IDs specifying which [tags](management-resources/tag) to apply to this product
+      </Field>
+      <Field name="gameservers" type="[]flake" optional>
+        an array of IDs specifying which [game servers](management-resources/gameserver) this product's commands should run on
+      </Field>
+      <Field name="commands" type="[]product command" typeHref="#product-command-structure" optional>
+        an array of product commands that will be executed at different stages of this product's lifecycle.
+      </Field>
+    </Fields>
+
+    ### Returns
+    Returns the updated [product](#the-product-object).
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="PATCH" url="/stores/{store.id}/products/{product.id}" />
+    </Endpoints>
+
+    ```json {{ title: 'Response' }}
+    {
+      "id": "150519474611560448",
+      "store_id": "94688451781206016",
+      "version_id": "150519521570988032",
+      "image_url": "https://example.paynow.gg/product-image.webp",
+      "slug": "blender",
+      "name": "Blender",
+      "description": "A blender. It blends stuff.",
+      "price": 23499,
+      "allow_one_time_purchase": true,
+      "allow_subscription": true,
+      "subscription_interval_value": 1,
+      "subscription_interval_scale": "month",
+      "remove_after_enabled": true,
+      "remove_after_time_value": 1,
+      "remove_after_time_scale": "month",
+      "store_stock_limit": {
+        "enabled": true,
+        "quantity": 500,
+        "time_value": 1,
+        "time_scale": "month"
+      },
+      "user_stock_limit": {
+        "enabled": true,
+        "quantity": 1,
+        "time_value": 1,
+        "time_scale": "day"
+      },
+      "stock_limit_do_not_include_removed": true,
+      "tags": [
+        {
+            "id": "124248382326706176",
+            "slug": "food",
+            "name": "Food"
+        }
+      ],
+      "gameservers": [
+        {
+            "id": "108003582208380928",
+            "name": "test"
+        }
+      ],
+      "commands": [
+        {
+          "stage": "on_purchase",
+          "content": "give {customer.steam.id} 1 blender"
+        },
+        {
+          "stage": "on_expire",
+          "content": "give {customer.steam.id} 1 blender"
+        }
+      ],
+      "created_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "created_at": "2023-04-14T06:53:01.265316Z",
+      "updated_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "updated_at": "2023-04-14T06:53:12.460717Z"
+    }
+    ```
+  </Col>
+</Row>
+
+---
+
+## Delete Product {{ tag: 'DELETE' }}
+
+<Row>
+  <Col>
+    Deletes a product by ID.
+
+    All subscriptions to this product will automatically be cancelled, so be cautious.
+
+    ### Returns
+    Returns `HTTP 204`
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="DELETE" url="/stores/{store.id}/products/{product.id}" />
+    </Endpoints>
+
+    ```json {{ title: 'Response' }}
+    HTTP 204
+    ```
+  </Col>
+</Row>
+
