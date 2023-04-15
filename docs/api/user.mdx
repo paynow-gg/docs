@@ -6,11 +6,6 @@
 
     Users have their own [type of authentication](reference#types-of-authentication).
   </Col>
-  <Col sticky>
-    <Endpoints>
-        <Endpoint method="GET" href="#get-current-user" url="/users/@me" />
-    </Endpoints>
-  </Col>
 </Row>
 
 ---
@@ -25,8 +20,7 @@
       </Field>
       <Field name="email" type="string" nullable>
         email of the user.
-        Visible only to the current user, and only
-        on the [get current user](#get-current-user) route.
+        Cannot be seen by other users.
       </Field>
       <Field name="first_name" type="string">
         first name of the user
@@ -41,35 +35,6 @@
   </Col>
   <Col sticky>
     ```json {{ title: 'The User object' }}
-    {
-        "id": "11084680073842688",
-        "email": "example@paynow.gg",
-        "first_name": "Example",
-        "last_name": "Exampleson",
-        "created_at": "2023-04-13T01:26:04Z"
-    }
-    ```
-  </Col>
-</Row>
-
----
-
-## Get Current User {{ tag: 'GET' }}
-
-<Row>
-  <Col>
-    Returns the currently authenticated user.
-
-    ### Returns
-    Returns a User object.
-
-  </Col>
-  <Col sticky>
-    <Endpoints request>
-        <Endpoint method="GET" url="/users/@me" />
-    </Endpoints>
-
-    ```json {{ title: 'Response' }}
     {
         "id": "11084680073842688",
         "email": "example@paynow.gg",
