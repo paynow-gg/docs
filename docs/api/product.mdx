@@ -662,16 +662,16 @@
 
         Price must be exactly `0` (free), or between `50` ($0.50) and `500000` ($5,000.00)
       </Field>
-      <Field name="allow_one_time_purchase" type="boolean" optional default={true}>
+      <Field name="allow_one_time_purchase" type="boolean" optional>
         whether this product can be purchased one time (without subscribing)
       </Field>
-      <Field name="allow_subscription" type="boolean" optional default={false}>
+      <Field name="allow_subscription" type="boolean" optional>
         whether this product can be subscribed to
       </Field>
-      <Field name="subscription_interval_value" type="integer" optional default={1}>
+      <Field name="subscription_interval_value" type="integer" optional>
         the interval value at which this product will renew when subscribed
       </Field>
-      <Field name="subscription_interval_scale" type="enum" optional default="month">
+      <Field name="subscription_interval_scale" type="enum" optional>
         the interval scale at which this product will renew when subscribed.
         <Enums>
           <Enum value="day"/>
@@ -680,13 +680,13 @@
           <Enum value="year"/>
         </Enums>
       </Field>
-      <Field name="remove_after_enabled" type="boolean" optional default={false}>
+      <Field name="remove_after_enabled" type="boolean" optional>
         whether this product should be auto-removed from the customer's inventory after the configured time.
       </Field>
-      <Field name="remove_after_time_value" type="integer" optional default={1}>
+      <Field name="remove_after_time_value" type="integer" optional>
         the time value at which this product will be removed
       </Field>
-      <Field name="remove_after_time_scale" type="enum" optional default="month">
+      <Field name="remove_after_time_scale" type="enum" optional>
         the time scale at which this product will be automatically removed.
         <Enums>
           <Enum value="day"/>
@@ -695,16 +695,16 @@
           <Enum value="year"/>
         </Enums>
       </Field>
-      <Field name="store_stock_limit.enabled" type="boolean" optional default={false}>
+      <Field name="store_stock_limit.enabled" type="boolean" optional>
         whether the stock should be limited across the entire [store](api/store)
       </Field>
-      <Field name="store_stock_limit.quantity" type="integer" optional default={10}>
+      <Field name="store_stock_limit.quantity" type="integer" optional>
         the number of units to limit the store's stock
       </Field>
-      <Field name="store_stock_limit.time_value" type="integer" optional default={1}>
+      <Field name="store_stock_limit.time_value" type="integer" optional>
         the time value to limit this store's stock
       </Field>
-      <Field name="store_stock_limit.time_scale" type="enum" optional default="month">
+      <Field name="store_stock_limit.time_scale" type="enum" optional>
         the time scale to limit this store's stock.
         <Enums>
           <Enum value="day"/>
@@ -713,16 +713,16 @@
           <Enum value="year"/>
         </Enums>
       </Field>
-      <Field name="customer_stock_limit.enabled" type="boolean" optional default={false}>
+      <Field name="customer_stock_limit.enabled" type="boolean" optional>
         whether the stock should be limited for each individual customer [customer](api/customer)
       </Field>
-      <Field name="customer_stock_limit.quantity" type="integer" optional default={10}>
+      <Field name="customer_stock_limit.quantity" type="integer" optional>
         the number of units to limit the customer's stock
       </Field>
-      <Field name="customer_stock_limit.time_value" type="integer" optional default={1}>
+      <Field name="customer_stock_limit.time_value" type="integer" optional>
         the time value to limit this customer's stock
       </Field>
-      <Field name="customer_stock_limit.time_scale" type="enum" optional default="month">
+      <Field name="customer_stock_limit.time_scale" type="enum" optional>
         the time scale to limit this customer's stock.
         <Enums>
           <Enum value="day"/>
@@ -731,7 +731,7 @@
           <Enum value="year"/>
         </Enums>
       </Field>
-      <Field name="stock_limit_do_not_include_removed" type="boolean" optional default={false}>
+      <Field name="stock_limit_do_not_include_removed" type="boolean" optional>
         whether the stock limiter should not include items that have been removed from a customer's inventory.
         If this is `false`, then the stock limiter will increase the available stock when an item expires.
       </Field>
@@ -835,7 +835,7 @@
     All subscriptions to this product will automatically be cancelled, so be cautious.
 
     ### Returns
-    Returns `HTTP 204`
+    Returns `HTTP 204` if the specified product was deleted.
   </Col>
   <Col sticky>
     <Endpoints request perms={[ {id: 'product_delete'} ]}>
@@ -847,4 +847,3 @@
     ```
   </Col>
 </Row>
-

@@ -1,0 +1,565 @@
+# Sale
+
+<Row>
+  <Col>
+    Sales are a type of discount that are automatically applied at checkout.
+    They can be in the form of a percent or an absolute amount.
+
+    Sales can be created to apply to specific [tags](api/tag) or [products](api/product).
+
+    See the sale fields for more details and options.
+  </Col>
+  <Col sticky>
+    <Endpoints>
+        <Endpoint method="POST" href="#create-sale" url="/stores/{store.id}/sales" />
+        <Endpoint method="GET" href="#get-sales" url="/stores/{store.id}/sales" />
+        <Endpoint method="GET" href="#get-sale" url="/stores/{store.id}/sales/{sale.id}" />
+        <Endpoint method="PATCH" href="#update-sale" url="/stores/{store.id}/sales/{sale.id}" />
+        <Endpoint method="DELETE" href="#delete-sale" url="/stores/{store.id}/sales/{sale.id}" />
+    </Endpoints>
+  </Col>
+</Row>
+
+---
+
+## The Sale object
+
+<Row>
+  <Col>
+    <Fields>
+      <Field name="id" type="flake">
+        id of the sale
+      </Field>
+      <Field name="store_id" type="flake">
+        id of the store the sale belongs to
+      </Field>
+      <Field name="enabled" type="boolean">
+        whether the sale is enabled and currently usable by customers
+        (assuming it's within the `begins_at` and `ends_at` range)
+      </Field>
+      <Field name="name" type="string">
+        the name of this sale.
+        Visible to customers.
+      </Field>
+      <Field name="apply_to_tags" type="[]partial tag" typeHref="#partial-tag-structure">
+        an array containing a list of tags that this sale can apply to.
+      </Field>
+      <Field name="apply_to_products" type="[]partial product" typeHref="#partial-product-structure">
+        an array containing a list of products that this sale can apply to.
+      </Field>
+      <Field name="discount_type" type="enum">
+        the type of discount this sale applies.
+        <Enums vertical>
+            <Enum value="percent">`discount_amount` applies as a percent</Enum>
+            <Enum value="amount">`discount_amount` applies as an absolute amount</Enum>
+        </Enums>
+      </Field>
+      <Field name="discount_amount" type="integer">
+        the discount amount this sale applies.
+
+        If `discount_type` is `percent`, then this is interpreted as multiples of 10 basis points (where `1000` is **100.0%**)
+
+        If `discount_type` is `amount`, then this is interpreted as an absolute amount (where `1000` is **$10.00**)
+      </Field>
+      <Field name="minimum_order_value" type="integer">
+        the minimum value of the order required before this sale may be applied
+      </Field>
+      <Field name="begins_at" type="timestamp">
+        timestamp of when the sale will become active
+      </Field>
+      <Field name="ends_at" type="timestamp" nullable>
+        timestamp of when the sale will end
+      </Field>
+      <Field name="created_by" type="user" typeHref="user#the-user-object">
+        the user that created this sale.
+      </Field>
+      <Field name="created_at" type="timestamp">
+        timestamp of when the sale was created
+      </Field>
+      <Field name="updated_by" type="user" typeHref="user#the-user-object" nullable>
+        the user that most recently updated this sale.
+      </Field>
+      <Field name="updated_at" type="timestamp" nullable>
+        timestamp of when the sale was last updated
+      </Field>
+    </Fields>
+
+    ## Partial Tag Structure
+
+    Contains a partial set fields that refer to a [tag](api/tag)
+
+    <Fields>
+      <Field name="id" type="flake">
+        id of the tag
+      </Field>
+      <Field name="slug" type="string">
+        the url-safe identifier for the tag, unique to the store
+      </Field>
+      <Field name="name" type="string">
+        the name the tag
+      </Field>
+    </Fields>
+
+    ## Partial Product Structure
+
+    Contains a partial set fields that refer to a [product](api/product)
+
+    <Fields>
+      <Field name="id" type="flake">
+        id of the product
+      </Field>
+      <Field name="store_id" type="flake">
+        id of the store that this product belongs to
+      </Field>
+      <Field name="version_id" type="flake">
+        version id of the product
+      </Field>
+      <Field name="slug" type="string">
+        the url-safe identifier for the product, unique to the store
+      </Field>
+      <Field name="name" type="string">
+        the name the product
+      </Field>
+      <Field name="description" type="string">
+        the full-length description of the product
+      </Field>
+      <Field name="price" type="integer">
+        the price of the product
+      </Field>
+      <Field name="created_at" type="timestamp">
+        timestamp of when the product was created
+      </Field>
+      <Field name="updated_at" type="timestamp" nullable>
+        timestamp of when the product was last updated
+      </Field>
+    </Fields>
+  </Col>
+  <Col sticky>
+    ```json {{ title: 'The Sale object' }}
+    {
+      "id": "149580776499843072",
+      "store_id": "94688451781206016",
+      "enabled": true,
+      "name": "Big 50% off Sale!",
+      "apply_to_tags": [
+        {
+          "id": "124248382326706176",
+          "store_id": "94688451781206016",
+          "slug": "food",
+          "name": "Food",
+          "description": "delicious foods.",
+          "created_at": "2023-04-11T19:01:04.772468Z",
+          "updated_at": null
+        }
+      ],
+      "apply_to_products": [
+        {
+          "id": "124249183568797696",
+          "store_id": "94688451781206016",
+          "version_id": "149702205245493248",
+          "image_url": "https://example.paynow.gg/",
+          "slug": "banana",
+          "name": "Banana",
+          "description": "It literally goes bad after like, an hour...",
+          "price": 117,
+          "created_at": "2023-04-11T19:04:15.801636Z",
+          "updated_at": "2023-04-12T00:45:29.064138Z"
+        }
+      ],
+      "discount_type": "percent",
+      "discount_amount": 500,
+      "minimum_order_value": 0,
+      "begins_at": "2023-04-11T16:42:58.163471Z",
+      "ends_at": "2023-05-11T16:43:28.253320Z",
+      "created_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "created_at": "2023-04-11T16:42:58.197319Z",
+      "updated_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "updated_at": "2023-04-11T17:17:01.633842Z"
+    }
+    ```
+  </Col>
+</Row>
+
+---
+
+## Create Sale {{ tag: 'POST' }}
+
+<Row>
+  <Col>
+    Creates a new sale.
+
+    <Fields parameters>
+      <Field name="enabled" type="boolean" optional default={true}>
+        whether the sale is enabled and currently usable by customers
+        (assuming it's within the `begins_at` and `ends_at` range)
+      </Field>
+      <Field name="name" type="string" required>
+        the name of this sale (1 - 50 characters)
+      </Field>
+      <Field name="apply_to_tags" type="[]flake" optional>
+        an array of IDs specifying which [tags](api/tag) this sale can apply to
+      </Field>
+      <Field name="apply_to_products" type="[]flake" optional>
+        an array of IDs specifying which [products](api/product) this sale can apply to
+      </Field>
+      <Field name="discount_type" type="enum" required>
+        the type of discount this sale applies.
+        <Enums vertical>
+            <Enum value="percent">`discount_amount` applies as a percent</Enum>
+            <Enum value="amount">`discount_amount` applies as an absolute amount</Enum>
+        </Enums>
+      </Field>
+      <Field name="discount_amount" type="integer" required>
+        the discount amount this sale applies.
+
+        If `discount_type` is `percent`, then this is interpreted as multiples of 10 basis points (where `1000` is **100.0%**)
+
+        If `discount_type` is `amount`, then this is interpreted as an absolute amount (where `1000` is **$10.00**)
+      </Field>
+      <Field name="minimum_order_value" type="integer" optional default={0}>
+        the minimum value of the order required before this sale may be applied
+      </Field>
+      <Field name="begins_at" type="timestamp" optional default="current time">
+        timestamp of when the sale will become active
+      </Field>
+      <Field name="ends_at" type="timestamp" optional>
+        timestamp of when the sale will end
+      </Field>
+    </Fields>
+
+    ### Returns
+    Returns the newly created [sale](#the-sale-object).
+  </Col>
+  <Col sticky>
+    <Endpoints request perms={[ {id: 'sale_create'} ]}>
+        <Endpoint method="POST" url="/stores/{store.id}/sales" />
+    </Endpoints>
+
+    ```json {{ title: 'Response' }}
+    {
+      "id": "149580776499843072",
+      "store_id": "94688451781206016",
+      "enabled": true,
+      "name": "Big 50% off Sale!",
+      "apply_to_tags": [
+        {
+          "id": "124248382326706176",
+          "store_id": "94688451781206016",
+          "slug": "food",
+          "name": "Food",
+          "description": "delicious foods.",
+          "created_at": "2023-04-11T19:01:04.772468Z",
+          "updated_at": null
+        }
+      ],
+      "apply_to_products": [
+        {
+          "id": "124249183568797696",
+          "store_id": "94688451781206016",
+          "version_id": "149702205245493248",
+          "image_url": "https://example.paynow.gg/",
+          "slug": "banana",
+          "name": "Banana",
+          "description": "It literally goes bad after like, an hour...",
+          "price": 117,
+          "created_at": "2023-04-11T19:04:15.801636Z",
+          "updated_at": "2023-04-12T00:45:29.064138Z"
+        }
+      ],
+      "discount_type": "percent",
+      "discount_amount": 500,
+      "minimum_order_value": 0,
+      "begins_at": "2023-04-11T16:42:58.163471Z",
+      "ends_at": "2023-05-11T16:43:28.253320Z",
+      "created_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "created_at": "2023-04-11T16:42:58.197319Z",
+      "updated_by": null,
+      "updated_at": null
+    }
+    ```
+  </Col>
+</Row>
+
+---
+
+## Get Sales {{ tag: 'GET' }}
+
+<Row>
+  <Col>
+    Returns all sales in the store.
+
+    ### Returns
+    Returns an array of [sales](#the-sale-object).
+  </Col>
+  <Col sticky>
+    <Endpoints request perms={[ {id: 'sale_read'} ]}>
+        <Endpoint method="GET" url="/stores/{store.id}/sales" />
+    </Endpoints>
+
+    ```json {{ title: 'Response' }}
+    [
+      {
+        "id": "149580776499843072",
+        "store_id": "94688451781206016",
+        "enabled": true,
+        "name": "Big 50% off Sale!",
+        "apply_to_tags": [
+          {
+            "id": "124248382326706176",
+            "store_id": "94688451781206016",
+            "slug": "food",
+            "name": "Food",
+            "description": "delicious foods.",
+            "created_at": "2023-04-11T19:01:04.772468Z",
+            "updated_at": null
+          }
+        ],
+        "apply_to_products": [
+          {
+            "id": "124249183568797696",
+            "store_id": "94688451781206016",
+            "version_id": "149702205245493248",
+            "image_url": "https://example.paynow.gg/",
+            "slug": "banana",
+            "name": "Banana",
+            "description": "It literally goes bad after like, an hour...",
+            "price": 117,
+            "created_at": "2023-04-11T19:04:15.801636Z",
+            "updated_at": "2023-04-12T00:45:29.064138Z"
+          }
+        ],
+        "discount_type": "percent",
+        "discount_amount": 500,
+        "minimum_order_value": 0,
+        "begins_at": "2023-04-11T16:42:58.163471Z",
+        "ends_at": "2023-05-11T16:43:28.253320Z",
+        "created_by": {
+          "id": "11084680073842688",
+          "first_name": "Example",
+          "last_name": "Exampleson"
+        },
+        "created_at": "2023-04-11T16:42:58.197319Z",
+        "updated_by": {
+          "id": "11084680073842688",
+          "first_name": "Example",
+          "last_name": "Exampleson"
+        },
+        "updated_at": "2023-04-11T17:17:01.633842Z"
+      },
+      {...},
+      {...}
+    ]
+    ```
+  </Col>
+</Row>
+
+---
+
+## Get Sale {{ tag: 'GET' }}
+
+<Row>
+  <Col>
+    Returns a sale by ID.
+
+    ### Returns
+    Returns a [sale](#the-sale-object) if a valid identifier was provided.
+  </Col>
+  <Col sticky>
+    <Endpoints request perms={[ {id: 'sale_read'} ]}>
+        <Endpoint method="GET" url="/stores/{store.id}/sales/{sale.id}" />
+    </Endpoints>
+
+    ```json {{ title: 'Response' }}
+    {
+      "id": "149580776499843072",
+      "store_id": "94688451781206016",
+      "enabled": true,
+      "name": "Big 50% off Sale!",
+      "apply_to_tags": [
+        {
+          "id": "124248382326706176",
+          "store_id": "94688451781206016",
+          "slug": "food",
+          "name": "Food",
+          "description": "delicious foods.",
+          "created_at": "2023-04-11T19:01:04.772468Z",
+          "updated_at": null
+        }
+      ],
+      "apply_to_products": [
+        {
+          "id": "124249183568797696",
+          "store_id": "94688451781206016",
+          "version_id": "149702205245493248",
+          "image_url": "https://example.paynow.gg/",
+          "slug": "banana",
+          "name": "Banana",
+          "description": "It literally goes bad after like, an hour...",
+          "price": 117,
+          "created_at": "2023-04-11T19:04:15.801636Z",
+          "updated_at": "2023-04-12T00:45:29.064138Z"
+        }
+      ],
+      "discount_type": "percent",
+      "discount_amount": 500,
+      "minimum_order_value": 0,
+      "begins_at": "2023-04-11T16:42:58.163471Z",
+      "ends_at": "2023-05-11T16:43:28.253320Z",
+      "created_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "created_at": "2023-04-11T16:42:58.197319Z",
+      "updated_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "updated_at": "2023-04-11T17:17:01.633842Z"
+    }
+    ```
+  </Col>
+</Row>
+
+---
+
+## Update Sale {{ tag: 'PATCH' }}
+
+<Row>
+  <Col>
+    Updates a sale.
+
+    <Fields parameters>
+      <Field name="enabled" type="boolean" optional>
+        whether the sale is enabled and currently usable by customers
+        (assuming it's within the `begins_at` and `ends_at` range)
+      </Field>
+      <Field name="name" type="string" optional>
+        the name of this sale (1 - 50 characters)
+      </Field>
+      <Field name="apply_to_tags" type="[]flake" optional>
+        an array of IDs specifying which [tags](api/tag) this sale can apply to
+      </Field>
+      <Field name="apply_to_products" type="[]flake" optional>
+        an array of IDs specifying which [products](api/product) this sale can apply to
+      </Field>
+      <Field name="discount_type" type="enum" optional>
+        the type of discount this sale applies. If provided for update, you must also provide `discount_amount`.
+        <Enums vertical>
+            <Enum value="percent">`discount_amount` applies as a percent</Enum>
+            <Enum value="amount">`discount_amount` applies as an absolute amount</Enum>
+        </Enums>
+      </Field>
+      <Field name="discount_amount" type="integer" optional>
+        the discount amount this sale applies. If provided for update, you must also provide `discount_type`.
+
+        If `discount_type` is `percent`, then this is interpreted as multiples of 10 basis points (where `1000` is **100.0%**)
+
+        If `discount_type` is `amount`, then this is interpreted as an absolute amount (where `1000` is **$10.00**)
+      </Field>
+      <Field name="minimum_order_value" type="integer" optional>
+        the minimum value of the order required before this sale may be applied
+      </Field>
+      <Field name="begins_at" type="timestamp" optional>
+        timestamp of when the sale will become active
+      </Field>
+      <Field name="ends_at" type="timestamp" optional>
+        timestamp of when the sale will end
+      </Field>
+    </Fields>
+
+    ### Returns
+    Returns the updated [sale](#the-sale-object).
+  </Col>
+  <Col sticky>
+    <Endpoints request perms={[ {id: 'sale_update'} ]}>
+        <Endpoint method="PATCH" url="/stores/{store.id}/sales/{sale.id}" />
+    </Endpoints>
+
+    ```json {{ title: 'Response' }}
+    {
+      "id": "149580776499843072",
+      "store_id": "94688451781206016",
+      "enabled": true,
+      "name": "Big 50% off Sale!",
+      "apply_to_tags": [
+        {
+          "id": "124248382326706176",
+          "store_id": "94688451781206016",
+          "slug": "food",
+          "name": "Food",
+          "description": "delicious foods.",
+          "created_at": "2023-04-11T19:01:04.772468Z",
+          "updated_at": null
+        }
+      ],
+      "apply_to_products": [
+        {
+          "id": "124249183568797696",
+          "store_id": "94688451781206016",
+          "version_id": "149702205245493248",
+          "image_url": "https://example.paynow.gg/",
+          "slug": "banana",
+          "name": "Banana",
+          "description": "It literally goes bad after like, an hour...",
+          "price": 117,
+          "created_at": "2023-04-11T19:04:15.801636Z",
+          "updated_at": "2023-04-12T00:45:29.064138Z"
+        }
+      ],
+      "discount_type": "percent",
+      "discount_amount": 500,
+      "minimum_order_value": 0,
+      "begins_at": "2023-04-11T16:42:58.163471Z",
+      "ends_at": "2023-05-11T16:43:28.253320Z",
+      "created_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "created_at": "2023-04-11T16:42:58.197319Z",
+      "updated_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "updated_at": "2023-04-11T17:17:01.633842Z"
+    }
+    ```
+  </Col>
+</Row>
+
+---
+
+## Delete Sale {{ tag: 'DELETE' }}
+
+<Row>
+  <Col>
+    Deletes a sale by ID.
+
+    ### Returns
+    Returns `HTTP 204` if the specified sale was deleted.
+  </Col>
+  <Col sticky>
+    <Endpoints request perms={[ {id: 'sale_delete'} ]}>
+        <Endpoint method="DELETE" url="/stores/{store.id}/sales/{sale.id}" />
+    </Endpoints>
+
+    ```json {{ title: 'Response' }}
+    HTTP 204
+    ```
+  </Col>
+</Row>

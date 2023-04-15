@@ -30,6 +30,14 @@
       {
         "title": "Product",
         "href": "/api/product"
+      },
+      {
+        "title": "Coupon",
+        "href": "/api/coupon"
+      },
+      {
+        "title": "Sale",
+        "href": "/api/sale"
       }
     ]
   },

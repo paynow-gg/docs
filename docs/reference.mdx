@@ -114,6 +114,37 @@ Authorization: gameserver J7273cAJT7s3cP5WdSjJPtVCsLXK3bVfVPJimTX2YDT4
 
 ---
 
+## Flake IDs
+
+PayNow uses [Snowflake IDs](https://en.wikipedia.org/wiki/Snowflake_ID) (shorted to "flake" in our system) for everything that requires a unique identifier.
+These IDs are unique across the entire system.
+
+Because our implementation uses signed 64-bit integers (`int64`), they are always returned as a strings in our API to prevent overflows in inferior languages.
+In our documentation we label ID fields with the `flake` type. When calling routes that expect a `flake`, you should always send it in string form.
+
+### Flake ID in Binary
+```
+sign  timestamp                                  node       increment
+0     11111111111111111111111111111111111111111  1111111111 111111111111
+64    63                                         22         12          0
+```
+
+### PayNow Epoch
+
+The timestamp component is offset by an epoch.
+
+```yaml
+Unix ms: 1645568542000
+ISO8601: 2022-02-22T22:22:22.000Z
+```
+
+Convert ID to time:
+```go
+TimeFromUnixMillis((id >> 22) + epoch)
+```
+
+---
+
 # Errors
 
 The PayNow API uses a simple structure for errors.

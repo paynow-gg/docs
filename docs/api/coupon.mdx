@@ -1,0 +1,719 @@
+# Coupon
+
+<Row>
+  <Col>
+    Coupons are a type of discount that a customer can apply at checkout.
+    They can be in the form of a percent or an absolute amount, and can have a limited number of uses.
+
+    Coupons can be created for specific [tags](api/tag) or [products](api/product), and can be
+    applied either to the individual products, or to the total order value.
+
+    See the coupon fields for more details and options.
+  </Col>
+  <Col sticky>
+    <Endpoints>
+        <Endpoint method="POST" href="#create-coupon" url="/stores/{store.id}/coupons" />
+        <Endpoint method="GET" href="#get-coupons" url="/stores/{store.id}/coupons" />
+        <Endpoint method="GET" href="#get-coupon" url="/stores/{store.id}/coupons/{coupon.id}" />
+        <Endpoint method="PATCH" href="#update-coupon" url="/stores/{store.id}/coupons/{coupon.id}" />
+        <Endpoint method="DELETE" href="#delete-coupon" url="/stores/{store.id}/coupons/{coupon.id}" />
+    </Endpoints>
+  </Col>
+</Row>
+
+---
+
+## The Coupon object
+
+<Row>
+  <Col>
+    <Fields>
+      <Field name="id" type="flake">
+        id of the coupon
+      </Field>
+      <Field name="store_id" type="flake">
+        id of the store the coupon belongs to
+      </Field>
+      <Field name="enabled" type="boolean">
+        whether the coupon is enabled and currently usable by customers
+        (assuming it's within the `usable_at` and `expires_at` range)
+      </Field>
+      <Field name="code" type="string">
+        the code that customers type in at checkout.
+        Code is case insensitive and unique to the store.
+        Limited to alphanumeric characters and dashes.
+      </Field>
+      <Field name="note" type="string" nullable>
+        a note for this coupon.
+        Only visible to the store members, not visible to the customer.
+      </Field>
+      <Field name="apply_to_tags" type="[]partial tag" typeHref="#partial-tag-structure">
+        an array containing a list of tags that this coupon can apply to.
+      </Field>
+      <Field name="apply_to_products" type="[]partial product" typeHref="#partial-product-structure">
+        an array containing a list of products that this coupon can apply to.
+      </Field>
+      <Field name="discount_type" type="enum">
+        the type of discount this coupon applies.
+        <Enums vertical>
+            <Enum value="percent">`discount_amount` applies as a percent</Enum>
+            <Enum value="amount">`discount_amount` applies as an absolute amount</Enum>
+        </Enums>
+      </Field>
+      <Field name="discount_amount" type="integer">
+        the discount amount this coupon applies.
+
+        If `discount_type` is `percent`, then this is interpreted as multiples of 10 basis points (where `1000` is **100.0%**)
+
+        If `discount_type` is `amount`, then this is interpreted as an absolute amount (where `1000` is **$10.00**)
+      </Field>
+      <Field name="discount_apply_individually" type="boolean">
+        whether this discount applies to individual order lines, or to the entire order
+      </Field>
+      <Field name="discount_apply_before_sales" type="boolean">
+        whether this discount should be applied before [sales](api/sale).
+      </Field>
+      <Field name="usable_by_customer" type="customer" typeHref="customer#the-customer-object" nullable>
+        the customer that this coupon applies to.
+        If present, only this customer can use the coupon.
+      </Field>
+      <Field name="minimum_order_value" type="integer">
+        the minimum value of the order required before this coupon may be applied
+      </Field>
+      <Field name="redeem_limit_store_enabled" type="boolean">
+        whether the coupon redeem limit is enabled for the whole store
+      </Field>
+      <Field name="redeem_limit_store_amount" type="integer">
+        the number of times this coupon may be redeemed across the whole store
+      </Field>
+      <Field name="redeem_limit_customer_enabled" type="boolean">
+        whether the coupon redeem limit is enabled for individual customers
+      </Field>
+      <Field name="redeem_limit_customer_amount" type="integer">
+        the number of times this coupon may be redeemed by the same customer
+      </Field>
+      <Field name="usable_on_one_time_purchase" type="boolean">
+        whether the coupon may be applied to one time purchases
+      </Field>
+      <Field name="usable_on_subscription" type="boolean">
+        whether the coupon may be applied to a subscription
+      </Field>
+      <Field name="usable_at" type="timestamp">
+        timestamp of when the coupon will become usable
+      </Field>
+      <Field name="expires_at" type="timestamp" nullable>
+        timestamp of when the coupon will expire and become unusable
+      </Field>
+      <Field name="created_by" type="user" typeHref="user#the-user-object">
+        the user that created this coupon.
+      </Field>
+      <Field name="created_at" type="timestamp">
+        timestamp of when the coupon was created
+      </Field>
+      <Field name="updated_by" type="user" typeHref="user#the-user-object" nullable>
+        the user that most recently updated this coupon.
+      </Field>
+      <Field name="updated_at" type="timestamp" nullable>
+        timestamp of when the coupon was last updated
+      </Field>
+    </Fields>
+
+    ## Partial Tag Structure
+
+    Contains a partial set fields that refer to a [tag](api/tag)
+
+    <Fields>
+      <Field name="id" type="flake">
+        id of the tag
+      </Field>
+      <Field name="slug" type="string">
+        the url-safe identifier for the tag, unique to the store
+      </Field>
+      <Field name="name" type="string">
+        the name the tag
+      </Field>
+    </Fields>
+
+    ## Partial Product Structure
+
+    Contains a partial set fields that refer to a [product](api/product)
+
+    <Fields>
+      <Field name="id" type="flake">
+        id of the product
+      </Field>
+      <Field name="store_id" type="flake">
+        id of the store that this product belongs to
+      </Field>
+      <Field name="version_id" type="flake">
+        version id of the product
+      </Field>
+      <Field name="slug" type="string">
+        the url-safe identifier for the product, unique to the store
+      </Field>
+      <Field name="name" type="string">
+        the name the product
+      </Field>
+      <Field name="description" type="string">
+        the full-length description of the product
+      </Field>
+      <Field name="price" type="integer">
+        the price of the product
+      </Field>
+      <Field name="created_at" type="timestamp">
+        timestamp of when the product was created
+      </Field>
+      <Field name="updated_at" type="timestamp" nullable>
+        timestamp of when the product was last updated
+      </Field>
+    </Fields>
+  </Col>
+  <Col sticky>
+    ```json {{ title: 'The Coupon object' }}
+    {
+      "id": "149580776499843072",
+      "store_id": "94688451781206016",
+      "enabled": true,
+      "code": "HALF-OFF",
+      "note": "gives the customers 50% off if their order $10.00 or more",
+      "apply_to_tags": [
+        {
+          "id": "124248382326706176",
+          "store_id": "94688451781206016",
+          "slug": "food",
+          "name": "Food",
+          "description": "delicious foods.",
+          "created_at": "2023-04-11T19:01:04.772468Z",
+          "updated_at": null
+        }
+      ],
+      "apply_to_products": [
+        {
+          "id": "124249183568797696",
+          "store_id": "94688451781206016",
+          "version_id": "149702205245493248",
+          "image_url": "https://example.paynow.gg/",
+          "slug": "banana",
+          "name": "Banana",
+          "description": "It literally goes bad after like, an hour...",
+          "price": 117,
+          "created_at": "2023-04-11T19:04:15.801636Z",
+          "updated_at": "2023-04-12T00:45:29.064138Z"
+        }
+      ],
+      "discount_type": "percent",
+      "discount_amount": 500,
+      "discount_apply_individually": false,
+      "discount_apply_before_sales": false,
+      "usable_by_customer": null,
+      "minimum_order_value": 1000,
+      "redeem_limit_store_enabled": false,
+      "redeem_limit_store_amount": 0,
+      "redeem_limit_customer_enabled": true,
+      "redeem_limit_customer_amount": 1,
+      "usable_on_one_time_purchase": true,
+      "usable_on_subscription": false,
+      "usable_at": "2023-04-11T16:42:58.163471Z",
+      "expires_at": "2023-06-11T16:43:28.253320Z",
+      "created_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "created_at": "2023-04-11T16:42:58.197319Z",
+      "updated_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "updated_at": "2023-04-11T17:17:01.633842Z"
+    }
+    ```
+  </Col>
+</Row>
+
+---
+
+## Create Coupon {{ tag: 'POST' }}
+
+<Row>
+  <Col>
+    Creates a new coupon.
+
+    <Fields parameters>
+      <Field name="enabled" type="boolean" optional default={true}>
+        whether the coupon is enabled and currently usable by customers
+        (assuming it's within the `usable_at` and `expires_at` range)
+      </Field>
+      <Field name="code" type="string" required>
+        the code that customers type in at checkout.
+        Code is case insensitive and unique to the store.
+        Limited to alphanumeric characters and dashes.
+        Cannot start or end with a dash. Must be 1 - 50 characters.
+      </Field>
+      <Field name="note" type="string" optional>
+        a note for this coupon.
+        Only visible to the store members, not visible to the customer.
+      </Field>
+      <Field name="apply_to_tags" type="[]flake" optional>
+        an array of IDs specifying which [tags](api/tag) this coupon can apply to
+      </Field>
+      <Field name="apply_to_products" type="[]flake" optional>
+        an array of IDs specifying which [products](api/product) this coupon can apply to
+      </Field>
+      <Field name="discount_type" type="enum" required>
+        the type of discount this coupon applies.
+        <Enums vertical>
+            <Enum value="percent">`discount_amount` applies as a percent</Enum>
+            <Enum value="amount">`discount_amount` applies as an absolute amount</Enum>
+        </Enums>
+      </Field>
+      <Field name="discount_amount" type="integer" required>
+        the discount amount this coupon applies.
+
+        If `discount_type` is `percent`, then this is interpreted as multiples of 10 basis points (where `1000` is **100.0%**)
+
+        If `discount_type` is `amount`, then this is interpreted as an absolute amount (where `1000` is **$10.00**)
+      </Field>
+      <Field name="discount_apply_individually" type="boolean" optional default={true}>
+        whether this discount applies to individual order lines, or to the entire order
+      </Field>
+      <Field name="discount_apply_before_sales" type="boolean" optional default={true}>
+        whether this discount should be applied before [sales](api/sale).
+      </Field>
+      <Field name="usable_by_customer_id" type="flake" optional>
+        the customer that this coupon applies to.
+        If provided, only this customer can use the coupon.
+      </Field>
+      <Field name="minimum_order_value" type="integer" optional default={0}>
+        the minimum value of the order required before this coupon may be applied
+      </Field>
+      <Field name="redeem_limit_store_enabled" type="boolean" optional default={false}>
+        whether the coupon redeem limit is enabled for the whole store
+      </Field>
+      <Field name="redeem_limit_store_amount" type="integer" optional default={0}>
+        the number of times this coupon may be redeemed across the whole store
+      </Field>
+      <Field name="redeem_limit_customer_enabled" type="boolean" optional default={false}>
+        whether the coupon redeem limit is enabled for individual customers
+      </Field>
+      <Field name="redeem_limit_customer_amount" type="integer" optional default={0}>
+        the number of times this coupon may be redeemed by the same customer
+      </Field>
+      <Field name="usable_on_one_time_purchase" type="boolean" optional default={true}>
+        whether the coupon may be applied to one time purchases
+      </Field>
+      <Field name="usable_on_subscription" type="boolean" optional default={false}>
+        whether the coupon may be applied to a subscription
+      </Field>
+      <Field name="usable_at" type="timestamp" optional default="current time">
+        timestamp of when the coupon will become usable
+      </Field>
+      <Field name="expires_at" type="timestamp" optional>
+        timestamp of when the coupon will expire and become unusable
+      </Field>
+    </Fields>
+
+    ### Returns
+    Returns the newly created [coupon](#the-coupon-object).
+  </Col>
+  <Col sticky>
+    <Endpoints request perms={[ {id: 'coupon_create'} ]}>
+        <Endpoint method="POST" url="/stores/{store.id}/coupons" />
+    </Endpoints>
+
+    ```json {{ title: 'Response' }}
+    {
+      "id": "149580776499843072",
+      "store_id": "94688451781206016",
+      "enabled": true,
+      "code": "HALF-OFF",
+      "note": "gives the customers 50% off if their order $10.00 or more",
+      "apply_to_tags": [
+        {
+          "id": "124248382326706176",
+          "store_id": "94688451781206016",
+          "slug": "food",
+          "name": "Food",
+          "description": "delicious foods.",
+          "created_at": "2023-04-11T19:01:04.772468Z",
+          "updated_at": null
+        }
+      ],
+      "apply_to_products": [
+        {
+          "id": "124249183568797696",
+          "store_id": "94688451781206016",
+          "version_id": "149702205245493248",
+          "image_url": "https://example.paynow.gg/",
+          "slug": "banana",
+          "name": "Banana",
+          "description": "It literally goes bad after like, an hour...",
+          "price": 117,
+          "created_at": "2023-04-11T19:04:15.801636Z",
+          "updated_at": "2023-04-12T00:45:29.064138Z"
+        }
+      ],
+      "discount_type": "percent",
+      "discount_amount": 500,
+      "discount_apply_individually": false,
+      "discount_apply_before_sales": false,
+      "usable_by_customer": null,
+      "minimum_order_value": 1000,
+      "redeem_limit_store_enabled": false,
+      "redeem_limit_store_amount": 0,
+      "redeem_limit_customer_enabled": true,
+      "redeem_limit_customer_amount": 1,
+      "usable_on_one_time_purchase": true,
+      "usable_on_subscription": false,
+      "usable_at": "2023-04-11T16:42:58.163471Z",
+      "expires_at": null,
+      "created_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "created_at": "2023-04-11T16:42:58.197319Z",
+      "updated_by": null,
+      "updated_at": null
+    }
+    ```
+  </Col>
+</Row>
+
+---
+
+## Get Coupons {{ tag: 'GET' }}
+
+<Row>
+  <Col>
+    Returns all coupons in the store.
+
+    ### Returns
+    Returns an array of [coupons](#the-coupon-object).
+  </Col>
+  <Col sticky>
+    <Endpoints request perms={[ {id: 'coupon_read'} ]}>
+        <Endpoint method="GET" url="/stores/{store.id}/coupons" />
+    </Endpoints>
+
+    ```json {{ title: 'Response' }}
+    [
+      {
+        "id": "149580776499843072",
+        "store_id": "94688451781206016",
+        "enabled": true,
+        "code": "HALF-OFF",
+        "note": "gives the customers 50% off if their order $10.00 or more",
+        "apply_to_tags": [
+          {
+            "id": "124248382326706176",
+            "store_id": "94688451781206016",
+            "slug": "food",
+            "name": "Food",
+            "description": "delicious foods.",
+            "created_at": "2023-04-11T19:01:04.772468Z",
+            "updated_at": null
+          }
+        ],
+        "apply_to_products": [
+          {
+            "id": "124249183568797696",
+            "store_id": "94688451781206016",
+            "version_id": "149702205245493248",
+            "image_url": "https://example.paynow.gg/",
+            "slug": "banana",
+            "name": "Banana",
+            "description": "It literally goes bad after like, an hour...",
+            "price": 117,
+            "created_at": "2023-04-11T19:04:15.801636Z",
+            "updated_at": "2023-04-12T00:45:29.064138Z"
+          }
+        ],
+        "discount_type": "percent",
+        "discount_amount": 500,
+        "discount_apply_individually": false,
+        "discount_apply_before_sales": false,
+        "usable_by_customer": null,
+        "minimum_order_value": 1000,
+        "redeem_limit_store_enabled": false,
+        "redeem_limit_store_amount": 0,
+        "redeem_limit_customer_enabled": true,
+        "redeem_limit_customer_amount": 1,
+        "usable_on_one_time_purchase": true,
+        "usable_on_subscription": false,
+        "usable_at": "2023-04-11T16:42:58.163471Z",
+        "expires_at": "2023-06-11T16:43:28.253320Z",
+        "created_by": {
+          "id": "11084680073842688",
+          "first_name": "Example",
+          "last_name": "Exampleson"
+        },
+        "created_at": "2023-04-11T16:42:58.197319Z",
+        "updated_by": {
+          "id": "11084680073842688",
+          "first_name": "Example",
+          "last_name": "Exampleson"
+        },
+        "updated_at": "2023-04-11T17:17:01.633842Z"
+      },
+      {...},
+      {...}
+    ]
+    ```
+  </Col>
+</Row>
+
+---
+
+## Get Coupon {{ tag: 'GET' }}
+
+<Row>
+  <Col>
+    Returns a coupon by ID.
+
+    ### Returns
+    Returns a [coupon](#the-coupon-object) if a valid identifier was provided.
+  </Col>
+  <Col sticky>
+    <Endpoints request perms={[ {id: 'coupon_read'} ]}>
+        <Endpoint method="GET" url="/stores/{store.id}/coupons/{coupon.id}" />
+    </Endpoints>
+
+    ```json {{ title: 'Response' }}
+    {
+      "id": "149580776499843072",
+      "store_id": "94688451781206016",
+      "enabled": true,
+      "code": "HALF-OFF",
+      "note": "gives the customers 50% off if their order $10.00 or more",
+      "apply_to_tags": [
+        {
+          "id": "124248382326706176",
+          "store_id": "94688451781206016",
+          "slug": "food",
+          "name": "Food",
+          "description": "delicious foods.",
+          "created_at": "2023-04-11T19:01:04.772468Z",
+          "updated_at": null
+        }
+      ],
+      "apply_to_products": [
+        {
+          "id": "124249183568797696",
+          "store_id": "94688451781206016",
+          "version_id": "149702205245493248",
+          "image_url": "https://example.paynow.gg/",
+          "slug": "banana",
+          "name": "Banana",
+          "description": "It literally goes bad after like, an hour...",
+          "price": 117,
+          "created_at": "2023-04-11T19:04:15.801636Z",
+          "updated_at": "2023-04-12T00:45:29.064138Z"
+        }
+      ],
+      "discount_type": "percent",
+      "discount_amount": 500,
+      "discount_apply_individually": false,
+      "discount_apply_before_sales": false,
+      "usable_by_customer": null,
+      "minimum_order_value": 1000,
+      "redeem_limit_store_enabled": false,
+      "redeem_limit_store_amount": 0,
+      "redeem_limit_customer_enabled": true,
+      "redeem_limit_customer_amount": 1,
+      "usable_on_one_time_purchase": true,
+      "usable_on_subscription": false,
+      "usable_at": "2023-04-11T16:42:58.163471Z",
+      "expires_at": "2023-06-11T16:43:28.253320Z",
+      "created_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "created_at": "2023-04-11T16:42:58.197319Z",
+      "updated_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "updated_at": "2023-04-11T17:17:01.633842Z"
+    }
+    ```
+  </Col>
+</Row>
+
+---
+
+## Update Coupon {{ tag: 'PATCH' }}
+
+<Row>
+  <Col>
+    Updates a coupon.
+
+    <Fields parameters>
+      <Field name="enabled" type="boolean" optional>
+        whether the coupon is enabled and currently usable by customers
+        (assuming it's within the `usable_at` and `expires_at` range)
+      </Field>
+      <Field name="code" type="string" optional>
+        the code that customers type in at checkout.
+        Code is case insensitive and unique to the store.
+        Limited to alphanumeric characters and dashes.
+        Cannot start or end with a dash. Must be 1 - 50 characters.
+      </Field>
+      <Field name="note" type="string" optional>
+        a note for this coupon.
+        Only visible to the store members, not visible to the customer.
+      </Field>
+      <Field name="apply_to_tags" type="[]flake" optional>
+        an array of IDs specifying which [tags](api/tag) this coupon can apply to
+      </Field>
+      <Field name="apply_to_products" type="[]flake" optional>
+        an array of IDs specifying which [products](api/product) this coupon can apply to
+      </Field>
+      <Field name="discount_type" type="enum" optional>
+        the type of discount this coupon applies. If provided for update, you must also provide `discount_amount`.
+        <Enums vertical>
+            <Enum value="percent">`discount_amount` applies as a percent</Enum>
+            <Enum value="amount">`discount_amount` applies as an absolute amount</Enum>
+        </Enums>
+      </Field>
+      <Field name="discount_amount" type="integer" optional>
+        the discount amount this coupon applies. If provided for update, you must also provide `discount_type`.
+
+        If `discount_type` is `percent`, then this is interpreted as multiples of 10 basis points (where `1000` is **100.0%**)
+
+        If `discount_type` is `amount`, then this is interpreted as an absolute amount (where `1000` is **$10.00**)
+      </Field>
+      <Field name="discount_apply_individually" type="boolean" optional>
+        whether this discount applies to individual order lines, or to the entire order
+      </Field>
+      <Field name="discount_apply_before_sales" type="boolean" optional>
+        whether this discount should be applied before [sales](api/sale).
+      </Field>
+      <Field name="usable_by_customer_id" type="flake" optional>
+        the customer that this coupon applies to.
+        If provided, only this customer can use the coupon.
+      </Field>
+      <Field name="minimum_order_value" type="integer" optional>
+        the minimum value of the order required before this coupon may be applied
+      </Field>
+      <Field name="redeem_limit_store_enabled" type="boolean" optional>
+        whether the coupon redeem limit is enabled for the whole store
+      </Field>
+      <Field name="redeem_limit_store_amount" type="integer" optional>
+        the number of times this coupon may be redeemed across the whole store
+      </Field>
+      <Field name="redeem_limit_customer_enabled" type="boolean" optional>
+        whether the coupon redeem limit is enabled for individual customers
+      </Field>
+      <Field name="redeem_limit_customer_amount" type="integer" optional>
+        the number of times this coupon may be redeemed by the same customer
+      </Field>
+      <Field name="usable_on_one_time_purchase" type="boolean" optional>
+        whether the coupon may be applied to one time purchases
+      </Field>
+      <Field name="usable_on_subscription" type="boolean" optional>
+        whether the coupon may be applied to a subscription
+      </Field>
+      <Field name="usable_at" type="timestamp" optional>
+        timestamp of when the coupon will become usable
+      </Field>
+      <Field name="expires_at" type="timestamp" optional>
+        timestamp of when the coupon will expire and become unusable
+      </Field>
+    </Fields>
+
+    ### Returns
+    Returns the updated [coupon](#the-coupon-object).
+  </Col>
+  <Col sticky>
+    <Endpoints request perms={[ {id: 'coupon_update'} ]}>
+        <Endpoint method="PATCH" url="/stores/{store.id}/coupons/{coupon.id}" />
+    </Endpoints>
+
+    ```json {{ title: 'Response' }}
+    {
+      "id": "149580776499843072",
+      "store_id": "94688451781206016",
+      "enabled": true,
+      "code": "HALF-OFF",
+      "note": "gives the customers 50% off if their order $10.00 or more",
+      "apply_to_tags": [
+        {
+          "id": "124248382326706176",
+          "store_id": "94688451781206016",
+          "slug": "food",
+          "name": "Food",
+          "description": "delicious foods.",
+          "created_at": "2023-04-11T19:01:04.772468Z",
+          "updated_at": null
+        }
+      ],
+      "apply_to_products": [
+        {
+          "id": "124249183568797696",
+          "store_id": "94688451781206016",
+          "version_id": "149702205245493248",
+          "image_url": "https://example.paynow.gg/",
+          "slug": "banana",
+          "name": "Banana",
+          "description": "It literally goes bad after like, an hour...",
+          "price": 117,
+          "created_at": "2023-04-11T19:04:15.801636Z",
+          "updated_at": "2023-04-12T00:45:29.064138Z"
+        }
+      ],
+      "discount_type": "percent",
+      "discount_amount": 500,
+      "discount_apply_individually": false,
+      "discount_apply_before_sales": false,
+      "usable_by_customer": null,
+      "minimum_order_value": 1000,
+      "redeem_limit_store_enabled": false,
+      "redeem_limit_store_amount": 0,
+      "redeem_limit_customer_enabled": true,
+      "redeem_limit_customer_amount": 1,
+      "usable_on_one_time_purchase": true,
+      "usable_on_subscription": false,
+      "usable_at": "2023-04-11T16:42:58.163471Z",
+      "expires_at": "2023-06-11T16:43:28.253320Z",
+      "created_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "created_at": "2023-04-11T16:42:58.197319Z",
+      "updated_by": {
+        "id": "11084680073842688",
+        "first_name": "Example",
+        "last_name": "Exampleson"
+      },
+      "updated_at": "2023-04-11T17:17:01.633842Z"
+    }
+    ```
+  </Col>
+</Row>
+
+---
+
+## Delete Coupon {{ tag: 'DELETE' }}
+
+<Row>
+  <Col>
+    Deletes a coupon by ID.
+
+    ### Returns
+    Returns `HTTP 204` if the specified coupon was deleted.
+  </Col>
+  <Col sticky>
+    <Endpoints request perms={[ {id: 'coupon_delete'} ]}>
+        <Endpoint method="DELETE" url="/stores/{store.id}/coupons/{coupon.id}" />
+    </Endpoints>
+
+    ```json {{ title: 'Response' }}
+    HTTP 204
+    ```
+  </Col>
+</Row>
