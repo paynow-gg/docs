@@ -195,54 +195,6 @@
 
 ---
 
-## Get Current User Stores {{ tag: 'GET' }}
-
-<Row>
-  <Col>
-    Returns all of the stores that the currently authenticated [user](api/user) is a member of.
-
-    ### Returns
-    Returns an array of [stores](#the-store-object).
-
-  </Col>
-  <Col sticky>
-    <Endpoints request>
-        <Endpoint method="GET" url="/stores" />
-    </Endpoints>
-
-    ```json {{ title: 'Response' }}
-    [
-      {
-        "id": "150439783699582976",
-        "owner": {
-          "id": "11084680073842688",
-          "first_name": "Example",
-          "last_name": "Exampleson"
-        },
-        "slug": "docs-example",
-        "name": "Docs Example",
-        "game": "rust",
-        "currency": "USD",
-        "created_at": "2023-04-14T01:36:21.47124312Z",
-        "logo_url": "https://example.paynow.gg/image.webp",
-        "logo_square_url": "https://example.paynow.gg/square-image.webp",
-        "updated_by": {
-          "id": "11084680073842688",
-          "first_name": "Example",
-          "last_name": "Exampleson"
-        },
-        "updated_at": "2023-04-14T01:40:21.34024311Z",
-        "members": null
-      },
-      {...},
-      {...}
-    ]
-    ```
-  </Col>
-</Row>
-
----
-
 ## Get Store {{ tag: 'GET' }}
 
 <Row>
