@@ -476,6 +476,15 @@ Select a customer and then click "Create token".
 
 ## The InventoryItem object
 
+An inventory item represents a product that is owned by a customer.
+When a customer buys something on your store, the product goes into their inventory as an inventory item.
+
+Items can also be assigned and revoked from the customer's inventory.
+Items are automatically revoked when the payment is reversed (either by refund or chargeback).
+
+Inventory items have different states depending on the [product's commands and configuration](api/product#the-product-object).
+See the `state` field below for more details.
+
 <Row>
   <Col>
     <Fields>
@@ -505,7 +514,7 @@ Select a customer and then click "Create token".
         the product this inventory item represents
       </Field>
       <Field name="state" type="enum">
-        the name of the customer
+        the state of the item
         <Enums vertical>
           <Enum value="usable">item has been assigned, but has not been used yet</Enum>
           <Enum value="active">item is active</Enum>
@@ -649,7 +658,7 @@ Select a customer and then click "Create token".
     Returns all of the items in the customer's inventory.
 
     ### Returns
-    Returns an array of [inventory items](#the-inventoryitem-object).
+    Returns an array of [inventory items](#the-inventory-item-object).
   </Col>
   <Col sticky>
     <Endpoints request perms={[ {id: 'customer_inventory_manage'} ]}>
@@ -750,7 +759,7 @@ Select a customer and then click "Create token".
     </Fields>
 
     ### Returns
-    Returns an array of the newly created [inventory items](#the-inventoryitem-object).
+    Returns an array of the newly created [inventory items](#the-inventory-item-object).
   </Col>
   <Col sticky>
     <Endpoints request perms={[ {id: 'customer_inventory_manage'} ]}>

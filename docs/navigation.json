@@ -13,7 +13,7 @@
     ]
   },
   {
-    "title": "Management Resources",
+    "title": "Management API",
     "links": [
       {
         "title": "User",
@@ -34,7 +34,7 @@
     ]
   },
   {
-    "title": "Storefront Resources",
+    "title": "Storefront API",
     "links": [
       {
         "title": "Store",

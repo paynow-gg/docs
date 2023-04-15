@@ -7,6 +7,7 @@
   <Col sticky>
     <Endpoints>
         <Endpoint method="GET" href="#get-current-customer" url="/store/customer" />
+        <Endpoint method="GET" href="#get-current-customer-inventory" url="/store/customer/inventory" />
     </Endpoints>
   </Col>
 </Row>
@@ -106,6 +107,181 @@
         "created_at": "2023-04-13T19:51:02.162046Z",
         "updated_at": "2023-04-13T19:55:13.122010Z"
     }
+    ```
+  </Col>
+</Row>
+
+## The InventoryItem object
+
+An inventory item represents a product that is owned by a customer.
+When a customer buys something on the store, the product goes into their inventory as an inventory item.
+
+<Row>
+  <Col>
+    <Fields>
+      <Field name="id" type="flake">
+        id of the item
+      </Field>
+      <Field name="store_id" type="flake">
+        id of the store this item belongs to
+      </Field>
+      <Field name="customer_id" type="flake">
+        id of the customer this item belongs to
+      </Field>
+      <Field name="order_id" type="flake" nullable>
+        id of the order that is related to this item
+      </Field>
+      <Field name="order_line_id" type="flake" nullable>
+        id of the order line that is related to this item
+      </Field>
+      <Field name="quantity_index" type="integer" nullable>
+        the quantity index of this item.
+        Used if the order line contained multiple units.
+      </Field>
+      <Field name="product" type="partial product" typeHref="#partial-product-structure">
+        the product this inventory item represents
+      </Field>
+      <Field name="state" type="enum">
+        the state of the item
+        <Enums vertical>
+          <Enum value="usable">item has been assigned, but has not been used yet</Enum>
+          <Enum value="active">item is active</Enum>
+          <Enum value="used">item has been used</Enum>
+          <Enum value="revoked">item has been revoked</Enum>
+        </Enums>
+      </Field>
+      <Field name="expirable" type="boolean">
+        whether this item has a duration and can expire
+      </Field>
+      <Field name="gift" type="boolean">
+        whether this item was a gift
+      </Field>
+      <Field name="added_at" type="timestamp">
+        timestamp of when this item was added to the customer's inventory
+      </Field>
+      <Field name="active_at" type="timestamp" nullable>
+        timestamp of when this item was activated.
+        Is populated after the item becomes `active`.
+      </Field>
+      <Field name="expires_at" type="timestamp" nullable>
+        timestamp of when this item will expire.
+        Is populated after the item becomes `active`.
+      </Field>
+      <Field name="removed_at" type="timestamp" nullable>
+        timestamp of when this item was removed.
+        Is populated after the item becomes `used`.
+      </Field>
+      <Field name="revoked_at" type="timestamp" nullable>
+        timestamp of when this item was revoked.
+        Is populated after the item becomes `revoked`.
+      </Field>
+      <Field name="revoke_reason" type="enum" nullable>
+        the reason this item was revoked
+        <Enums vertical>
+          <Enum value="admin">a store admin decided to manually revoke the item</Enum>
+          <Enum value="refund">the item was refunded from the original order</Enum>
+          <Enum value="chargeback">the customer initiated a chargeback</Enum>
+        </Enums>
+      </Field>
+    </Fields>
+
+    ## Partial Product Structure
+
+    Contains a partial set fields that refer to a [product](api/storefront-product)
+
+    <Fields>
+      <Field name="id" type="flake">
+        id of the product
+      </Field>
+      <Field name="store_id" type="flake">
+        the id of the store that this product belongs to
+      </Field>
+      <Field name="version_id" type="flake">
+        version id of the product
+      </Field>
+      <Field name="slug" type="string">
+        the url-safe identifier for the product, unique to the store
+      </Field>
+      <Field name="name" type="string">
+        the name the product
+      </Field>
+    </Fields>
+  </Col>
+  <Col sticky>
+    ```json {{ title: 'The InventoryItem object' }}
+    {
+      "id": "149643503939362817",
+      "store_id": "94688451781206016",
+      "customer_id": "150352880618967040",
+      "order_id": "149643389770407936",
+      "order_line_id": "149643389770407937",
+      "quantity_index": 1,
+      "product": {
+        "id": "124249183568797696",
+        "store_id": "94688451781206016",
+        "version_id": "147121000780144640",
+        "slug": "banana",
+        "name": "Banana"
+      },
+      "state": "used",
+      "expirable": true,
+      "gift": false,
+      "added_at": "2023-04-11T20:52:13.659206Z",
+      "active_at": "2023-04-11T21:52:53.66545Z",
+      "expires_at": "2023-04-11T22:52:53.66545Z",
+      "removed_at": "2023-04-11T22:53:55.763216Z",
+      "revoked_at": null,
+      "revoke_reason": null
+    }
+    ```
+  </Col>
+</Row>
+
+---
+
+## Get Current Customer Inventory {{ tag: 'GET' }}
+
+<Row>
+  <Col>
+    Returns all of the inventory items for the currently authenticated customer.
+
+    ### Returns
+    Returns an array of [inventory items](#the-inventory-item-object).
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="GET" url="/store/customer/inventory" />
+    </Endpoints>
+
+    ```json {{ title: 'Response' }}
+    [
+      {
+        "id": "149643503939362817",
+        "store_id": "94688451781206016",
+        "customer_id": "150352880618967040",
+        "order_id": "149643389770407936",
+        "order_line_id": "149643389770407937",
+        "quantity_index": 1,
+        "product": {
+          "id": "124249183568797696",
+          "store_id": "94688451781206016",
+          "version_id": "147121000780144640",
+          "slug": "banana",
+          "name": "Banana"
+        },
+        "state": "used",
+        "expirable": true,
+        "gift": false,
+        "added_at": "2023-04-11T20:52:13.659206Z",
+        "active_at": "2023-04-11T21:52:53.66545Z",
+        "expires_at": "2023-04-11T22:52:53.66545Z",
+        "removed_at": "2023-04-11T22:53:55.763216Z",
+        "revoked_at": null,
+        "revoke_reason": null
+      },
+      {...},
+      {...}
+    ]
     ```
   </Col>
 </Row>

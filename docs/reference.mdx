@@ -87,8 +87,6 @@ Select a game server to see the token.
 
 [Users](api/user) are human users who are allowed to create and manage stores on the [dashboard](https://paynow.gg/dashboard).
 
-This section is added for completeness, and you should never share your user token or try to use it outside of the dashboard.
-
 ---
 
 ## Providing Authentication
@@ -172,3 +170,15 @@ The PayNow API uses a simple structure for errors.
 		```
 	</Col>
 </Row>
+
+---
+
+## Management vs Storefront APIs
+
+The PayNow API can be divided into two groups of routes: **Management** and **Storefront**.
+The Management API is used for store management and can be accessed by [users](api/users), API keys, and [game servers](api/gameserver).
+This API allows you to perform actions like [updating product prices](api/product#update-product), [creating coupons](api/coupon#create-coupon), and [managing customer items](api/customer#the-inventory-item-object).
+
+On the other hand, Storefront API is intended for customer use, and provides a different representation of the same resources available in the Management API.
+For example, the Storefront API lets you [display products](api/storefront-product) to customers and keep track of [items in their cart](api/storefront-cart).
+You can use the Storefront API from any location on the internet, such as your custom domain or a plugin on your game server or other application.
