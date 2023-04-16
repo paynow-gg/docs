@@ -11,4 +11,4 @@ We welcome your contributions!
 
 ## Markdown Syntax
 
-We use [MDX](https://mdxjs.com/) for Markdown rendering. See [/examples](https://github.com/paynow-gg/docs/tree/main/example) for example usage of MDX.
+We use [MDX](https://mdxjs.com/) for Markdown rendering.
