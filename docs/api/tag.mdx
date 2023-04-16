@@ -1,0 +1,21 @@
+# Tag
+
+<Row>
+  <Col>
+    Tags are a way to group [products](api/product) for filtering on your store.
+    They can be used to limit which products a [coupon](api/coupon) or [sale](api/sale) applies to.
+
+    Tags have a name, description, and a url-safe slug for easy linking on your store.
+  </Col>
+  <Col sticky>
+    <Endpoints>
+        <Endpoint method="POST" href="#create-tag" url="/stores/{store.id}/tags" />
+        <Endpoint method="GET" href="#get-tags" url="/stores/{store.id}/tags" />
+        <Endpoint method="GET" href="#get-tag" url="/stores/{store.id}/tags/{tag.id}" />
+        <Endpoint method="PATCH" href="#update-tag" url="/stores/{store.id}/tags/{tag.id}" />
+        <Endpoint method="DELETE" href="#delete-tag" url="/stores/{store.id}/tags/{tag.id}" />
+    </Endpoints>
+  </Col>
+</Row>
+
+---
