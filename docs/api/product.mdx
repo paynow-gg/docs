@@ -97,13 +97,13 @@
         whether the stock limiter should not include items that have been removed from a customer's inventory.
         If this is `false`, then the stock limiter will increase the available stock when an item expires.
       </Field>
-      <Field name="tags" type="partial tag" typeHref="#partial-tag-structure">
+      <Field name="tags" type="[]partial tag" typeHref="#partial-tag-structure">
         an array of tags used to describe this product
       </Field>
-      <Field name="gameservers" type="partial game server" typeHref="#partial-game-server-structure">
+      <Field name="gameservers" type="[]partial game server" typeHref="#partial-game-server-structure">
         an array of game servers that this product's commands should run on
       </Field>
-      <Field name="commands" type="product command" typeHref="#product-command-structure">
+      <Field name="commands" type="[]product command" typeHref="#product-command-structure">
         an array of game servers that this product's commands should run on
       </Field>
       <Field name="created_by" type="user" typeHref="user#the-user-object">
