@@ -28,8 +28,20 @@
         "href": "/api/customer"
       },
       {
+        "title": "Game Server",
+        "href": "/api/gameserver"
+      },
+      {
         "title": "Product",
         "href": "/api/product"
+      },
+      {
+        "title": "Tag",
+        "href": "/api/tag"
+      },
+      {
+        "title": "Navlinks",
+        "href": "/api/navlinks"
       },
       {
         "title": "Coupon",
