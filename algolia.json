@@ -1,6 +1,6 @@
 {
   "index_name": "paynow-api-docs",
-  "start_urls": ["https://paynow.gg/docs"],
+  "start_urls": ["https://docs.paynow.gg"],
   "selectors": {
     "lvl0": "main h1",
     "lvl1": "main h2",
