@@ -1,0 +1,205 @@
+# Orders
+
+<Row>
+	<Col>
+		Orders represent transactions where customers purchase products.
+		They can have different statuses such as created, completed, canceled, and refunded.
+		Orders can be associated with a specific store, customer, checkout, or subscription.
+
+		See the order fields for more details and options.
+	</Col>
+	<Col sticky>
+		<Endpoints>
+			<Endpoint method="GET" href="#get-store-orders" url="/stores/{store.id}/orders" />
+			<Endpoint method="GET" href="#get-store-order" url="/stores/{store.id}/orders/{order.id}" />
+		</Endpoints>
+	</Col>
+</Row>
+
+---
+
+## The Order object
+
+<Row>
+	<Col>
+		<Fields>
+			<Field name="id" type="int64">
+				id of the order
+			</Field>
+			<Field name="pretty_id" type="string">
+				human-readable id of the order
+			</Field>
+			<Field name="store_id" type="int64">
+				id of the store the order belongs to
+			</Field>
+			<Field name="customer" type="Customer">
+				the customer associated with this order
+			</Field>
+			<Field name="status" type="string">
+				status of the order (created, completed, canceled, refunded)
+			</Field>
+			<Field name="checkout_id" type="int64" nullable>
+				id of the checkout associated with the order
+			</Field>
+			<Field name="subscription_id" type="int64" nullable>
+				id of the subscription associated with the order
+			</Field>
+			<Field name="is_subscription" type="boolean">
+				whether the order is a subscription
+			</Field>
+			<Field name="billing_name" type="string" nullable>
+				billing name associated with the order
+			</Field>
+			<Field name="billing_email" type="string" nullable>
+				billing email associated with the order
+			</Field>
+			<Field name="currency" type="string">
+				currency of the order
+			</Field>
+			<Field name="tax_inclusive" type="boolean">
+				whether the order price is tax-inclusive
+			</Field>
+			<Field name="discount_amount" type="int64">
+				discount amount applied to the order
+			</Field>
+			<Field name="subtotal_amount" type="int64">
+				subtotal amount of the order
+			</Field>
+			<Field name="tax_amount" type="int64">
+				tax amount applied to the order
+			</Field>
+			<Field name="total_amount" type="int64">
+				total amount of the order
+			</Field>
+			<Field name="created_at" type="timestamp">
+				timestamp of when the order was created
+			</Field>
+			<Field name="completed_at" type="timestamp" nullable>
+				timestamp of when the order was completed
+			</Field>
+			<Field name="canceled_at" type="timestamp" nullable>
+				timestamp of when the order was canceled
+			</Field>
+		</Fields>
+	</Col>
+	<Col sticky>
+		```json {{ title: 'The Order object' }}
+		{
+			"id": "150580776499843072",
+			"pretty_id": "pn-1234abc",
+			"store_id": "94688451781206016",
+			"customer": {
+				"id": "11084680073842688",
+				"first_name": "Example",
+				"last_name": "Customer"
+			},
+			"status": "completed",
+			"checkout_id": null,
+			"subscription_id": null,
+			"is_subscription": false,
+			"billing_name": "Example Customer",
+			"billing_email": "example@customer.com",
+			"currency": "usd",
+			"tax_inclusive": true,
+			"discount_amount": 0,
+			"subtotal_amount": 1000,
+			"tax_amount": 100,
+			"total_amount": 1100,
+			"created_at": "2023-04-11T16:42:58.197319Z",
+			"completed_at": "2023-04-11T17:42:58.197319Z",
+			"canceled_at": null
+		}
+		```
+	</Col>
+</Row>
+
+---
+
+## Get Store Orders {{ tag: 'GET' }}
+
+<Row>
+	<Col>
+		Retrieves a list of orders for a specific store.
+
+		<Fields query parameters>
+			<Field name="order_id" type="int64" optional>
+				filter by id of a specific order to retrieve
+			</Field>
+			<Field name="subscription_id" type="int64" optional>
+				filter by id of the subscription associated with the orders
+			</Field>
+			<Field name="is_subscription" type="boolean" optional>
+				filter by whether the order is a subscription
+			</Field>
+			<Field name="limit" type="integer" optional default={10}>
+				limit the number of orders returned
+			</Field>
+			<Field name="after" type="flake" optional>
+				return orders created after this ID flake
+			</Field>
+			<Field name="before" type="flake" optional>
+				return orders created before this ID flake
+			</Field>
+		</Fields>
+
+		### Returns
+		Returns a list of [orders](#the-order-object).
+	</Col>
+	<Col sticky>
+		<Endpoints request perms={[ {id: 'order_read'} ]}>
+			<Endpoint method="GET" url="/stores/{store.id}/orders" />
+		</Endpoints>
+
+		```json {{ title: 'Response' }}
+		[
+			{
+				"id": "150580776499843072",
+				"pretty_id": "pn-1234abc",
+				"store_id": "94688451781206016",
+				"customer": {
+					"id": "11084680073842688",
+					"first_name": "Example",
+					"last_name": "Customer"
+				},
+				"status": "completed",
+				"created_at": "2023-04-11T16:42:58.197319Z",
+				"completed_at": "2023-04-11T17:42:58.197319Z"
+			}
+		]
+		```
+	</Col>
+</Row>
+
+---
+
+## Get Store Order {{ tag: 'GET' }}
+
+<Row>
+	<Col>
+		Retrieves a specific order by ID for a specific store.
+
+		### Returns
+		Returns the requested [order](#the-order-object).
+	</Col>
+	<Col sticky>
+		<Endpoints request perms={[ {id: 'order_read'} ]}>
+			<Endpoint method="GET" url="/stores/{store.id}/orders/{order.id}" />
+		</Endpoints>
+
+		```json {{ title: 'Response' }}
+		{
+			"id": "150580776499843072",
+			"pretty_id": "pn-1234abc",
+			"store_id": "94688451781206016",
+			"customer": {
+				"id": "11084680073842688",
+				"first_name": "Example",
+				"last_name": "Customer"
+			},
+			"status": "completed",
+			"created_at": "2023-04-11T16:42:58.197319Z",
+			"completed_at": "2023-04-11T17:42:58.197319Z"
+		}
+		```
+	</Col>
+</Row>
