@@ -48,6 +48,10 @@
         "href": "/api/coupon"
       },
       {
+        "title": "Gift Card",
+        "href": "/api/giftcard"
+      },
+      {
         "title": "Sale",
         "href": "/api/sale"
       }

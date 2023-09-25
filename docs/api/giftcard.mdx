@@ -1,0 +1,332 @@
+# Gift Card
+
+<Row>
+	<Col>
+		Gift Cards are a form of stored value that a customer can redeem at checkout.
+		They hold a certain balance and can be used multiple times until the balance is depleted.
+
+		See the gift card fields for more details and options.
+	</Col>
+	<Col sticky>
+		<Endpoints>
+			<Endpoint method="POST" href="#create-gift-card" url="/stores/{store.id}/giftcards" />
+			<Endpoint method="GET" href="#get-gift-cards" url="/stores/{store.id}/giftcards" />
+			<Endpoint method="GET" href="#get-gift-card" url="/stores/{store.id}/giftcards/{giftcard.id}" />
+			<Endpoint method="PATCH" href="#update-gift-card" url="/stores/{store.id}/giftcards/{giftcard.id}" />
+			<Endpoint method="DELETE" href="#delete-gift-card" url="/stores/{store.id}/giftcards/{giftcard.id}" />
+		</Endpoints>
+	</Col>
+</Row>
+
+---
+
+## The Gift Card object
+
+<Row>
+	<Col>
+		<Fields>
+			<Field name="id" type="flake">
+				id of the gift card
+			</Field>
+			<Field name="store_id" type="flake">
+				id of the store the gift card belongs to
+			</Field>
+			<Field name="enabled" type="boolean">
+				whether the gift card is enabled and currently usable by customers
+			</Field>
+			<Field name="code" type="string">
+				the code that customers type in at checkout.
+				Code is case insensitive and unique to the store.
+				Limited to alphanumeric characters, spaces and dashes.
+			</Field>
+			<Field name="balance" type="integer">
+				the remaining balance on the gift card.
+				balance is in zero-decimal format (where $10.00 is `1000`).
+			</Field>
+			<Field name="starting_balance" type="integer">
+				the starting balance of the gift card.
+				balance is in zero-decimal format (where $10.00 is `1000`).
+			</Field>
+			<Field name="usable_at" type="timestamp">
+				timestamp of when the gift card will become usable
+			</Field>
+			<Field name="expires_at" type="timestamp" nullable>
+				timestamp of when the gift card will expire and become unusable
+			</Field>
+			<Field name="created_by" type="user" typeHref="user#the-user-object">
+				the user that created this gift card.
+			</Field>
+			<Field name="created_at" type="timestamp">
+				timestamp of when the gift card was created
+			</Field>
+			<Field name="updated_by" type="user" typeHref="user#the-user-object" nullable>
+				the user that most recently updated this gift card.
+			</Field>
+			<Field name="updated_at" type="timestamp" nullable>
+				timestamp of when the gift card was last updated
+			</Field>
+		</Fields>
+	</Col>
+	<Col sticky>
+		```json {{ title: 'The Gift Card object' }}
+		{
+			"id": "150580776499843072",
+			"store_id": "94688451781206016",
+			"enabled": true,
+			"code": "GIFT-100",
+			"balance": 10000,
+			"starting_balance": 10000,
+			"usable_at": "2023-04-11T16:42:58.163471Z",
+			"expires_at": "2023-06-11T16:43:28.253320Z",
+			"created_by": {
+				"id": "11084680073842688",
+				"first_name": "Example",
+				"last_name": "Exampleson"
+			},
+			"created_at": "2023-04-11T16:42:58.197319Z",
+			"updated_by": null,
+			"updated_at": null
+		}
+		```
+	</Col>
+</Row>
+
+---
+
+## Create Gift Card {{ tag: 'POST' }}
+
+<Row>
+	<Col>
+		Creates a new gift card.
+
+		<Fields parameters>
+			<Field name="enabled" type="boolean" optional default={true}>
+				whether the gift card is enabled and currently usable by customers
+			</Field>
+			<Field name="code" type="string" required>
+				the code that customers type in at checkout.
+				Code is case insensitive and unique to the store.
+				Limited to alphanumeric characters, spaces and dashes.
+			</Field>
+			<Field name="balance" type="integer" required>
+				the balance of the gift card.
+				balance is in zero-decimal format (where $10.00 is `1000`).
+			</Field>
+			<Field name="usable_at" type="timestamp" optional default="current time">
+				timestamp of when the gift card will become usable
+			</Field>
+			<Field name="expires_at" type="timestamp" optional>
+				timestamp of when the gift card will expire and become unusable
+			</Field>
+		</Fields>
+
+		### Returns
+		Returns the newly created [gift card](#the-gift-card-object).
+	</Col>
+	<Col sticky>
+		<Endpoints request perms={[ {id: 'giftcard_create'} ]}>
+			<Endpoint method="POST" url="/stores/{store.id}/giftcards" />
+		</Endpoints>
+
+		```json {{ title: 'Response' }}
+		{
+			"id": "150580776499843072",
+			"store_id": "94688451781206016",
+			"enabled": true,
+			"code": "GIFT-100",
+			"balance": 10000,
+			"starting_balance": 10000,
+			"usable_at": "2023-04-11T16:42:58.163471Z",
+			"expires_at": "2023-06-11T16:43:28.253320Z",
+			"created_by": {
+				"id": "11084680073842688",
+				"first_name": "Example",
+				"last_name": "Exampleson"
+			},
+			"created_at": "2023-04-11T16:42:58.197319Z",
+			"updated_by": null,
+			"updated_at": null
+		}
+		```
+	</Col>
+</Row>
+
+---
+
+## Get Gift Cards {{ tag: 'GET' }}
+
+<Row>
+	<Col>
+		Retrieves a paginated list of gift cards.
+
+		<Fields query parameters>
+			<Field name="limit" type="integer" optional>
+				the max number of results to return (1 - 100)
+			</Field>
+			<Field name="after" type="flake" optional>
+				an ID flake, after which to start returning results
+			</Field>
+			<Field name="before" type="flake" optional>
+				an ID flake, before which to start returning results
+			</Field>
+			<Field name="include_canceled" type="boolean" optional>
+				whether the response should include canceled giftcards
+			</Field>
+			<Field name="code" type="string" optional>
+				filter the giftcards by a code
+			</Field>
+		</Fields>
+
+		### Returns
+		Returns a list of [gift cards](#the-gift-card-object).
+	</Col>
+	<Col sticky>
+		<Endpoints request perms={[ {id: 'giftcard_read'} ]}>
+			<Endpoint method="GET" url="/stores/{store.id}/giftcards" />
+		</Endpoints>
+
+		```json {{ title: 'Response' }}
+		[
+			{
+				"id": "150580776499843072",
+				"store_id": "94688451781206016",
+				"enabled": true,
+				"code": "GIFT-100",
+				"balance": 10000,
+				"starting_balance": 10000,
+				"usable_at": "2023-04-11T16:42:58.163471Z",
+				"expires_at": "2023-06-11T16:43:28.253320Z",
+				"created_by": {
+					"id": "11084680073842688",
+					"first_name": "Example",
+					"last_name": "Exampleson"
+				},
+				"created_at": "2023-04-11T16:42:58.197319Z",
+				"updated_by": null,
+				"updated_at": null
+			}
+		]
+		```
+	</Col>
+</Row>
+
+---
+
+## Get Gift Card {{ tag: 'GET' }}
+
+<Row>
+	<Col>
+		Retrieves a specific gift card by ID.
+
+		### Returns
+		Returns the requested [gift card](#the-gift-card-object).
+	</Col>
+	<Col sticky>
+		<Endpoints request perms={[ {id: 'giftcard_read'} ]}>
+			<Endpoint method="GET" url="/stores/{store.id}/giftcards/{giftcard.id}" />
+		</Endpoints>
+
+		```json {{ title: 'Response' }}
+		{
+			"id": "150580776499843072",
+			"store_id": "94688451781206016",
+			"enabled": true,
+			"code": "GIFT-100",
+			"balance": 10000,
+			"starting_balance": 10000,
+			"usable_at": "2023-04-11T16:42:58.163471Z",
+			"expires_at": "2023-06-11T16:43:28.253320Z",
+			"created_by": {
+				"id": "11084680073842688",
+				"first_name": "Example",
+				"last_name": "Exampleson"
+			},
+			"created_at": "2023-04-11T16:42:58.197319Z",
+			"updated_by": null,
+			"updated_at": null
+		}
+		```
+	</Col>
+</Row>
+
+---
+
+## Update Gift Card {{ tag: 'PATCH' }}
+
+<Row>
+	<Col>
+		Updates a specific gift card by ID.
+
+		<Fields parameters>
+			<Field name="enabled" type="boolean" optional>
+				whether the gift card is enabled and currently usable by customers
+			</Field>
+			<Field name="code" type="string" optional>
+				the code that customers type in at checkout.
+				Code is case insensitive and unique to the store.
+				Limited to alphanumeric characters, spaces and dashes.
+			</Field>
+			<Field name="balance" type="integer" optional>
+				the remaining balance on the gift card.
+				balance is in zero-decimal format (where $10.00 is `1000`).
+			</Field>
+			<Field name="usable_at" type="timestamp" optional>
+				timestamp of when the gift card will become usable
+			</Field>
+			<Field name="expires_at" type="timestamp" optional>
+				timestamp of when the gift card will expire and become unusable
+			</Field>
+		</Fields>
+
+		### Returns
+		Returns the updated [gift card](#the-gift-card-object).
+	</Col>
+	<Col sticky>
+		<Endpoints request perms={[ {id: 'giftcard_update'} ]}>
+			<Endpoint method="PATCH" url="/stores/{store.id}/giftcards/{giftcard.id}" />
+		</Endpoints>
+
+		```json {{ title: 'Response' }}
+		{
+			"id": "150580776499843072",
+			"store_id": "94688451781206016",
+			"enabled": true,
+			"code": "GIFT-100",
+			"balance": 10000,
+			"starting_balance": 10000,
+			"usable_at": "2023-04-11T16:42:58.163471Z",
+			"expires_at": "2023-06-11T16:43:28.253320Z",
+			"created_by": {
+				"id": "11084680073842688",
+				"first_name": "Example",
+				"last_name": "Exampleson"
+			},
+			"created_at": "2023-04-11T16:42:58.197319Z",
+			"updated_by": {
+				"id": "11084680073842688",
+				"first_name": "Example",
+				"last_name": "Exampleson"
+			},
+			"updated_at": "2023-04-11T17:42:58.197319Z"
+		}
+		```
+	</Col>
+</Row>
+
+---
+
+## Delete Gift Card {{ tag: 'DELETE' }}
+
+<Row>
+	<Col>
+		Deletes a specific gift card by ID.
+
+		### Returns
+		Returns a 204 No Content response upon successful deletion.
+	</Col>
+	<Col sticky>
+		<Endpoints request perms={[ {id: 'giftcard_delete'} ]}>
+			<Endpoint method="DELETE" url="/stores/{store.id}/giftcards/{giftcard.id}" />
+		</Endpoints>
+	</Col>
+</Row>
