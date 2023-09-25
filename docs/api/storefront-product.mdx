@@ -73,7 +73,7 @@
     ## Stock Limit Structure
 
     <Fields>
-      <Field name="store_limited" type="boolean">
+      {/*<Field name="store_limited" type="boolean">
         whether the product's stock is limited across the entire store
       </Field>
       <Field name="store_available" type="integer">
@@ -84,7 +84,11 @@
       </Field>
       <Field name="customer_available" type="integer">
         the number of units available for the current customer. `0` if customer limits are disabled.
-      </Field>
+      </Field>*/}
+
+		<Field name="available_to_purchase" type="boolean">
+			whether the product is available to purchase (all stock limits met)
+		</Field>
     </Fields>
 
     ## Product Tag Structure
@@ -116,10 +120,7 @@
         "subscription_interval_value": 1,
         "subscription_interval_scale": "month",
         "stock": {
-          "store_limited": true,
-          "store_available": 420,
-          "customer_limited": false,
-          "customer_available": 0
+          "available_to_purchase": true
         },
         "tags": [
             {
@@ -167,10 +168,7 @@
           "subscription_interval_value": 1,
           "subscription_interval_scale": "month",
           "stock": {
-            "store_limited": true,
-            "store_available": 420,
-            "customer_limited": false,
-            "customer_available": 0
+			"available_to_purchase": true
           },
           "tags": [
               {
@@ -221,10 +219,7 @@
       "subscription_interval_value": 1,
       "subscription_interval_scale": "month",
       "stock": {
-        "store_limited": true,
-        "store_available": 420,
-        "customer_limited": false,
-        "customer_available": 0
+		"available_to_purchase": true
       },
       "tags": [
           {

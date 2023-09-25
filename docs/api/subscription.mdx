@@ -1,0 +1,244 @@
+# Subscriptions
+
+<Row>
+	<Col>
+		Subscriptions allow customers to purchase products on a recurring basis.
+		They can be created, retrieved, updated, and canceled through the provided endpoints.
+		Subscriptions are associated with a specific store and customer and can have different statuses such as created, active, and canceled.
+
+		See the subscription fields for more details and options.
+	</Col>
+	<Col sticky>
+		<Endpoints>
+			<Endpoint method="GET" href="#get-subscriptions" url="/stores/{store.id}/subscriptions" />
+			<Endpoint method="GET" href="#get-subscription" url="/stores/{store.id}/subscriptions/{subscription.id}" />
+			<Endpoint method="POST" href="#cancel-subscription" url="/stores/{store.id}/subscriptions/{subscription.id}/cancel" />
+		</Endpoints>
+	</Col>
+</Row>
+
+---
+
+## The Subscription object
+
+<Row>
+	<Col>
+		<Fields>
+			<Field name="id" type="int64">
+				id of the subscription
+			</Field>
+			<Field name="pretty_id" type="string">
+				human-readable id of the subscription
+			</Field>
+			<Field name="store_id" type="int64">
+				id of the store the subscription belongs to
+			</Field>
+			<Field name="customer" type="Customer">
+				the customer associated with this subscription
+			</Field>
+			<Field name="status" type="string">
+				status of the subscription (created, active, canceled)
+			</Field>
+			<Field name="billing_name" type="string" nullable>
+				billing name associated with the subscription
+			</Field>
+			<Field name="billing_email" type="string" nullable>
+				billing email associated with the subscription
+			</Field>
+			<Field name="gift" type="boolean">
+				whether the subscription is a gift
+			</Field>
+			<Field name="gift_to_customer" type="Customer" nullable>
+				the customer to whom the subscription is gifted
+			</Field>
+			<Field name="product_id" type="int64">
+				id of the product associated with the subscription
+			</Field>
+			<Field name="product_name" type="string">
+				name of the product associated with the subscription
+			</Field>
+			<Field name="product_image_url" type="string" nullable>
+				image URL of the product associated with the subscription
+			</Field>
+			<Field name="interval_value" type="int">
+				interval value indicating the frequency of the subscription
+			</Field>
+			<Field name="interval_scale" type="string">
+				interval scale indicating the unit of time for the subscription frequency (e.g., day, week, month)
+			</Field>
+			<Field name="currency" type="string">
+				currency of the subscription
+			</Field>
+			<Field name="tax_inclusive" type="boolean">
+				whether the subscription price is tax-inclusive
+			</Field>
+			<Field name="price" type="int64">
+				price of the subscription in zero-decimal format (where "$10.00" is 1000)
+			</Field>
+			<Field name="discount_amount" type="int64">
+				discount amount applied to the subscription
+			</Field>
+			<Field name="subtotal_amount" type="int64">
+				subtotal amount of the subscription
+			</Field>
+			<Field name="tax_amount" type="int64">
+				tax amount applied to the subscription
+			</Field>
+			<Field name="total_amount" type="int64">
+				total amount of the subscription
+			</Field>
+			<Field name="created_at" type="timestamp">
+				timestamp of when the subscription was created
+			</Field>
+			<Field name="updated_at" type="timestamp" nullable>
+				timestamp of when the subscription was last updated
+			</Field>
+			<Field name="active_at" type="timestamp" nullable>
+				timestamp of when the subscription became active
+			</Field>
+			<Field name="canceled_at" type="timestamp" nullable>
+				timestamp of when the subscription was canceled
+			</Field>
+			<Field name="cancel_reason" type="string" nullable>
+				reason for canceling the subscription
+			</Field>
+		</Fields>
+	</Col>
+	<Col sticky>
+		```json {{ title: 'The Subscription object' }}
+		{
+			"id": "150580776499843072",
+			"pretty_id": "pn-123abcd",
+			"store_id": "94688451781206016",
+			"customer": {
+				"id": "11084680073842688",
+				"first_name": "Example",
+				"last_name": "Customer"
+			},
+			"status": "active",
+			"billing_name": "Example Customer",
+			"billing_email": "example@customer.com",
+			"gift": false,
+			"gift_to_customer": null,
+			"product_id": "123456789",
+			"product_name": "Example Product",
+			"product_image_url": "http://example.com/product-image.jpg",
+			"interval_value": 1,
+			"interval_scale": "month",
+			"currency": "usd",
+			"tax_inclusive": true,
+			"price": 1000,
+			"discount_amount": 0,
+			"subtotal_amount": 1000,
+			"tax_amount": 100,
+			"total_amount": 1100,
+			"created_at": "2023-04-11T16:42:58.197319Z",
+			"updated_at": null,
+			"active_at": "2023-04-11T16:42:58.197319Z",
+			"canceled_at": null,
+			"cancel_reason": null
+		}
+		```
+	</Col>
+</Row>
+
+---
+
+## Get Subscriptions {{ tag: 'GET' }}
+
+<Row>
+	<Col>
+		Retrieves a list of subscriptions for a specific store.
+
+		<Fields query parameters>
+			<Field name="limit" type="integer" optional>
+				the max number of results to return (1 - 100)
+			</Field>
+			<Field name="after" type="flake" optional>
+				an ID flake, after which to start returning results
+			</Field>
+			<Field name="before" type="flake" optional>
+				an ID flake, before which to start returning results
+			</Field>
+			<Field name="customer_id" type="flake" optional>
+				filter subscriptions created by a customer
+			</Field>
+		</Fields>
+
+		### Returns
+		Returns a list of [subscriptions](#the-subscription-object).
+	</Col>
+	<Col sticky>
+		<Endpoints request perms={[ {id: 'subscription_read'} ]}>
+			<Endpoint method="GET" url="/stores/{store.id}/subscriptions" />
+		</Endpoints>
+
+		```json {{ title: 'Response' }}
+		[
+			{
+				"id": "150580776499843072",
+				"pretty_id": "pn-123abcd",
+				"store_id": "94688451781206016",
+				"customer": {
+					"id": "11084680073842688",
+					"first_name": "Example",
+					"last_name": "Customer"
+				},
+				"status": "active",
+				"created_at": "2023-04-11T16:42:58.197319Z"
+			}
+		]
+		```
+	</Col>
+</Row>
+
+---
+
+## Get Subscription {{ tag: 'GET' }}
+
+<Row>
+	<Col>
+		Retrieves a specific subscription by ID.
+
+		### Returns
+		Returns the requested [subscription](#the-subscription-object).
+	</Col>
+	<Col sticky>
+		<Endpoints request perms={[ {id: 'subscription_read'} ]}>
+			<Endpoint method="GET" url="/stores/{store.id}/subscriptions/{subscription.id}" />
+		</Endpoints>
+
+		```json {{ title: 'Response' }}
+		{
+			"id": "150580776499843072",
+			"pretty_id": "pn-123abcd",
+			"store_id": "94688451781206016",
+			"customer": {
+			"id": "11084680073842688",
+			"first_name": "Example",
+			"last_name": "Customer"
+		},
+			"status": "active",
+			"created_at": "2023-04-11T16:42:58.197319Z"
+		}
+		```
+	</Col>
+</Row>
+
+---
+
+## Cancel Subscription {{ tag: 'POST' }}
+
+<Row>
+	<Col>
+		Cancels a specific subscription by ID.
+
+		### Returns
+		Returns a 204 No Content response upon successful cancellation.
+	</Col>
+	<Col sticky>
+		<Endpoints request perms={[ {id: 'subscription_cancel'} ]}>
+			<Endpoint method="POST" url="/stores/{store.id}/subscriptions/{subscription.id}/cancel" />
+		</Endpoints>
+	</Col>
+</Row>

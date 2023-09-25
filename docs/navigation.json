@@ -44,6 +44,10 @@
         "href": "/api/navlinks"
       },
       {
+        "title": "Subscription",
+        "href": "/api/subscription"
+      },
+      {
         "title": "Coupon",
         "href": "/api/coupon"
       },
