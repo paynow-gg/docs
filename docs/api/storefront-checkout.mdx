@@ -10,9 +10,7 @@
         </Endpoints>
     </Col>
 </Row>
-
 ---
-
 ## Create Checkout {{ tag: 'POST' }}
 
 This endpoint creates a new checkout.
@@ -20,27 +18,27 @@ This endpoint creates a new checkout.
 <Row>
     <Col>
         <Fields>
-            <Field name="customer_id" type="int64">
+            <Field name="customer_id" type="flake">
                 id of the customer this checkout belongs to
             </Field>
-            <Field name="subscription" type="bool">
+            <Field name="subscription" type="boolean">
                 boolean indicating if this checkout is for a subscription
             </Field>
-            <Field name="lines" type="[]CreateCheckoutRequestLine">
+            <Field name="lines" type="[]CreateCheckoutRequestLine" typeHref="#checkout-line-object-structure">
                 list of items in checkout
             </Field>
         </Fields>
 
-        ## CreateCheckoutRequestLine object structure
+        ## Checkout line object structure
 
         <Fields>
-            <Field name="product_id" type="int64">
+            <Field name="product_id" type="flake">
                 id of the product
             </Field>
-            <Field name="gift_to" type="CustomerPlatformAccount">
-                creates a PayNow customer from a platform account ID, so anonymous customers can be gifted
+            <Field name="gift_to" type="nullable (optional)" typeHref="#checkout-gift">
+                gift using a platform, currently only steam is supported
             </Field>
-            <Field name="gift_to_customer_id" type="pnutil.NullID">
+            <Field name="gift_to_customer_id" type="flake">
                 id of the customer to gift to
             </Field>
             <Field name="quantity" type="integer">
@@ -48,6 +46,15 @@ This endpoint creates a new checkout.
             </Field>
         </Fields>
 
+        ## Checkout Gift
+        <Fields>
+            <Field name="platform" type="platform">
+                platform used to gift, steam is currently the only supported platform
+            </Field>
+            <Field name="id" type="integer">
+                steam id of the customer to gift to
+            </Field>
+        </Fields>
     </Col>
 
     <Col sticky>
