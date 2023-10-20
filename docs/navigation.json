@@ -83,6 +83,10 @@
       {
         "title": "Cart",
         "href": "/api/storefront-cart"
+      },
+      {
+        "title": "Checkout",
+        "href": "/api/storefront-checkout"
       }
     ]
   }

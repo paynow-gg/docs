@@ -1,0 +1,76 @@
+# Storefront Checkout
+
+<Row>
+    <Col>
+        A checkout represents a customer's virtual shopping cart at the point of purchase.
+    </Col>
+    <Col sticky>
+        <Endpoints>
+            <Endpoint method="POST" href="#create-checkout" url="/checkouts" />
+        </Endpoints>
+    </Col>
+</Row>
+
+---
+
+## Create Checkout {{ tag: 'POST' }}
+
+This endpoint creates a new checkout.
+
+<Row>
+    <Col>
+        <Fields>
+            <Field name="customer_id" type="int64">
+                id of the customer this checkout belongs to
+            </Field>
+            <Field name="subscription" type="bool">
+                boolean indicating if this checkout is for a subscription
+            </Field>
+            <Field name="lines" type="[]CreateCheckoutRequestLine">
+                list of items in checkout
+            </Field>
+        </Fields>
+
+        ## CreateCheckoutRequestLine object structure
+
+        <Fields>
+            <Field name="product_id" type="int64">
+                id of the product
+            </Field>
+            <Field name="gift_to" type="CustomerPlatformAccount">
+                creates a PayNow customer from a platform account ID, so anonymous customers can be gifted
+            </Field>
+            <Field name="gift_to_customer_id" type="pnutil.NullID">
+                id of the customer to gift to
+            </Field>
+            <Field name="quantity" type="integer">
+                the quantity (count) of products in this line
+            </Field>
+        </Fields>
+
+    </Col>
+
+    <Col sticky>
+
+        ```json {{ title: 'Create Checkout Request' }}
+        {
+          "customer_id": "97394129868165120",
+          "subscription": false,
+          "lines": [
+              {
+                  "product_id": "124249183568797696",
+                  "gift_to": {
+                      "platform": "example_platform",
+                      "id": "example_id"
+                  },
+                  "gift_to_customer_id": "123456789",
+                  "quantity": 2
+              }
+          ]
+        }
+        ```
+
+    </Col>
+</Row>
+
+---
