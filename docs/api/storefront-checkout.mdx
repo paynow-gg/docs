@@ -45,8 +45,11 @@ This endpoint creates a new checkout.
 
         ## Checkout Gift
         <Fields>
-            <Field name="platform" type="string">
-                platform used to gift, steam is currently the only supported platform
+            <Field name="platform" type="enum">
+                platform used to gift
+                <Enums vertical>
+                    <Enum value="Steam">Steam platform</Enum>
+                </Enums>
             </Field>
             <Field name="id" type="integer">
                 steam id of the customer to gift to
