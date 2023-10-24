@@ -32,10 +32,10 @@ This endpoint creates a new checkout.
             <Field name="product_id" type="flake">
                 id of the product
             </Field>
-            <Field name="gift_to" type="nullable (optional)" typeHref="#checkout-gift">
+            <Field name="gift_to" type="CustomerPlatformAccount" nullable typeHref="#checkout-gift">
                 gift using a platform, currently only steam is supported
             </Field>
-            <Field name="gift_to_customer_id" type="flake (nullable)">
+            <Field name="gift_to_customer_id" type="flake" optional>
                 id of the customer to gift to
             </Field>
             <Field name="quantity" type="integer">
@@ -45,7 +45,7 @@ This endpoint creates a new checkout.
 
         ## Checkout Gift
         <Fields>
-            <Field name="platform" type="platform">
+            <Field name="platform" type="string">
                 platform used to gift, steam is currently the only supported platform
             </Field>
             <Field name="id" type="integer">
