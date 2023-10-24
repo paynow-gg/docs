@@ -1,23 +1,172 @@
 # Game Server
 
 <Row>
-  <Col>
-    Game Servers represent individual servers that you host.
-    When a product is assigned to a [customer's inventory](api/customer#the-inventory-item-object), the commands you configure can run on one or more game servers.
-    Game servers can be associated in the [product's configuration](api/product#the-product-object).
+    <Col>
+        Game Servers represent individual servers that you host.
+        When a product is assigned to a [customer's inventory](api/customer#the-inventory-item-object), the commands you configure can run on one or more game servers.
+        Game servers can be associated in the [product's configuration](api/product#the-product-object).
 
-    Game servers have their own [type of authentication](api/reference#types-of-authentication) used for accessing store data from a plugin.
-  </Col>
-  <Col sticky>
-    <Endpoints>
-        <Endpoint method="POST" href="#create-game-server" url="/stores/{store.id}/gameservers" />
-        <Endpoint method="GET" href="#get-game-servers" url="/stores/{store.id}/gameservers" />
-        <Endpoint method="GET" href="#get-game-server" url="/stores/{store.id}/gameservers/{gameserver.id}" />
-        <Endpoint method="PATCH" href="#update-game-server" url="/stores/{store.id}/gameservers/{gameserver.id}" />
-        <Endpoint method="POST" href="#reset-game-server-token" url="/stores/{store.id}/gameservers/{gameserver.id}/reset-token" />
-        <Endpoint method="DELETE" href="#delete-game-server" url="/stores/{store.id}/gameservers/{gameserver.id}" />
-    </Endpoints>
-  </Col>
+        Game servers have their own [type of authentication](api/reference#types-of-authentication) used for accessing store data from a plugin.
+    </Col>
+    <Col sticky>
+        <Endpoints>
+            <Endpoint method="POST" href="#create-game-server" url="/stores/{store.id}/gameservers" />
+            <Endpoint method="GET" href="#get-game-servers" url="/stores/{store.id}/gameservers" />
+            <Endpoint method="GET" href="#get-game-server" url="/stores/{store.id}/gameservers/{gameserver.id}" />
+            <Endpoint method="PATCH" href="#update-game-server" url="/stores/{store.id}/gameservers/{gameserver.id}" />
+            <Endpoint method="POST" href="#reset-game-server-token" url="/stores/{store.id}/gameservers/{gameserver.id}/reset-token" />
+            <Endpoint method="DELETE" href="#delete-game-server" url="/stores/{store.id}/gameservers/{gameserver.id}" />
+        </Endpoints>
+    </Col>
 </Row>
 
 ---
+## Create Game Server {{ tag: 'POST' }}
+
+This endpoint creates a new game server.
+
+<Row>
+    <Col>
+        <Fields>
+            <Field name="name" type="string">
+                name of the game server
+            </Field>
+            <Field name="enabled" type="boolean">
+                boolean indicating if the game server is enabled
+            </Field>
+        </Fields>
+    </Col>
+    <Col sticky>
+
+        ```json {{ title: 'Create Game Server Request' }}
+        {
+            "name": "GameServer1",
+            "enabled": true
+        }
+        ```
+
+    </Col>
+</Row>
+
+---
+
+## Get Game Servers {{ tag: 'GET' }}
+
+This endpoint fetches the list of game servers.
+
+<Row>
+    <Col>
+
+        ## Response
+
+        Returns a JSON array of game servers.
+
+    </Col>
+    <Col sticky>
+
+        ```json {{ title: 'Get Game Servers Response' }}
+        [
+            {
+                "id": "124249183568797696",
+                "name": "GameServer",
+                "enabled": true
+            }
+        ]
+        ```
+
+    </Col>
+</Row>
+
+---
+
+## Get Game Server {{ tag: 'GET' }}
+
+This endpoint fetches a single game server based on the provided gameServerID.
+
+<Row>
+    <Col>
+        <Fields>
+            <Field name="id" type="flake" urlParam>
+                id of the game server to fetch
+            </Field>
+        </Fields>
+    </Col>
+    <Col sticky>
+
+        ```plaintext {{ title: 'URL Example' }}
+        /stores/12345/gameservers/124249183568797696
+        ```
+
+    </Col>
+</Row>
+
+---
+
+## Update Game Server {{ tag: 'PATCH' }}
+
+This endpoint updates the details of a game server based on the provided game server id.
+
+<Row>
+    <Col>
+        <Fields>
+            <Field name="name" type="string (optional)">
+                new name of the game server
+            </Field>
+            <Field name="enabled" type="boolean (optional)">
+                boolean indicating if the game server should be enabled
+            </Field>
+        </Fields>
+    </Col>
+    <Col sticky>
+
+        ```plaintext {{ title: 'URL Example' }}
+        /stores/12345/gameservers/124249183568797696
+        ```
+
+        ```json {{ title: 'Update Game Server Request' }}
+        {
+            "name": "UpdatedGameServer",
+            "enabled": false
+        }
+        ```
+
+    </Col>
+</Row>
+
+---
+
+## Reset Game Server Token {{ tag: 'POST' }}
+
+This endpoint resets the token of a game server based on the provided Id.
+
+<Row>
+    <Col>
+
+    </Col>
+    <Col sticky>
+
+        ```plaintext {{ title: 'URL Example' }}
+        /stores/12345/gameservers/124249183568797696/reset-token
+        ```
+
+    </Col>
+</Row>
+
+---
+
+## Delete Game Server {{ tag: 'DELETE' }}
+
+This endpoint deletes a game server based on the provided Id.
+
+<Row>
+    <Col>
+
+    </Col>
+    <Col sticky>
+
+        ```plaintext {{ title: 'URL Example' }}
+        /stores/12345/gameservers/124249183568797696
+        ```
+
+    </Col>
+</Row>
