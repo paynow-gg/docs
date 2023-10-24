@@ -1,0 +1,115 @@
+# Delivery Command Queue
+
+<Row>
+    <Col>
+        The Delivery Command Queue is responsible for managing the commands that need to be executed in order to deliver products to customers. It is accessed through an API endpoint.
+    </Col>
+    <Col sticky>
+        <Endpoints>
+            <Endpoint method="GET" href="#get-queued-commands" url="/delivery/command-queue" />
+            <Endpoint method="DELETE" href="#bulk-mark-commands-executed" url="/delivery/command-queue" />
+            <Endpoint method="DELETE" href="#mark-command-executed" url="/delivery/command-queue/{attemptID}" />
+        </Endpoints>
+    </Col>
+</Row>
+---
+
+## Get Queued Commands {{ tag: 'GET' }}
+
+This endpoint fetches the list of commands that are queued for execution.
+
+<Row>
+    <Col>
+
+        ## Response
+
+        Returns a JSON array of queued commands.
+
+        ### QueuedCommand object structure
+
+        <Fields>
+            <Field name="attempt_id" type="int64">
+                id of the command attempt
+            </Field>
+            <Field name="command" type="string">
+                command to be executed to assign products for customers
+            </Field>
+            <Field name="queued_at" type="time">
+                time when the command was queued
+            </Field>
+        </Fields>
+
+    </Col>
+    <Col sticky>
+
+        ```json {{ title: 'Get Queued Commands Response' }}
+        [
+            {
+                "attempt_id": "124249183568797696",
+                "command": "add 76561198085278322 hero",
+                "queued_at": "2023-10-23T14:12:00Z"
+            }
+        ]
+        ```
+
+    </Col>
+</Row>
+
+---
+
+## Bulk Mark Commands Executed {{ tag: 'DELETE' }}
+
+This endpoint allows for marking multiple commands as executed in a bulk operation.
+
+<Row>
+    <Col>
+        <Fields>
+            <Field name="commands" type="[]BulkCommandMarkExecutedEntry">
+                list of commands to mark as executed
+            </Field>
+        </Fields>
+
+        ### BulkCommandMarkExecutedEntry object structure
+
+        <Fields>
+            <Field name="attempt_id" type="int64">
+                id of the command attempt
+            </Field>
+        </Fields>
+
+    </Col>
+    <Col sticky>
+
+        ```json {{ title: 'Bulk Mark Commands Executed Request' }}
+        [
+            {
+                "attempt_id": "124249183568797696"
+            }
+        ]
+        ```
+
+    </Col>
+</Row>
+
+---
+
+## Mark Command Executed {{ tag: 'DELETE' }}
+
+This endpoint marks a single command as executed based on the provided attemptID.
+
+<Row>
+    <Col>
+        <Fields>
+            <Field name="attemptID" type="int64" urlParam>
+                id of the command attempt to mark as executed
+            </Field>
+        </Fields>
+    </Col>
+    <Col sticky>
+
+        ```plaintext {{ title: 'URL Example' }}
+        /delivery/command-queue/124249183568797696
+        ```
+
+    </Col>
+</Row>

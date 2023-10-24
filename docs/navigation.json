@@ -89,5 +89,14 @@
         "href": "/api/storefront-checkout"
       }
     ]
+  },
+  {
+    "title": "Delivery API",
+    "links": [
+      {
+        "title": "Command Queue",
+        "href": "/api/delivery-commandqueue"
+      }
+    ]
   }
 ]
