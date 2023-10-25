@@ -28,7 +28,7 @@ This endpoint fetches the list of commands that are queued for execution.
         ### QueuedCommand object structure
 
         <Fields>
-            <Field name="attempt_id" type="int64">
+            <Field name="attempt_id" type="integer">
                 id of the command attempt
             </Field>
             <Field name="command" type="string">
@@ -41,7 +41,9 @@ This endpoint fetches the list of commands that are queued for execution.
 
     </Col>
     <Col sticky>
-
+        <Endpoints>
+            <Endpoint method="GET" url="/delivery/command-queue" />
+        </Endpoints>
         ```json {{ title: 'Get Queued Commands Response' }}
         [
             {
@@ -64,7 +66,7 @@ This endpoint allows for marking multiple commands as executed in a bulk operati
 <Row>
     <Col>
         <Fields>
-            <Field name="commands" type="[]BulkCommandMarkExecutedEntry">
+            <Field name="commands" type="[]BulkCommandMarkExecutedEntry" typeHref="#bulk-mark-commands-executed">
                 list of commands to mark as executed
             </Field>
         </Fields>
@@ -79,6 +81,9 @@ This endpoint allows for marking multiple commands as executed in a bulk operati
 
     </Col>
     <Col sticky>
+        <Endpoints>
+            <Endpoint method="DELETE" url="/delivery/command-queue" />
+        </Endpoints>
 
         ```json {{ title: 'Bulk Mark Commands Executed Request' }}
         [
@@ -99,16 +104,23 @@ This endpoint marks a single command as executed based on the provided attemptID
 
 <Row>
     <Col>
-        <Fields>
-            <Field name="attemptID" type="int64" urlParam>
+        <Fields query parameters>
+            <Field name="attemptID" type="integer">
                 id of the command attempt to mark as executed
             </Field>
         </Fields>
+
+        ### Returns
+        Does not return a response object.
+
     </Col>
     <Col sticky>
+        <Endpoints>
+            <Endpoint method="DELETE" url="/delivery/command-queue?attemptID={attemptID}" />
+        </Endpoints>
 
         ```plaintext {{ title: 'URL Example' }}
-        /delivery/command-queue/124249183568797696
+        /delivery/command-queue?attemptID=124249183568797696
         ```
 
     </Col>
