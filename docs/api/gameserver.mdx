@@ -68,12 +68,12 @@
             "token": "exampletoken12345",
             "token_reset_at": "2023-10-25T14:12:00Z",
             "created_by": {
-            "id": "11084680073842688",
-            "email": "example@paynow.gg",
-            "first_name": "Example",
-            "last_name": "Exampleson",
-            "created_at": "2023-04-13T01:26:04Z"
-        },
+				"id": "11084680073842688",
+				"email": "example@paynow.gg",
+				"first_name": "Example",
+				"last_name": "Exampleson",
+				"created_at": "2023-04-13T01:26:04Z"
+			},
             "created_at": "2023-10-23T14:12:00Z",
             "updated_by": {
             "id": "11084680073842688",
@@ -115,31 +115,31 @@ This endpoint creates a new game server with the provided details for the specif
         </Endpoints>
 
         ```json {{ title: 'Create Game Server Request' }}
-        {
-            "name": "NewGameServer",
-            "enabled": true
-        }
-        ```
+		{
+			"id": "124249183568797696",
+			"store_id": "12345",
+			"name": "GameServer1",
+			"enabled": true,
+			"token": "exampletoken12345",
+			"token_reset_at": "2023-10-25T14:12:00Z",
+			"created_by": {
+				"id": "11084680073842688",
+				"email": "example@paynow.gg",
+				"first_name": "Example",
+				"last_name": "Exampleson",
+				"created_at": "2023-04-13T01:26:04Z"
+			},
+			"created_at": "2023-10-23T14:12:00Z",
+			"updated_by": {
+				"id": "11084680073842688",
+				"email": "example@paynow.gg",
+				"first_name": "Example",
+				"last_name": "Exampleson",
+				"created_at": "2023-04-13T01:26:04Z"
+			},
+			"updated_at": "2023-10-25T14:12:00Z"
+		}
 
-        ```json {{ title: 'Create Game Server Response' }}
-        {
-            "id": "124249183568797696",
-            "store_id": "12345",
-            "name": "NewGameServer",
-            "enabled": true,
-            "token": "exampletoken12345",
-            "token_reset_at": null,
-            "created_by": {
-                "id": "11084680073842688",
-                "email": "example@paynow.gg",
-                "first_name": "Example",
-                "last_name": "Exampleson",
-                "created_at": "2023-04-13T01:26:04Z"
-            },
-            "created_at": "2023-10-25T14:12:00Z",
-            "updated_by": null,
-            "updated_at": null
-        }
         ```
 
     </Col>
@@ -163,44 +163,44 @@ This endpoint creates a new game server with the provided details for the specif
         </Endpoints>
 
         ```json {{ title: 'Get Game Servers Response' }}
-        [
-            {
-                "id": "124249183568797696",
-                "store_id": "12345",
-                "name": "GameServer1",
-                "enabled": true,
-                "token": "exampletoken12345",
-                "token_reset_at": null,
-                "created_by": {
-                    "id": "11084680073842688",
-                    "email": "example@paynow.gg",
-                    "first_name": "Example",
-                    "last_name": "Exampleson",
-                    "created_at": "2023-04-13T01:26:04Z"
-                },
-                "created_at": "2023-10-25T14:12:00Z",
-                "updated_by": null,
-                "updated_at": null
-            },
-            {
-                "id": "124249183568797697",
-                "store_id": "12345",
-                "name": "GameServer2",
-                "enabled": false,
-                "token": "exampletoken67890",
-                "token_reset_at": null,
-                "created_by": {
-                    "id": "11084680073842688",
-                    "email": "example@paynow.gg",
-                    "first_name": "Example",
-                    "last_name": "Exampleson",
-                    "created_at": "2023-04-13T01:26:04Z"
-                },
-                "created_at": "2023-10-25T14:15:00Z",
-                "updated_by": null,
-                "updated_at": null
-            }
-        ]
+		[
+			{
+				"id": "124249183568797696",
+				"store_id": "12345",
+				"name": "GameServer1",
+				"enabled": true,
+				"token": "exampletoken12345",
+				"token_reset_at": null,
+				"created_by": {
+					"id": "11084680073842688",
+					"email": "example@paynow.gg",
+					"first_name": "Example",
+					"last_name": "Exampleson",
+					"created_at": "2023-04-13T01:26:04Z"
+				},
+				"created_at": "2023-10-25T14:12:00Z",
+				"updated_by": null,
+				"updated_at": null
+			},
+			{
+				"id": "124249183568797697",
+				"store_id": "12345",
+				"name": "GameServer2",
+				"enabled": false,
+				"token": "exampletoken67890",
+				"token_reset_at": null,
+				"created_by": {
+					"id": "11084680073842688",
+					"email": "example@paynow.gg",
+					"first_name": "Example",
+					"last_name": "Exampleson",
+					"created_at": "2023-04-13T01:26:04Z"
+				},
+				"created_at": "2023-10-25T14:15:00Z",
+				"updated_by": null,
+				"updated_at": null
+			}
+		]
         ```
 
     </Col>
@@ -209,16 +209,10 @@ This endpoint creates a new game server with the provided details for the specif
 ---
 
 ## Get Game Server {{ tag: 'GET' }}
-	This endpoint fetches a single game server based on the provided gameServerID.
+	This endpoint fetches a single game server based on the provided game server ID.
 
 <Row>
     <Col>
-        <Fields query parameters>
-            <Field name="id" type="flake">
-                id of the game server
-            </Field>
-        </Fields>
-
         ### Returns
         Returns a [Game Server object](#the-game-server-object).
 
@@ -227,11 +221,6 @@ This endpoint creates a new game server with the provided details for the specif
         <Endpoints request>
             <Endpoint method="GET" url="/stores/{store.id}/gameservers/{gameserver.id}" />
         </Endpoints>
-
-        ```plaintext {{ title: 'URL Example' }}
-        /stores/12345/gameservers/124249183568797696
-        ```
-
         ```json {{ title: 'Get Game Server Response' }}
         {
             "id": "124249183568797696",
@@ -256,20 +245,14 @@ This endpoint creates a new game server with the provided details for the specif
     </Col>
 </Row>
 
-
 ---
 
 ## Update Game Server {{ tag: 'PATCH' }}
-
-This endpoint updates the details of a game server based on the provided game server id.
+    This endpoint updates the details of a game server based on the provided game server id.
 
 <Row>
     <Col>
-        <Fields query parameters>
-            <Field name="id" type="flake">
-                id of the game server
-            </Field>
-        </Fields>
+        ### Request Parameters
 
         <Fields>
             <Field name="name" type="string" optional>
@@ -280,15 +263,14 @@ This endpoint updates the details of a game server based on the provided game se
             </Field>
         </Fields>
 
+        ### Returns
+        Returns a [Game Server object](#the-game-server-object).
+
     </Col>
     <Col sticky>
         <Endpoints request>
             <Endpoint method="PATCH" url="/stores/{store.id}/gameservers/{gameserver.id}" />
         </Endpoints>
-
-        ```plaintext {{ title: 'URL Example' }}
-        /stores/12345/gameservers/124249183568797696
-        ```
 
         ```json {{ title: 'Update Game Server Request' }}
         {
@@ -297,22 +279,44 @@ This endpoint updates the details of a game server based on the provided game se
         }
         ```
 
+        ```json {{ title: 'Update Game Server Response' }}
+        {
+            "id": "124249183568797696",
+            "store_id": "12345",
+            "name": "UpdatedGameServer",
+            "enabled": false,
+            "token": "exampletoken12345",
+            "token_reset_at": "2023-10-25T14:12:00Z",
+            "created_by": {
+                "id": "11084680073842688",
+                "email": "example@paynow.gg",
+                "first_name": "Example",
+                "last_name": "Exampleson",
+                "created_at": "2023-04-13T01:26:04Z"
+            },
+            "created_at": "2023-10-25T14:12:00Z",
+            "updated_by": {
+                "id": "11084680073842688",
+                "email": "example@paynow.gg",
+                "first_name": "Example",
+                "last_name": "Exampleson",
+                "created_at": "2023-04-13T01:26:04Z"
+            },
+            "updated_at": "2023-10-25T14:12:00Z"
+        }
+        ```
+
     </Col>
 </Row>
+
 
 ---
 
 ## Reset Game Server Token {{ tag: 'POST' }}
-This endpoint resets the token of a specified game server and returns the updated game server object with a new token.
+    This endpoint resets the token of a specified game server and returns the updated game server object with a new token.
 
 <Row>
     <Col>
-        <Fields query parameters>
-            <Field name="gameServerID" type="flake">
-                id of the game server whose token is to be reset
-            </Field>
-        </Fields>
-
         ### Returns
         Returns a [Game Server object](#the-game-server-object).
 
@@ -322,9 +326,6 @@ This endpoint resets the token of a specified game server and returns the update
             <Endpoint method="POST" url="/stores/{store.id}/gameservers/{gameserver.id}/reset-token" />
         </Endpoints>
 
-        ```plaintext {{ title: 'URL Example' }}
-        /stores/12345/gameservers/124249183568797696/reset-token
-        ```
 
         ```json {{ title: 'Reset Game Server Token Response' }}
         {
@@ -349,32 +350,24 @@ This endpoint resets the token of a specified game server and returns the update
 
     </Col>
 </Row>
-
 ---
 
 ## Delete Game Server {{ tag: 'DELETE' }}
-This endpoint deletes a specified game server based on the provided gameServerID.
 
 <Row>
     <Col>
-        <Fields query parameters>
-            <Field name="gameServerID" type="flake">
-                id of the game server to be deleted
-            </Field>
-        </Fields>
+        Deletes a specified game server based on the provided game server ID.
 
         ### Returns
-        Does not return a response object. Responds with HTTP status code 204 No Content on successful deletion.
-
+        Returns `HTTP 204`
     </Col>
     <Col sticky>
         <Endpoints request>
             <Endpoint method="DELETE" url="/stores/{store.id}/gameservers/{gameserver.id}" />
         </Endpoints>
 
-        ```plaintext {{ title: 'URL Example' }}
-        /stores/12345/gameservers/124249183568797696
+        ```json {{ title: 'Response' }}
+        HTTP 204
         ```
-
     </Col>
 </Row>
