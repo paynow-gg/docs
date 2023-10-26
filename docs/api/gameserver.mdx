@@ -92,10 +92,10 @@
 ---
 
 ## Create Game Server {{ tag: 'POST' }}
-This endpoint creates a new game server with the provided details for the specified store ID, and returns the created game server object.
 
 <Row>
     <Col>
+        This endpoint creates a new game server with the provided details for the specified store ID, and returns the created game server object.
         <Fields>
             <Field name="name" type="string">
                 name of the game server
@@ -149,10 +149,11 @@ This endpoint creates a new game server with the provided details for the specif
 ---
 
 ## Get Game Servers {{ tag: 'GET' }}
-    This endpoint fetches a list of all game servers associated with the specified store ID.
-	
+
 <Row>
     <Col>
+        This endpoint fetches a list of all game servers associated with the specified store ID.
+
         ### Returns
         Returns an array of [Game Server objects](#the-game-server-object).
 
@@ -209,10 +210,11 @@ This endpoint creates a new game server with the provided details for the specif
 ---
 
 ## Get Game Server {{ tag: 'GET' }}
-	This endpoint fetches a single game server based on the provided game server ID.
 
 <Row>
     <Col>
+        This endpoint fetches a single game server based on the provided game server ID.
+        
         ### Returns
         Returns a [Game Server object](#the-game-server-object).
 
@@ -248,12 +250,11 @@ This endpoint creates a new game server with the provided details for the specif
 ---
 
 ## Update Game Server {{ tag: 'PATCH' }}
-    This endpoint updates the details of a game server based on the provided game server id.
 
 <Row>
     <Col>
-        ### Request Parameters
-
+        This endpoint updates the details of a game server based on the provided game server id.
+        
         <Fields>
             <Field name="name" type="string" optional>
                 new name of the game server

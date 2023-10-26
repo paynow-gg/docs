@@ -22,3 +22,251 @@
 </Row>
 
 ---
+## The Tag object
+
+<Row>
+    <Col>
+        <Fields>
+            <Field name="id" type="integer">
+                id of the tag
+            </Field>
+            <Field name="store_id" type="integer">
+                id of the store the tag belongs to
+            </Field>
+            <Field name="slug" type="string">
+                A URL-safe version of the tag name
+            </Field>
+            <Field name="name" type="string">
+                name of the tag
+            </Field>
+            <Field name="description" type="string" nullable>
+                A description of what the tag represents
+            </Field>
+            <Field name="enabled" type="boolean">
+                Indicates if the tag is enabled
+            </Field>
+            <Field name="created_by" type="user" typeHref="user#the-user-object">
+                the user who created the tag
+            </Field>
+            <Field name="created_at" type="time">
+                time when the tag was created
+            </Field>
+            <Field name="updated_by" type="user" typeHref="user#the-user-object" nullable>
+                the user who most recently updated the tag
+            </Field>
+            <Field name="updated_at" type="time" nullable>
+                time when the tag was last updated
+            </Field>
+        </Fields>
+    </Col>
+    <Col sticky>
+        ```json {{ title: 'The Tag object' }}
+        {
+            "id": 123,
+            "store_id": 456,
+            "slug": "example-tag",
+            "name": "Example Tag",
+            "description": "This is an example tag.",
+            "enabled": true,
+            "created_by": {
+                "id": "11084680073842688",
+                "email": "example@paynow.gg",
+                "first_name": "Example",
+                "last_name": "Exampleson",
+                "created_at": "2023-04-13T01:26:04Z"
+            },
+            "created_at": "2023-04-13T01:26:04Z",
+            "updated_by": {
+                "id": "11084680073842688",
+                "email": "example@paynow.gg",
+                "first_name": "Example",
+                "last_name": "Exampleson",
+                "created_at": "2023-04-13T01:26:04Z"
+            },
+            "updated_at": "2023-04-14T01:26:04Z"
+        }
+        ```
+    </Col>
+</Row>
+
+---
+
+## Get Tags {{ tag: 'GET' }}
+
+<Row>
+    <Col>
+        This endpoint fetches all the tags associated with a specified store ID.
+
+        ### Returns
+        Returns an array of [Tag objects](#the-tag-object).
+
+    </Col>
+    <Col sticky>
+        <Endpoints request>
+            <Endpoint method="GET" url="/stores/{store.id}/tags" />
+        </Endpoints>
+
+
+        ```json {{ title: 'Get Tags Response' }}
+        [
+            {
+                "id": 789,
+                "store_id": 456,
+                "slug": "newtag",
+                "name": "NewTag",
+                "description": "This is a new tag.",
+                "enabled": true,
+                "created_by": {
+                    "id": "11084680073842688",
+                    "email": "example@paynow.gg",
+                    "first_name": "Example",
+                    "last_name": "Exampleson",
+                    "created_at": "2023-04-13T01:26:04Z"
+                },
+                "created_at": "2023-04-13T01:26:04Z",
+                "updated_by": null,
+                "updated_at": null
+            },
+            {
+                // ...other tags
+            }
+        ]
+        ```
+
+    </Col>
+</Row>
+
+---
+
+## Get Tag {{ tag: 'GET' }}
+
+<Row>
+    <Col>
+        This endpoint fetches a single tag based on the provided tag ID and store id.
+
+        ### Returns
+        Returns a [Tag object](#the-tag-object).
+
+    </Col>
+    <Col sticky>
+        <Endpoints request>
+            <Endpoint method="GET" url="/stores/{store.id}/tags/{tag.id}" />
+        </Endpoints>
+
+
+        ```json {{ title: 'Get Tag Response' }}
+        {
+            "id": 789,
+            "store_id": 456,
+            "slug": "newtag",
+            "name": "NewTag",
+            "description": "This is a new tag.",
+            "enabled": true,
+            "created_by": {
+                "id": "11084680073842688",
+                "email": "example@paynow.gg",
+                "first_name": "Example",
+                "last_name": "Exampleson",
+                "created_at": "2023-04-13T01:26:04Z"
+            },
+            "created_at": "2023-04-13T01:26:04Z",
+            "updated_by": null,
+            "updated_at": null
+        }
+        ```
+
+    </Col>
+</Row>
+
+---
+
+## Update Tag {{ tag: 'PATCH' }}
+
+<Row>
+    <Col>
+        This endpoint updates the details of a specified tag based on the provided tag ID and store ID. All fields are optional, and only the fields provided will be updated.
+
+        <Fields>
+            <Field name="slug" type="string" optional>
+                A URL-safe version of the tag name
+            </Field>
+            <Field name="name" type="string" optional>
+                name of the tag
+            </Field>
+            <Field name="enabled" type="boolean" optional>
+                Indicates if the tag is enabled
+            </Field>
+            <Field name="description" type="string" optional>
+                A description of what the tag represents
+            </Field>
+        </Fields>
+
+        ### Returns
+        Returns the updated [Tag object](#the-tag-object).
+    </Col>
+    <Col sticky>
+        <Endpoints request>
+            <Endpoint method="PATCH" url="/stores/{store.id}/tags/{tag.id}" />
+        </Endpoints>
+
+
+        ```json {{ title: 'Update Tag Request' }}
+        {
+            "slug": "updated-tag",
+            "name": "Updated Tag",
+            "enabled": false,
+            "description": "This is an updated tag."
+        }
+        ```
+
+        ```json {{ title: 'Update Tag Response' }}
+        {
+            "id": 789,
+            "store_id": 456,
+            "slug": "updated-tag",
+            "name": "Updated Tag",
+            "description": "This is an updated tag.",
+            "enabled": false,
+            "created_by": {
+                "id": "11084680073842688",
+                "email": "example@paynow.gg",
+                "first_name": "Example",
+                "last_name": "Exampleson",
+                "created_at": "2023-04-13T01:26:04Z"
+            },
+            "created_at": "2023-04-13T01:26:04Z",
+            "updated_by": {
+                "id": "11084680073842688",
+                "email": "example@paynow.gg",
+                "first_name": "Example",
+                "last_name": "Exampleson",
+                "created_at": "2023-04-13T01:26:04Z"
+            },
+            "updated_at": "2023-04-14T01:26:04Z"
+        }
+        ```
+
+    </Col>
+</Row>
+
+---
+
+## Delete Tag {{ tag: 'DELETE' }}
+
+<Row>
+    <Col>
+        Deletes a specified tag based on the provided tag ID and store ID.
+
+        ### Returns
+        Returns `HTTP 204`
+    </Col>
+    <Col sticky>
+        <Endpoints request>
+            <Endpoint method="DELETE" url="/stores/{store.id}/tags/{tag.id}" />
+        </Endpoints>
+
+        ```json {{ title: 'Response' }}
+        HTTP 204
+        ```
+    </Col>
+</Row>
