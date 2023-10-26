@@ -142,7 +142,7 @@
 
 <Row>
     <Col>
-        This endpoint fetches a single tag based on the provided tag ID and store id.
+        This endpoint fetches a single tag based on the provided store and tag ID.
 
         ### Returns
         Returns a [Tag object](#the-tag-object).
@@ -184,7 +184,7 @@
 
 <Row>
     <Col>
-        This endpoint updates the details of a specified tag based on the provided tag ID and store ID. All fields are optional, and only the fields provided will be updated.
+        This endpoint updates the details of a specified tag based on the provided store and tag ID. All fields are optional, and only the fields provided will be updated.
 
         <Fields>
             <Field name="slug" type="string" optional>
@@ -255,10 +255,10 @@
 
 <Row>
     <Col>
-        Deletes a specified tag based on the provided tag ID and store ID.
+        Deletes a specified tag based on the provided store and tag ID.
 
         ### Returns
-        Returns `HTTP 204`
+        Returns HTTP 204 indicating that the tag has been successfully deleted.
     </Col>
     <Col sticky>
         <Endpoints request>

@@ -23,3 +23,159 @@
 </Row>
 
 ---
+
+## The NavLink object
+
+<Row>
+    <Col>
+        <Fields>
+            <Field name="node_id" type="integer">
+                ID of the navlink node.
+            </Field>
+            <Field name="parent_node_id" type="string" nullable>
+                ID of the parent node, if any. This field is nullable and would be null if the navlink node is a root node.
+            </Field>
+            <Field name="store_id" type="integer">
+                ID of the store the navlink belongs to.
+            </Field>
+            <Field name="tag_id" type="integer">
+                ID of the tag the navlink represents.
+            </Field>
+            <Field name="tag_slug" type="string">
+                A URL-safe version of the tag name.
+            </Field>
+            <Field name="name" type="string">
+                Name of the navlink node.
+            </Field>
+            <Field name="order" type="integer">
+                The order in which the navlink node appears in the navigation structure.
+            </Field>
+        </Fields>
+    </Col>
+    <Col sticky>
+        ```json {{ title: 'The NavLink object' }}
+        {
+            "node_id": 123,
+            "parent_node_id": null,
+            "store_id": 456,
+            "tag_id": 789,
+            "tag_slug": "example-tag",
+            "name": "Example NavLink",
+            "order": 1
+        }
+        ```
+    </Col>
+</Row>
+
+---
+
+## Get Navlinks {{ tag: 'GET' }}
+
+<Row>
+    <Col>
+        This endpoint fetches all the navlinks associated with a specified store ID, which can be used to build the navigation structure dynamically.
+
+        ### Returns
+        Returns an array of [NavLink objects](#the-navlink-object).
+
+    </Col>
+    <Col sticky>
+        <Endpoints request>
+            <Endpoint method="GET" url="/stores/{store.id}/navlinks" />
+        </Endpoints>
+
+
+        ```json {{ title: 'Get Navlinks Response' }}
+        [
+            {
+                "node_id": 123,
+                "parent_node_id": null,
+                "store_id": 456,
+                "tag_id": 789,
+                "tag_slug": "example-tag",
+                "name": "Example NavLink",
+                "order": 1
+            },
+            {
+                // ...other navlinks
+            }
+        ]
+        ```
+
+    </Col>
+</Row>
+
+---
+
+## Update Navlinks Layout {{ tag: 'PATCH' }}
+
+<Row>
+    <Col>
+        This endpoint updates the layout of navlinks for a specified store. By specifying a navlink ID in the URL, and providing the `ParentNodeID`, `TagID`, and `Order` in the request body, the nesting and ordering of navlinks can be updated dynamically.
+
+        <Fields>
+            <Field name="parent_node_id" type="string" optional>
+                The ID of the parent node. If this field is omitted or set to null, the navlink will be treated as a root node.
+            </Field>
+            <Field name="tag_id" type="integer">
+                The ID of the tag the navlink represents.
+            </Field>
+            <Field name="order" type="integer">
+                The order in which the navlink should appear in the navigation structure.
+            </Field>
+        </Fields>
+
+        ### Returns
+        Returns the updated [NavLink object](#the-navlink-object).
+
+    </Col>
+    <Col sticky>
+        <Endpoints request>
+            <Endpoint method="PATCH" url="/stores/{store.id}/navlinks/sort-orders" />
+        </Endpoints>
+
+
+        ```json {{ title: 'Update Navlinks Layout Request' }}
+        {
+            "parent_node_id": null,
+            "tag_id": 789,
+            "order": 2
+        }
+        ```
+
+        ```json {{ title: 'Update Navlinks Layout Response' }}
+        {
+            "node_id": 123,
+            "parent_node_id": null,
+            "store_id": 456,
+            "tag_id": 789,
+            "tag_slug": "updated-tag",
+            "name": "Updated NavLink",
+            "order": 2
+        }
+        ```
+
+    </Col>
+</Row>
+
+---
+
+## Delete NavLink Node {{ tag: 'DELETE' }}
+
+<Row>
+    <Col>
+        This endpoint deletes a specified navlink node based on the provided store and navlink node ID. 
+
+        ### Returns
+        Returns `HTTP 204` indicating that the navlink node has been successfully deleted.
+    </Col>
+    <Col sticky>
+        <Endpoints request>
+            <Endpoint method="DELETE" url="/stores/{store.id}/navlinks/{node.id}" />
+        </Endpoints>
+
+        ```json {{ title: 'Response' }}
+        HTTP 204
+        ```
+    </Col>
+</Row>
