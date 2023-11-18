@@ -116,11 +116,11 @@ This endpoint marks a single command as executed based on the provided attemptID
     </Col>
     <Col sticky>
         <Endpoints>
-            <Endpoint method="DELETE" url="/delivery/command-queue?attemptID={attemptID}" />
+            <Endpoint method="DELETE" url="/delivery/command-queue/{attemptID}" />
         </Endpoints>
 
         ```plaintext {{ title: 'URL Example' }}
-        /delivery/command-queue?attemptID=124249183568797696
+        /delivery/command-queue/124249183568797696
         ```
 
     </Col>

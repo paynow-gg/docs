@@ -9,6 +9,12 @@
         <Endpoint method="GET" href="#get-current-customer" url="/store/customer" />
         <Endpoint method="GET" href="#get-current-customer-inventory" url="/store/customer/inventory" />
     </Endpoints>
+
+	  <Fields title={"Request Headers"}>
+		  <Field name="Authorization" type="customer auth" required>
+			  the token of your customer prefixed with `customer` if logged in, [more information here](/api/reference#providing-authentication)
+		  </Field>
+	  </Fields>
   </Col>
 </Row>
 

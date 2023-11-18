@@ -10,6 +10,22 @@
 			<Endpoint method="DELETE" href="#empty-current-cart" url="/store/cart" />
 			<Endpoint method="PUT" href="#set-cart-lines" url="/store/cart/lines" />
 		</Endpoints>
+
+		<Fields title={"Request Headers"}>
+			<Field name="Authorization" type="customer auth" required>
+				the token of your customer prefixed with `customer`, [see more information here](/api/reference#providing-authentication)
+			</Field>
+			<Field name="x-paynow-customer-ip" type="string">
+				the IP address (IPv4 or IPv6) of the customer.
+			</Field>
+			<Field name="x-paynow-customer-countrycode" type="string">
+				the customer's country code in ISO 3166-1 alpha-2 format.
+				If you're using Cloudflare, you can use the value of `CF-IPCountry` header from the request of your customer.
+
+				You need to include either `x-paynow-customer-ip` or `x-paynow-customer-countrycode`
+				if the requests are **not being made from the customer's browser**.
+			</Field>
+		</Fields>
 	</Col>
 </Row>
 

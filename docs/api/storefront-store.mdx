@@ -1,16 +1,40 @@
 # Storefront Store
 
 <Row>
-  <Col>
-    The store object contains the information about your store such as currency and other configuration values.
+	<Col>
+		The store object contains the information about your store such as currency and other configuration values.
 
-    This resource is intended to be accessed directly by customers using a [customer token](api/customer#customer-tokens).
-  </Col>
-  <Col sticky>
-    <Endpoints>
-        <Endpoint method="GET" href="#get-store" url="/store" />
-    </Endpoints>
-  </Col>
+		This resource is intended to be accessed directly by customers using a [customer token](api/customer#customer-tokens).
+
+		**IMPORTANT:**
+		To properly display any relevant VAT/GST taxes, and for anti-fraud purposes,
+		you are **required** to include the customer's IP address OR country code (preferred, in ISO 3166-1 alpha-2 format)
+		in the request headers **if you are proxying the requests through your server** (in cases such as server-side rendering).
+	</Col>
+	<Col sticky>
+		<Endpoints>
+			<Endpoint method="GET" href="#get-store" url="/store"/>
+		</Endpoints>
+
+		<Fields title={"Request Headers"}>
+			<Field name="x-paynow-store-id" type="flake" required>
+				the ID of your store
+			</Field>
+			<Field name="Authorization" type="customer auth" optional>
+				the token of your customer prefixed with `customer` if logged in, [more information here](/api/reference#providing-authentication)
+			</Field>
+			<Field name="x-paynow-customer-ip" type="string">
+				the IP address (IPv4 or IPv6) of the customer.
+			</Field>
+			<Field name="x-paynow-customer-countrycode" type="string">
+				the customer's country code in ISO 3166-1 alpha-2 format.
+				If you're using Cloudflare, you can use the value of `CF-IPCountry` header from the request of your customer.
+
+				You need to include either `x-paynow-customer-ip` or `x-paynow-customer-countrycode`
+				if the requests are **not being made from the customer's browser**.
+			</Field>
+		</Fields>
+	</Col>
 </Row>
 
 ---
@@ -18,48 +42,48 @@
 ## The Store object
 
 <Row>
-  <Col>
-    <Fields>
-      <Field name="id" type="flake">
-        id of the store
-      </Field>
-      <Field name="slug" type="string">
-        the unique url-safe identifier for the store
-      </Field>
-      <Field name="name" type="string">
-        the name of the store
-      </Field>
-      <Field name="game" type="enum">
-        the game of the store
-        <Enums>
-          <Enum value="rust" />
-        </Enums>
-      </Field>
-      <Field name="currency" type="string">
-        the currency that this store uses for all of its pricing
-      </Field>
-      <Field name="logo_url" type="string" nullable>
-        a url to the main brand logo image for the store
-      </Field>
-      <Field name="logo_square_url" type="string" nullable>
-        a url to the square logo image for the store
-      </Field>
-    </Fields>
-  </Col>
-  <Col sticky>
+	<Col>
+		<Fields>
+			<Field name="id" type="flake">
+				id of the store
+			</Field>
+			<Field name="slug" type="string">
+				the unique url-safe identifier for the store
+			</Field>
+			<Field name="name" type="string">
+				the name of the store
+			</Field>
+			<Field name="game" type="enum">
+				the game of the store
+				<Enums>
+					<Enum value="rust"/>
+				</Enums>
+			</Field>
+			<Field name="currency" type="string">
+				the currency that this store uses for all of its pricing
+			</Field>
+			<Field name="logo_url" type="string" nullable>
+				a url to the main brand logo image for the store
+			</Field>
+			<Field name="logo_square_url" type="string" nullable>
+				a url to the square logo image for the store
+			</Field>
+		</Fields>
+	</Col>
+	<Col sticky>
 
-    ```json {{ title: 'The Store object' }}
-    {
-        "id": "94688451781206016",
-        "slug": "best-store-ever",
-        "name": "The BEST Store",
-        "game": "rust",
-        "currency": "usd",
-        "logo_url": "https://example.paynow.gg/logo.webp",
-        "logo_square_url": "https://example.paynow.gg/logo_square.webp"
-    }
-    ```
-  </Col>
+		```json {{title: 'The Store object'}}
+		{
+			"id": "94688451781206016",
+			"slug": "best-store-ever",
+			"name": "The BEST Store",
+			"game": "rust",
+			"currency": "usd",
+			"logo_url": "https://example.paynow.gg/logo.webp",
+			"logo_square_url": "https://example.paynow.gg/logo_square.webp"
+		}
+		```
+	</Col>
 </Row>
 
 ---
@@ -67,28 +91,28 @@
 ## Get Store {{ tag: 'GET' }}
 
 <Row>
-  <Col>
-    Returns the store object for the current customer.
+	<Col>
+		Returns the store object for the current customer.
 
-    ### Returns
-    Returns a [store](#the-store-object).
+		### Returns
+		Returns a [store](#the-store-object).
 
-  </Col>
-  <Col sticky>
-    <Endpoints request>
-		<Endpoint method="GET" url="/store" />
-    </Endpoints>
+	</Col>
+	<Col sticky>
+		<Endpoints request>
+			<Endpoint method="GET" url="/store"/>
+		</Endpoints>
 
-    ```json {{ title: 'Response' }}
-    {
-        "id": "94688451781206016",
-        "slug": "best-store-ever",
-        "name": "The BEST Store",
-        "game": "rust",
-        "currency": "usd",
-        "logo_url": "https://example.paynow.gg/logo.webp",
-        "logo_square_url": "https://example.paynow.gg/logo_square.webp"
-    }
-    ```
-  </Col>
+		```json {{title: 'Response'}}
+		{
+			"id": "94688451781206016",
+			"slug": "best-store-ever",
+			"name": "The BEST Store",
+			"game": "rust",
+			"currency": "usd",
+			"logo_url": "https://example.paynow.gg/logo.webp",
+			"logo_square_url": "https://example.paynow.gg/logo_square.webp"
+		}
+		```
+	</Col>
 </Row>

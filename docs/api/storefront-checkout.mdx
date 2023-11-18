@@ -8,6 +8,12 @@
         <Endpoints>
             <Endpoint method="POST" href="#create-checkout" url="/checkouts" />
         </Endpoints>
+
+		<Fields title={"Request Headers"}>
+			<Field name="Authorization" type="customer auth" required>
+				the token of your customer prefixed with `customer`, [see more information here](/api/reference#providing-authentication)
+			</Field>
+		</Fields>
     </Col>
 </Row>
 ---
@@ -32,7 +38,7 @@ This endpoint creates a new checkout.
             <Field name="product_id" type="flake">
                 id of the product
             </Field>
-            <Field name="gift_to" type="CustomerPlatformAccount" nullable typeHref="#checkout-gift">
+            <Field name="gift_to" type="CustomerPlatformAccount" optional typeHref="#checkout-gift">
                 gift using a platform, currently only steam is supported
             </Field>
             <Field name="gift_to_customer_id" type="flake" optional>
@@ -48,7 +54,7 @@ This endpoint creates a new checkout.
             <Field name="platform" type="enum">
                 platform used to gift
                 <Enums vertical>
-                    <Enum value="Steam">Steam platform</Enum>
+                    <Enum value="steam">Steam platform</Enum>
                 </Enums>
             </Field>
             <Field name="id" type="integer">

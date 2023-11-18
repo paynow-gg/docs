@@ -1,17 +1,41 @@
 # Storefront Product
 
 <Row>
-  <Col>
-    Products are what your customers see when they visit your store.
-    They have a name, price, thumbnail, and many other properties you can use to enhance your store's display.
-  </Col>
-  <Col sticky>
-    <Endpoints>
-        <Endpoint method="GET" href="#get-products" url="/store/products" />
-        <Endpoint method="GET" href="#get-product" url="/store/products/{product.id}" />
-        <Endpoint method="GET" href="#get-product" url="/store/products/{product.slug}" />
-    </Endpoints>
-  </Col>
+	<Col>
+		Products are what your customers see when they visit your store.
+		They have a name, price, thumbnail, and many other properties you can use to enhance your store's display.
+
+		**IMPORTANT:**
+		To properly display any relevant VAT/GST taxes, and for anti-fraud purposes,
+		you are **required** to include the customer's IP address OR country code (preferred, in ISO 3166-1 alpha-2 format)
+		in the request headers **if you are proxying the requests through your server** (in cases such as server-side rendering).
+	</Col>
+	<Col sticky>
+		<Endpoints>
+			<Endpoint method="GET" href="#get-products" url="/store/products"/>
+			<Endpoint method="GET" href="#get-product" url="/store/products/{product.id}"/>
+			<Endpoint method="GET" href="#get-product" url="/store/products/{product.slug}"/>
+		</Endpoints>
+
+		<Fields title={"Request Headers"}>
+			<Field name="x-paynow-store-id" type="flake" required>
+				the ID of your store
+			</Field>
+			<Field name="Authorization" type="customer auth" optional>
+				the token of your customer prefixed with `customer` if logged in, [more information here](/api/reference#providing-authentication)
+			</Field>
+			<Field name="x-paynow-customer-ip" type="string">
+				the IP address (IPv4 or IPv6) of the customer.
+			</Field>
+			<Field name="x-paynow-customer-countrycode" type="string">
+				the customer's country code in ISO 3166-1 alpha-2 format.
+				If you're using Cloudflare, you can use the value of `CF-IPCountry` header from the request of your customer.
+
+				You need to include either `x-paynow-customer-ip` or `x-paynow-customer-countrycode`
+				if the requests are **not being made from the customer's browser**.
+			</Field>
+		</Fields>
+	</Col>
 </Row>
 
 ---
@@ -19,61 +43,76 @@
 ## The Product object
 
 <Row>
-  <Col>
-    <Fields>
-      <Field name="id" type="flake">
-        id of the product
-      </Field>
-      <Field name="store_id" type="flake">
-        id of the store this product belongs to
-      </Field>
-      <Field name="slug" type="string">
-        the url-safe identifier for the product, unique to the store
-      </Field>
-      <Field name="image_url" type="string" nullable>
-        a url to the thumbnail image for the product
-      </Field>
-      <Field name="name" type="string">
-        the name of the product
-      </Field>
-      <Field name="description" type="string">
-        the full-length description of the product
-      </Field>
-      <Field name="price" type="integer">
-        the price of this product in zero-decimal format (where "$10.00" is `1000`)
-      </Field>
-      <Field name="allow_one_time_purchase" type="boolean">
-        whether this product can be purchased one time (without subscribing)
-      </Field>
-      <Field name="allow_subscription" type="boolean">
-        whether this product can be subscribed to
-      </Field>
-      <Field name="subscription_interval_value" type="integer">
-        the interval value at which this product will renew when subscribed
-      </Field>
-      <Field name="subscription_interval_scale" type="enum">
-        the interval scale at which this product will renew when subscribed.
-        Can be one of `day`, `week`, `month`, `year`
-      </Field>
-      <Field name="stock" type="stock limit" typeHref="#stock-limit-structure" nullable>
-        the latest stock availability/limits for this product.
-        Will be `null` if the store has this information disabled for customer view.
-      </Field>
-      <Field name="tags" type="product tag" typeHref="#product-tag-structure">
-        an array of tags that this product belongs to
-      </Field>
-      <Field name="created_at" type="timestamp">
-        timestamp of when the product was created
-      </Field>
-      <Field name="updated_at" type="timestamp" nullable>
-        timestamp of when the product was last updated
-      </Field>
-    </Fields>
+	<Col>
+		<Fields>
+			<Field name="id" type="flake">
+				id of the product
+			</Field>
+			<Field name="store_id" type="flake">
+				id of the store this product belongs to
+			</Field>
+			<Field name="slug" type="string">
+				the url-safe identifier for the product, unique to the store
+			</Field>
+			<Field name="image_url" type="string" nullable>
+				a url to the thumbnail image for the product
+			</Field>
+			<Field name="name" type="string">
+				the name of the product
+			</Field>
+			<Field name="description" type="string">
+				the full-length description of the product
+			</Field>
+			<Field name="enabled" type="boolean">
+				a boolean signifying if the product is enabled.
+				This will always be `true`.
+			</Field>
+			<Field name="sort_order" type="integer">
+				the sort order value of this product in ascending order.
+			</Field>
+			<Field name="price" type="integer">
+				the price of this product in zero-decimal format (where "$10.00" is `1000`)
+			</Field>
+			<Field name="allow_one_time_purchase" type="boolean">
+				whether this product can be purchased one time (without subscribing)
+			</Field>
+			<Field name="allow_subscription" type="boolean">
+				whether this product can be subscribed to
+			</Field>
+			<Field name="subscription_interval_value" type="integer">
+				the interval value at which this product will renew when subscribed
+			</Field>
+			<Field name="subscription_interval_scale" type="enum">
+				the interval scale at which this product will renew when subscribed.
+				Can be one of `day`, `week`, `month`, `year`
+			</Field>
+			<Field name="stock" type="stock limit" typeHref="#stock-limit-structure" nullable>
+				the latest stock availability/limits for this product.
+				Will be `null` if the store has this information disabled for customer view.
+			</Field>
+			<Field name="pricing" type="pricing" typeHref="#pricing-structure" nullable>
+				the pricing details for the specified product.
+				Includes estimated VAT and active sales.
 
-    ## Stock Limit Structure
+				We recommend to show your customers the applied VAT percentage and the VAT local name.
 
-    <Fields>
-      {/*<Field name="store_limited" type="boolean">
+				In very rare cases, if there's an outage of our ordering service, the pricing object might be null.
+			</Field>
+			<Field name="tags" type="product tag" typeHref="#product-tag-structure">
+				an array of tags that this product belongs to
+			</Field>
+			<Field name="created_at" type="timestamp">
+				timestamp of when the product was created
+			</Field>
+			<Field name="updated_at" type="timestamp" nullable>
+				timestamp of when the product was last updated
+			</Field>
+		</Fields>
+
+		## Stock Limit Structure
+
+		<Fields>
+			{/*<Field name="store_limited" type="boolean">
         whether the product's stock is limited across the entire store
       </Field>
       <Field name="store_available" type="integer">
@@ -86,54 +125,163 @@
         the number of units available for the current customer. `0` if customer limits are disabled.
       </Field>*/}
 
-		<Field name="available_to_purchase" type="boolean">
-			whether the product is available to purchase (all stock limits met)
-		</Field>
-    </Fields>
+			<Field name="available_to_purchase" type="boolean">
+				whether the product is available to purchase (all stock limits met)
+			</Field>
+			<Field name="customer_available" type="integer" nullable>
+				the remaining stock available for the current customer
+			</Field>
+		</Fields>
 
-    ## Product Tag Structure
+		## Pricing Structure
 
-    <Fields>
-      <Field name="id" type="flake">
-        id of the tag
-      </Field>
-      <Field name="slug" type="string">
-        the url-safe identifier for the tag, unique to the store
-      </Field>
-      <Field name="name" type="string">
-        the name the tag
-      </Field>
-    </Fields>
-  </Col>
-  <Col sticky>
-    ```json {{ title: 'The Product object' }}
-    {
-        "id": "117390520375844864",
-        "store_id": "94688451781206016",
-        "slug": "super-special-kit",
-        "image_url": "https://example.paynow.gg/image.webp",
-        "name": "Super Special Kit",
-        "description": "Become the envy of your friends with this super special kit. Batteries not included.",
-        "price": 699,
-        "allow_one_time_purchase": true,
-        "allow_subscription": true,
-        "subscription_interval_value": 1,
-        "subscription_interval_scale": "month",
-        "stock": {
-          "available_to_purchase": true
-        },
-        "tags": [
-            {
-                "id": "103968177980973056",
-                "slug": "kits",
-                "name": "Kits"
-            }
-        ],
-        "created_at": "2023-04-12T20:50:23.069562Z",
-        "updated_at": "2023-04-13T21:48:26.264271Z"
-    }
-    ```
-  </Col>
+		<Fields>
+			<Field name="active_sale" type="active sale object" typeHref="#active-sale-structure" nullable>
+				the active sale object if a sale is active
+			</Field>
+			<Field name="sale_value" type="integer" nullable>
+				the total sale value applied to the final price
+			</Field>
+			<Field name="vat_rate" type="vat rate object" typeHref="#vat-rate-structure" nullable>
+				the estimated VAT rate information
+			</Field>
+			<Field name="price_original" type="integer">
+				the price before applying all taxes and discounts
+			</Field>
+			<Field name="price_final" type="integer">
+				the final price after applying all taxes and discounts (same as `price` field on the Product object)
+			</Field>
+		</Fields>
+
+		## Active Sale Structure
+
+		<Fields>
+			<Field name="id" type="flake">
+				id of the sale
+			</Field>
+			<Field name="name" type="string">
+				name of the sale
+			</Field>
+			<Field name="discount_type" type="enum">
+				the type of discount this sale applies
+				<Enums vertical>
+					<Enum value="percent">`discount_amount` applies as a percent</Enum>
+					<Enum value="amount">`discount_amount` applies as an absolute amount</Enum>
+				</Enums>
+			</Field>
+			<Field name="discount_amount" type="integer">
+				the discount amount this sale applies.
+
+				If `discount_type` is `percent`, then this is interpreted as multiples of 10 basis points (where `1000` is **100.0%**)
+
+				If `discount_type` is `amount`, then this is interpreted as an absolute amount (where `1000` is **$10.00**)
+			</Field>
+			<Field name="minimum_order_value" type="integer">
+				the minimum order value required for the sale to be applied
+			</Field>
+			<Field name="begins_at" type="timestamp">
+				timestamp of when the sale started
+			</Field>
+			<Field name="ends_at" type="timestamp" nullable>
+				timestamp of when the sale ends
+			</Field>
+		</Fields>
+
+		## VAT Rate Structure
+
+		<Fields>
+			<Field name="country_code" type="string">
+				the country code (ISO 3166-1 alpha-2) this VAT applies to
+			</Field>
+			<Field name="country_name" type="string">
+				the full country name in English associated with this VAT rate
+			</Field>
+			<Field name="currency" type="string">
+				the currency of the country this VAT applies to
+			</Field>
+			<Field name="vat_abbreviation" type="string">
+				the local VAT abbreviation in local language
+			</Field>
+			<Field name="vat_local_name" type="string">
+				the full name of the VAT in local language
+			</Field>
+			<Field name="eu_member_state" type="boolean">
+				signifies if the associated country is a member of the EU
+			</Field>
+			<Field name="percentage" type="integer">
+				the percentage of the VAT
+			</Field>
+		</Fields>
+
+		## Product Tag Structure
+
+		<Fields>
+			<Field name="id" type="flake">
+				id of the tag
+			</Field>
+			<Field name="slug" type="string">
+				the url-safe identifier for the tag, unique to the store
+			</Field>
+			<Field name="name" type="string">
+				the name the tag
+			</Field>
+		</Fields>
+	</Col>
+	<Col sticky>
+		```json {{title: 'The Product object'}}
+		{
+			"id": "214540104499212288",
+			"store_id": "208289304403783680",
+			"slug": "2x-trio-500-tokens",
+			"image_url": null,
+			"name": "2x Trio - 500 Tokens",
+			"description": "<p>Upon purchasing this product you receive 500 tokens.</p>",
+			"enabled": true,
+			"price": 1814,
+			"sort_order": 0,
+			"allow_one_time_purchase": true,
+			"allow_subscription": true,
+			"subscription_interval_value": 1,
+			"subscription_interval_scale": "month",
+			"stock": {
+				"available_to_purchase": true,
+				"customer_available": 1
+			},
+			"pricing": {
+				"active_sale": {
+					"id": "221398701879345152",
+					"name": "cool sale",
+					"discount_type": "percent",
+					"discount_amount": 250,
+					"minimum_order_value": 0,
+					"begins_at": "2023-09-30T22:00:00Z",
+					"ends_at": "2024-01-31T23:00:00Z"
+				},
+				"sale_value": 374,
+				"vat_rate": {
+					"country_code": "CZ",
+					"country_name": "Czech Republic",
+					"currency": "CZK",
+					"vat_abbreviation": "DPH",
+					"vat_local_name": "Daň z přidané hodnoty",
+					"eu_member_state": true,
+					"percentage": 21
+				},
+				"price_original": 1499,
+				"price_final": 1814
+			},
+			"tags": [
+				{
+					"id": "214540052082991104",
+					"slug": "test",
+					"name": "test"
+				}
+			],
+			"created_at": "2023-10-07T22:48:08.842234Z",
+			"updated_at": "2023-11-18T12:57:48.646287Z"
+		}
+		```
+	</Col>
 </Row>
 
 ---
@@ -141,50 +289,50 @@
 ## Get Products {{ tag: 'GET' }}
 
 <Row>
-  <Col>
-    Returns all products in the [store](api/storefront-store).
+	<Col>
+		Returns all products in the [store](api/storefront-store).
 
-    ### Returns
-    Returns an array of [products](#the-product-object).
+		### Returns
+		Returns an array of [products](#the-product-object).
 
-  </Col>
-  <Col sticky>
-    <Endpoints request perms={[ {id: 'product_read'} ]}>
-        <Endpoint method="GET" url="/store/products" />
-    </Endpoints>
+	</Col>
+	<Col sticky>
+		<Endpoints request perms={[{id: 'product_read'}]}>
+			<Endpoint method="GET" url="/store/products"/>
+		</Endpoints>
 
-    ```json {{ title: 'Response' }}
-    [
-        {
-          "id": "117390520375844864",
-          "store_id": "94688451781206016",
-          "slug": "super-special-kit",
-          "image_url": "https://example.paynow.gg/image.webp",
-          "name": "Super Special Kit",
-          "description": "Become the envy of your friends with this super special kit. Batteries not included.",
-          "price": 699,
-          "allow_one_time_purchase": true,
-          "allow_subscription": true,
-          "subscription_interval_value": 1,
-          "subscription_interval_scale": "month",
-          "stock": {
+		```json {{title: 'Response'}}
+		[
+		{
+			"id": "117390520375844864",
+			"store_id": "94688451781206016",
+			"slug": "super-special-kit",
+			"image_url": "https://example.paynow.gg/image.webp",
+			"name": "Super Special Kit",
+			"description": "Become the envy of your friends with this super special kit. Batteries not included.",
+			"price": 699,
+			"allow_one_time_purchase": true,
+			"allow_subscription": true,
+			"subscription_interval_value": 1,
+			"subscription_interval_scale": "month",
+			"stock": {
 			"available_to_purchase": true
-          },
-          "tags": [
-              {
-                  "id": "103968177980973056",
-                  "slug": "kits",
-                  "name": "Kits"
-              }
-          ],
-          "created_at": "2023-04-12T20:50:23.069562Z",
-          "updated_at": "2023-04-13T21:48:26.264271Z"
-      },
-      {...},
-      {...}
-    ]
-    ```
-  </Col>
+		},
+			"tags": [
+		{
+			"id": "103968177980973056",
+			"slug": "kits",
+			"name": "Kits"
+		}
+			],
+			"created_at": "2023-04-12T20:50:23.069562Z",
+			"updated_at": "2023-04-13T21:48:26.264271Z"
+		},
+		{...},
+		{...}
+		]
+		```
+	</Col>
 </Row>
 
 ---
@@ -192,45 +340,45 @@
 ## Get Product {{ tag: 'GET' }}
 
 <Row>
-  <Col>
-    Returns a product located by its `id` or `slug` field.
+	<Col>
+		Returns a product located by its `id` or `slug` field.
 
-    ### Returns
-    Returns a [product](#the-product-object) if a valid identifier was provided.
+		### Returns
+		Returns a [product](#the-product-object) if a valid identifier was provided.
 
-  </Col>
-  <Col sticky>
-    <Endpoints request perms={[ {id: 'product_read'} ]}>
-        <Endpoint method="GET" url="/store/products/{product.id}" />
-        <Endpoint method="GET" url="/store/products/{product.slug}" />
-    </Endpoints>
+	</Col>
+	<Col sticky>
+		<Endpoints request perms={[{id: 'product_read'}]}>
+			<Endpoint method="GET" url="/store/products/{product.id}"/>
+			<Endpoint method="GET" url="/store/products/{product.slug}"/>
+		</Endpoints>
 
-    ```json {{ title: 'Response' }}
-    {
-      "id": "117390520375844864",
-      "store_id": "94688451781206016",
-      "slug": "super-special-kit",
-      "image_url": "https://example.paynow.gg/image.webp",
-      "name": "Super Special Kit",
-      "description": "Become the envy of your friends with this super special kit. Batteries not included.",
-      "price": 699,
-      "allow_one_time_purchase": true,
-      "allow_subscription": true,
-      "subscription_interval_value": 1,
-      "subscription_interval_scale": "month",
-      "stock": {
-		"available_to_purchase": true
-      },
-      "tags": [
-          {
-              "id": "103968177980973056",
-              "slug": "kits",
-              "name": "Kits"
-          }
-      ],
-      "created_at": "2023-04-12T20:50:23.069562Z",
-      "updated_at": "2023-04-13T21:48:26.264271Z"
-  }
-    ```
-  </Col>
+		```json {{title: 'Response'}}
+		{
+			"id": "117390520375844864",
+			"store_id": "94688451781206016",
+			"slug": "super-special-kit",
+			"image_url": "https://example.paynow.gg/image.webp",
+			"name": "Super Special Kit",
+			"description": "Become the envy of your friends with this super special kit. Batteries not included.",
+			"price": 699,
+			"allow_one_time_purchase": true,
+			"allow_subscription": true,
+			"subscription_interval_value": 1,
+			"subscription_interval_scale": "month",
+			"stock": {
+			"available_to_purchase": true
+		},
+			"tags": [
+		{
+			"id": "103968177980973056",
+			"slug": "kits",
+			"name": "Kits"
+		}
+			],
+			"created_at": "2023-04-12T20:50:23.069562Z",
+			"updated_at": "2023-04-13T21:48:26.264271Z"
+		}
+		```
+	</Col>
 </Row>
