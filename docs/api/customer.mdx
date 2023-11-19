@@ -21,9 +21,9 @@
         <Endpoint method="POST" href="#create-customer-token" url="/stores/{store.id}/customers/{customer.id}/tokens" />
         <Endpoint method="DELETE" href="#invalidate-customer-tokens" url="/stores/{store.id}/customers/{customer.id}/tokens" />
 
-        <Endpoint method="GET" href="#get-customer-inventory" url="/stores/{store.id}/customers/{customer.id}/inventory" />
-        <Endpoint method="POST" href="#assign-inventory-item" url="/stores/{store.id}/customers/{customer.id}/inventory" />
-        <Endpoint method="DELETE" href="#revoke-inventory-item" url="/stores/{store.id}/customers/{customer.id}/inventory/{item.id}" />
+        <Endpoint method="GET" href="#get-customer-inventory" url="/stores/{store.id}/customers/{customer.id}/command_delivery" />
+        <Endpoint method="POST" href="#assign-inventory-item" url="/stores/{store.id}/customers/{customer.id}/command_delivery" />
+        <Endpoint method="DELETE" href="#revoke-inventory-item" url="/stores/{store.id}/customers/{customer.id}/command_delivery/{item.id}" />
     </Endpoints>
   </Col>
 </Row>
@@ -662,7 +662,7 @@ See the `state` field below for more details.
   </Col>
   <Col sticky>
     <Endpoints request perms={[ {id: 'customer_inventory_manage'} ]}>
-        <Endpoint method="GET" url="/stores/{store.id}/customers/{customer.id}/inventory" />
+        <Endpoint method="GET" url="/stores/{store.id}/customers/{customer.id}/command_delivery" />
     </Endpoints>
 
     ```json {{ title: 'Response' }}
@@ -763,7 +763,7 @@ See the `state` field below for more details.
   </Col>
   <Col sticky>
     <Endpoints request perms={[ {id: 'customer_inventory_manage'} ]}>
-        <Endpoint method="POST" url="/stores/{store.id}/customers/{customer.id}/inventory" />
+        <Endpoint method="POST" url="/stores/{store.id}/customers/{customer.id}/command_delivery" />
     </Endpoints>
 
     ```json {{ title: 'Response' }}
@@ -832,7 +832,7 @@ See the `state` field below for more details.
   </Col>
   <Col sticky>
     <Endpoints request perms={[ {id: 'customer_inventory_manage'} ]}>
-        <Endpoint method="DELETE" url="/stores/{store.id}/customers/inventory/{item.id}" />
+        <Endpoint method="DELETE" url="/stores/{store.id}/customers/command_delivery/{item.id}" />
     </Endpoints>
 
     ```json {{ title: 'Response' }}

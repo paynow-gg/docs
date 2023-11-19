@@ -7,7 +7,7 @@
   <Col sticky>
     <Endpoints>
         <Endpoint method="GET" href="#get-current-customer" url="/store/customer" />
-        <Endpoint method="GET" href="#get-current-customer-inventory" url="/store/customer/inventory" />
+        <Endpoint method="GET" href="#get-current-customer-inventory" url="/store/customer/command_delivery" />
     </Endpoints>
 
 	  <Fields title={"Request Headers"}>
@@ -256,7 +256,7 @@ When a customer buys something on the store, the product goes into their invento
   </Col>
   <Col sticky>
     <Endpoints request>
-        <Endpoint method="GET" url="/store/customer/inventory" />
+        <Endpoint method="GET" url="/store/customer/command_delivery" />
     </Endpoints>
 
     ```json {{ title: 'Response' }}
