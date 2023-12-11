@@ -203,6 +203,9 @@
         the content of the command.
         Can be replaced with variable templating.
       </Field>
+      <Field name="online_only" type="boolean">
+        indicates whether the command should be only executed if the customer is online
+      </Field>
     </Fields>
   </Col>
   <Col sticky>
@@ -252,11 +255,13 @@
       "commands": [
         {
           "stage": "on_purchase",
-          "content": "give {customer.steam.id} 1 blender"
+          "content": "give {customer.steam.id} 1 blender",
+          "online_only": true
         },
         {
           "stage": "on_expire",
-          "content": "give {customer.steam.id} 1 blender"
+          "content": "give {customer.steam.id} 1 blender",
+          "online_only": false
         }
       ],
       "created_by": {

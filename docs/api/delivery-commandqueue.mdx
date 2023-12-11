@@ -34,8 +34,14 @@ This endpoint fetches the list of commands that are queued for execution.
             <Field name="command" type="string">
                 command to be executed to assign products for customers
             </Field>
+            <Field name="online_only" type="boolean">
+                indicates whether the command should be only executed if the customer is online
+            </Field>
             <Field name="queued_at" type="time">
                 time when the command was queued
+            </Field>
+            <Field name="steam_id" type="string">
+                steam id 64 of the customer
             </Field>
         </Fields>
 
@@ -49,7 +55,9 @@ This endpoint fetches the list of commands that are queued for execution.
             {
                 "attempt_id": "124249183568797696",
                 "command": "add 76561198085278322 hero",
-                "queued_at": "2023-10-23T14:12:00Z"
+                "queued_at": "2023-10-23T14:12:00Z",
+                "online_only": false,
+                "steam_id": "76561198085278322"
             }
         ]
         ```
