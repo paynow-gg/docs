@@ -7,6 +7,7 @@
     <Col sticky>
         <Endpoints>
             <Endpoint method="GET" href="#get-queued-commands" url="/delivery/command-queue" />
+            <Endpoint method="POST" href="#get-queued-commands-with-online-players" url="/delivery/command-queue" />
             <Endpoint method="DELETE" href="#bulk-mark-commands-executed" url="/delivery/command-queue" />
             <Endpoint method="DELETE" href="#mark-command-executed" url="/delivery/command-queue/{attemptID}" />
         </Endpoints>
@@ -49,6 +50,64 @@ This endpoint fetches the list of commands that are queued for execution.
     <Col sticky>
         <Endpoints>
             <Endpoint method="GET" url="/delivery/command-queue" />
+        </Endpoints>
+        ```json {{ title: 'Get Queued Commands Response' }}
+        [
+            {
+                "attempt_id": "124249183568797696",
+                "command": "add 76561198085278322 hero",
+                "queued_at": "2023-10-23T14:12:00Z",
+                "online_only": false,
+                "steam_id": "76561198085278322"
+            }
+        ]
+        ```
+
+    </Col>
+</Row>
+
+---
+
+## Get Queued Commands with Online Players {{ tag: 'POST' }}
+
+This endpoint fetches the list of commands that are queued for execution while prioritizing commands for the online players passed in the request body
+
+<Row>
+    <Col>
+        <Fields>
+            <Field name="steam_ids" type="[]string">
+                list of steam ids for currently online players
+            </Field>
+        </Fields>
+
+        ## Response
+
+        Returns a JSON array of queued commands.
+
+        ### QueuedCommand object structure
+
+        <Fields>
+            <Field name="attempt_id" type="integer">
+                id of the command attempt
+            </Field>
+            <Field name="command" type="string">
+                command to be executed to assign products for customers
+            </Field>
+            <Field name="online_only" type="boolean">
+                indicates whether the command should be only executed if the customer is online
+            </Field>
+            <Field name="queued_at" type="time">
+                time when the command was queued
+            </Field>
+            <Field name="steam_id" type="string">
+                steam id 64 of the customer
+            </Field>
+        </Fields>
+
+    </Col>
+    <Col sticky>
+        <Endpoints>
+            <Endpoint method="POST" url="/delivery/command-queue" />
         </Endpoints>
         ```json {{ title: 'Get Queued Commands Response' }}
         [
