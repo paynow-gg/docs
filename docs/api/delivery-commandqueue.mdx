@@ -109,6 +109,14 @@ This endpoint fetches the list of commands that are queued for execution while p
         <Endpoints>
             <Endpoint method="POST" url="/delivery/command-queue" />
         </Endpoints>
+        ```json {{ title: 'Get Queued Commands Request' }}
+        {
+            "steam_ids": [
+                "76561198085278322",
+                "76561198085278323"
+            ]
+        }
+        ```
         ```json {{ title: 'Get Queued Commands Response' }}
         [
             {
