@@ -1,0 +1,264 @@
+# Webstore Modules
+
+<Row>
+	<Col>
+		Webstore Modules allow you to embed dynamic components to your webstore hosted by PayNow.
+		You can use it to display recent orders, allow customers to check their gift card balance, show top customers, and more.
+	</Col>
+</Row>
+
+---
+
+## Gift Card Balance module
+
+<Row>
+	<Col>
+		<Fields>
+			<Field name="settings.header" type="string">
+				header of the module
+			</Field>
+
+			<Field name="error" type="string">
+				error text if something went wrong (i.e. giftcard not found)
+			</Field>
+
+			<Field name="giftCard" type="giftcard lookup object" typeHref={"#giftcard-lookup-object"}>
+				header of the module
+			</Field>
+		</Fields>
+
+		## Giftcard Lookup Object
+
+		<Fields>
+			<Field name="code" type="string">
+				code of the giftcard
+			</Field>
+			<Field name="balance" type="int64">
+				current balance of giftcard
+			</Field>
+			<Field name="starting_balance" type="int64">
+				starting balance of giftcard
+			</Field>
+			<Field name="expires_at" type="string">
+				expiration date of giftcard
+			</Field>
+		</Fields>
+	</Col>
+</Row>
+
+## Recent Payments module
+
+<Row>
+	<Col>
+		<Fields>
+			<Field name="settings.header" type="string">
+				header of the module
+			</Field>
+
+			<Field name="settings.displayLimit" type="int64">
+				how many payments to show
+			</Field>
+
+			<Field name="settings.displayFreePayments" type="bool">
+				should display free payments
+			</Field>
+
+			<Field name="settings.displayTimeOfPurchase" type="bool">
+				should display time of payment
+			</Field>
+
+			<Field name="settings.displayPriceOfPurchase" type="bool">
+				should display price of purchase
+			</Field>
+
+			<Field name="settings.displayPurchasedProduct" type="bool">
+				should display purchased product
+			</Field>
+
+			<Field name="orders" type="order[]" typeHref={"#order-object"}>
+				list of recent orders
+			</Field>
+		</Fields>
+
+		## Order Object
+
+		<Fields>
+			<Field name="total_amount" type="number">
+				the total amount of the order
+			</Field>
+			<Field name="completed_at" type="string">
+				completion date of order
+			</Field>
+			<Field name="customer" type="customer" typeHref={"#customer-object"}>
+				customer that made the payment
+			</Field>
+			<Field name="lines" type="line[]" typeHref={"#order-line-object"}>
+				array of order lines if settings.displayPurchasedProduct is enabled
+			</Field>
+		</Fields>
+
+		## Customer Object
+
+		<Fields>
+			<Field name="id" type="flake">
+				ID of the customer
+			</Field>
+			<Field name="steam.name" type="string">
+				steam name of the customer
+			</Field>
+			<Field name="steam.avatar_url" type="string">
+				steam avatar of the customer
+			</Field>
+			<Field name="name" type="string">
+				name of the customer
+			</Field>
+		</Fields>
+
+		## Order Line Object
+
+		<Fields>
+			<Field name="product_id" type="flake">
+				ID of the product
+			</Field>
+			<Field name="product_name" type="string">
+				name of the product
+			</Field>
+			<Field name="product_image_url" type="string">
+				image of the product
+			</Field>
+			<Field name="gift" type="bool">
+				was the order a gift
+			</Field>
+			<Field name="price" type="int64">
+				the price of the product
+			</Field>
+			<Field name="total_amount" type="int64">
+				the total paid amount
+			</Field>
+			<Field name="quantity" type="int64">
+				quantity
+			</Field>
+		</Fields>
+
+	</Col>
+</Row>
+
+## Text Box module
+
+<Row>
+	<Col>
+		<Fields>
+			<Field name="settings.header" type="string">
+				header of the module
+			</Field>
+
+			<Field name="content" type="string">
+				the HTML content of the text box
+			</Field>
+		</Fields>
+	</Col>
+</Row>
+
+## Payment Goal module
+
+<Row>
+	<Col>
+		<Fields>
+			<Field name="settings.header" type="string">
+				header of the module
+			</Field>
+
+			<Field name="settings.period" type="string">
+				the period for which the goal is set
+			</Field>
+
+			<Field name="settings.goalTarget" type="int64">
+				the goal target in the store's default currency
+			</Field>
+
+			<Field name="settings.displayAbsoluteGoalAmount" type="boolean">
+				should the absolute goal amount be displayed?
+			</Field>
+
+			<Field name="revenue" type="string">
+				the current value of the payment goal
+			</Field>
+		</Fields>
+	</Col>
+</Row>
+
+## Top Customer module
+
+<Row>
+	<Col>
+		<Fields>
+			<Field name="settings.header" type="string">
+				header of the module
+			</Field>
+
+			<Field name="settings.period" type="string">
+				the period for which the top customers are calculated
+			</Field>
+
+			<Field name="settings.field" type="enum">
+				the field to sort the customers by
+				<Enums vertical>
+					<Enum value="total_spend_amount_gross"/>
+					<Enum value="total_spend_amount_net"/>
+					<Enum value="average_spend_amount_gross"/>
+					<Enum value="average_spend_amount_net"/>
+					<Enum value="total_payments"/>
+				</Enums>
+			</Field>
+
+			<Field name="settings.limit" type="int64">
+				the total returned top customers
+			</Field>
+
+			<Field name="settings.displayCustomerSpendAmount" type="bool">
+				should the customer's spend amount be displayed?
+			</Field>
+
+			<Field name="customers" type="customers[]" typeHref={"#top-customer-object"}>
+				the top customers
+			</Field>
+		</Fields>
+
+		## Top Customer Object
+
+		<Fields>
+			<Field name="id" type="flake">
+				ID of the customer
+			</Field>
+			<Field name="steam.name" type="string">
+				steam name of the customer
+			</Field>
+			<Field name="steam.avatar_url" type="string">
+				steam avatar of the customer
+			</Field>
+			<Field name="name" type="string">
+				name of the customer
+			</Field>
+
+			<Field name="stats.total_spend_amount_gross" type="int64">
+				total gross spend amount
+			</Field>
+
+			<Field name="stats.total_spend_amount_net" type="int64">
+				total net spend amount
+			</Field>
+
+			<Field name="stats.average_spend_amount_gross" type="int64">
+				average gross spend amount
+			</Field>
+
+			<Field name="stats.average_spend_amount_net" type="int64">
+				average net spend amount
+			</Field>
+
+			<Field name="stats.total_payments" type="int64">
+				total payment count
+			</Field>
+		</Fields>
+	</Col>
+</Row>

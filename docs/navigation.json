@@ -13,6 +13,15 @@
     ]
   },
   {
+    "title": "Webstores",
+    "links": [
+      {
+        "title": "Modules",
+        "href": "/api/webstore-modules"
+      }
+    ]
+  },
+  {
     "title": "Management API",
     "links": [
       {
