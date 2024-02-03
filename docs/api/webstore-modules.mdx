@@ -9,6 +9,16 @@
 
 ---
 
+## Module Placement in Template
+
+<Row>
+	<Col>
+		To incorporate any of the modules into your webstore, insert the `{{ modules | raw }}` variable into the desired location within your template layout file. This variable acts as a placeholder, automatically populating with the modules you've added from the module section.
+	</Col>
+</Row>
+
+---
+
 ## Gift Card Balance module
 
 <Row>
@@ -44,6 +54,12 @@
 			</Field>
 		</Fields>
 	</Col>
+
+	<Row>
+		<Col>
+			HTML file must be named `module.giftcard_balance.html`. Also must be in root directory.
+		</Col>
+	</Row>
 </Row>
 
 ## Recent Payments module
@@ -141,6 +157,12 @@
 		</Fields>
 
 	</Col>
+
+	<Row>
+		<Col>
+			HTML file must be named `module.recent_payments.html`. Also must be in root directory.
+		</Col>
+	</Row>
 </Row>
 
 ## Text Box module
@@ -157,6 +179,12 @@
 			</Field>
 		</Fields>
 	</Col>
+
+	<Row>
+		<Col>
+			HTML file must be named `module.text_box.html`. Also must be in root directory.
+		</Col>
+	</Row>
 </Row>
 
 ## Payment Goal module
@@ -180,11 +208,29 @@
 				should the absolute goal amount be displayed?
 			</Field>
 
+			<Field name="settings.allowPercentageOverflow" type="boolean">
+				should the % go above 100%
+			</Field>
+
+			<Field name="settings.animateGoalBar" type="boolean">
+				should the bar be animated
+			</Field>
+
+			<Field name="settings.barStyle" type="string">
+				striped or normal
+			</Field>
+
 			<Field name="revenue" type="string">
 				the current value of the payment goal
 			</Field>
 		</Fields>
 	</Col>
+
+	<Row>
+		<Col>
+			HTML file must be named `module.payment_goal.html`. Also must be in root directory.
+		</Col>
+	</Row>
 </Row>
 
 ## Top Customer module
@@ -261,4 +307,10 @@
 			</Field>
 		</Fields>
 	</Col>
+
+	<Row>
+		<Col>
+			HTML file must be named `module.top_customer.html`. Also must be in root directory.
+		</Col>
+	</Row>
 </Row>
