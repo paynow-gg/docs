@@ -102,19 +102,15 @@
 <Row>
     <Col>
         <Note>
-            To cancel subscriptions, use the form below by replacing `{{ subscription.id }}` with the actual subscription ID:
+            To cancel subscriptions, use the `{{ subscription.id }}` like in the example below.
         </Note>
         ```html {{ title: 'Cancel Subscription' }}
-            &lt;form action="/subscriptions/\{{ subscription.id }}/cancel" method="post"&gt;
-                &lt;input type="submit" value="Cancel Subscription"&gt;
-            &lt;/form&gt;
+            <form action="/subscriptions/{{ subscription.id }}/cancel" method="post">
+                <button type="submit">
+                    Cancel Subscription
+                </button>
+            </form>
         ```
-    </Col>
-</Row>
-
-<Row>
-    <Col>
-        Files related to managing subscriptions must be placed in a `subscriptions` folder at the root directory.
     </Col>
 </Row>
 
@@ -307,7 +303,7 @@
     </Col>
 </Row>
 
-# Active Tag Variables
+## Active Tag Variables
 
 <Row>
     <Col>
