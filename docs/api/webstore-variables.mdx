@@ -104,11 +104,11 @@
         <Note>
             To cancel subscriptions, use the form below by replacing `{{ subscription.id }}` with the actual subscription ID:
         </Note>
-        <CodeBlock language="html">
+        ```html {{ title: 'Cancel Subscription' }}
             &lt;form action="/subscriptions/\{{ subscription.id }}/cancel" method="post"&gt;
                 &lt;input type="submit" value="Cancel Subscription"&gt;
             &lt;/form&gt;
-        </CodeBlock>
+        ```
     </Col>
 </Row>
 
