@@ -16,6 +16,10 @@
     "title": "Webstores",
     "links": [
       {
+        "title": "Variables",
+        "href": "/api/webstore-variables"
+      },
+      {
         "title": "Modules",
         "href": "/api/webstore-modules"
       }
