@@ -94,6 +94,18 @@
         "href": "/api/storefront-product"
       },
       {
+        "title": "Subscription",
+        "href": "/api/storefront-subscription"
+      },
+      {
+        "title": "Tag",
+        "href": "/api/storefront-tag"
+      },
+      {
+        "title": "Navlink",
+        "href": "/api/storefront-navlink"
+      },
+      {
         "title": "Cart",
         "href": "/api/storefront-cart"
       },

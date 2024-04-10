@@ -2,360 +2,246 @@
 
 <Row>
 	<Col>
-		Webstore variables serve as powerful tools that enable you to tailor your template, ensuring content is precisely placed within your design. Utilizing Twig as our templating engine enhances this capability by offering a flexible syntax for defining where and how content appears. 
+		Webstore variables serve as powerful tools that enable you to tailor your template, ensuring content is precisely placed within your design. Utilizing Twig as our templating engine enhances this capability by offering a flexible syntax for defining where and how content appears.
         For a comprehensive understanding of how to leverage Twig within your templates, including its syntax and functions, the official Twig documentation provides an invaluable resource. https://twig.symfony.com/
+	</Col>
+
+	<Col sticky>
+	    <Endpoints>
+            <Endpoint method="FILE" href="#index-html" url="index.html" />
+            <Endpoint method="FILE" href="#category" url="category.html"/>
+            <Endpoint method="FILE" href="#product" url="product.html"/>
+        </Endpoints>
 	</Col>
 </Row>
 
 ---
 
-## Product Variables 
+## Global Variables
+
+Variables that are available in all template files.
 
 <Row>
     <Col>
-        <Fields>
-            <Field name="product.name" type="string">
-                Name of the product.
+        <Fields title="Global Variables">
+            <Field name="store" type="Store" typeHref="/api/storefront-store#the-store-object">
+                The details of the currently active store.
             </Field>
-            <Field name="product.price" type="float">
-                Price of the product.
+            <Field name="webstore" type="Webstore" typeHref="#webstore-object">
+                The details of your currently active hosted webstore.
             </Field>
-            <Field name="product.description" type="string">
-                Description of the product.
+            <Field name="cart" type="Cart" typeHref="/api/storefront-cart#the-cart-object" nullable>
+                The cart of the currently logged in customer. NULL if not logged in.
             </Field>
-            <Field name="product.stock.available" type="boolean">
-                Whether the product is available in stock.
+            <Field name="navlinks" type="Navlink[]" typeHref="/api/storefront-navlink#the-nav-link-object">
+                All enabled navlinks of this store.
             </Field>
-            <Field name="product.allow_one_time_purchase" type="boolean">
-                Indicates if the product can be purchased only once by a single customer.
+            <Field name="tags" type="Tag[]" typeHref="/api/storefront-tag#the-tag-object">
+                All enabled tags of this store.
             </Field>
-            <Field name="product.image_url" type="string">
-                URL of the product's image.
+            <Field name="customer" type="Customer" typeHref="/api/storefront-customer#the-customer-object" nullable>
+                The currently logged in customer. NULL if not logged in.
             </Field>
-            <Field name="product.slug" type="string">
-                A URL-friendly identifier (slug) for the product, used in creating web addresses for individual products.
+            <Field name="request" type="Request" typeHref="#request-details-object">
+                Details about the HTTP request to the hosted webstore.
             </Field>
-            <Field name="product.pricing.active_sale" type="boolean">
-                Indicates whether the product is currently on sale.
+            <Field name="notification" type="Notification" typeHref="#notification-object" nullable>
+                Any currently active notification that should be displayed to the customer.
             </Field>
-            <Field name="product.pricing.price_original" type="float">
-                The original price of the product before any sales or discounts.
+            <Field name="currency" type="string" nullable>
+                The preferred currency of the customer. If NULL, then use `store.currency`.
             </Field>
-            <Field name="product.pricing.vat_rate" type="object">
-                Details about the VAT rate applied to the product.
+            <Field name="available_currencies" type="string[]">
+                Array of available currencies to use for FX previews.
+
+                To set a preferred currency, redirect the customer to any route with a query parameter called
+                `currency`.
+                (i.e. `https://rustinity.paynow.store?currency=EUR`)
             </Field>
-            <Field name="product.pricing.vat_rate.percentage" type="float">
-                The VAT rate applied to the product price, as a percentage.
+            <Field name="modules" type="html">
+                Pre-rendered HTML of any active modules to insert into your webstore.
+
+                Use `{{ modules }}` to inject the rendered modules into any part of your webstore.
             </Field>
-            <Field name="product.pricing.vat_rate.vat_abbreviation" type="string">
-                Abbreviation of the VAT rate applicable to the product.
+            <Field name="favicon" type="string">
+                The URL to an image to use as a favicon. Usually the store square logo.
+            </Field>
+        </Fields>
+    </Col>
+</Row>
+
+## index.html
+
+The main page of your webstore.
+
+<Row>
+    <Col>
+        <Fields title="Available Variables">
+            <Field name="products" type="Product[]" typeHref="/api/storefront-product#the-product-object">
+                An array of all available products of this store.
+            </Field>
+        </Fields>
+    </Col>
+</Row>
+
+## category.html
+
+The category view of your webstore. You get redirected here after either selecting a navlink, or filtering with a tag.
+
+You can filter products here by using the `?tag` query parameter, and passing in comma separated tag slugs.
+
+<Row>
+    <Col>
+        <Fields title="Available Variables">
+            <Field name="products" type="Product[]" typeHref="/api/storefront-product#the-product-object">
+                An array of all products matching the query parameters.
+            </Field>
+            <Field name="activeTag" type="ActiveTag" typeHref="#active-tag-object">
+                The currently available tag.
+            </Field>
+        </Fields>
+    </Col>
+</Row>
+
+## product.html
+
+A product detail view page.
+
+<Row>
+    <Col>
+        <Fields title="Available Variables">
+            <Field name="product" type="Product" typeHref="/api/storefront-product#the-product-object">
+                The currently selected product.
+            </Field>
+            <Field name="available_gameservers" type="Available Game Servers[]" typeHref="#available-game-server-object" nullable>
+                An array of available gameservers if the product requires a gameserver selection.
             </Field>
         </Fields>
     </Col>
 </Row>
 
 
-## Subscription Variables 
-
-<Row>
-    <Col>
-        Files related to managing subscriptions must be placed in a `subscriptions` folder at the root directory.
-    </Col>
-</Row>
+## Available Game Server object
 
 <Row>
     <Col>
         <Fields>
-            <Field name="subscription.product_name" type="string">
-                Name of the product associated with the subscription.
-            </Field>
-            <Field name="subscription.total_amount_str" type="string">
-                The total amount of the subscription in a string format, usually including the currency symbol.
-            </Field>
-            <Field name="subscription.status" type="string">
-                The current status of the subscription (e.g., active, pending, canceled).
-            </Field>
-            <Field name="subscription.interval_value" type="int">
-                The numerical value of the interval between subscription charges.
-            </Field>
-            <Field name="subscription.interval_scale" type="string">
-                The scale of the interval (e.g., day, month, year) between subscription charges.
-            </Field>
-            <Field name="subscription.created_at" type="string">
-                The creation date of the subscription.
-            </Field>
-            <Field name="subscription.id" type="string">
-                Unique identifier of the subscription.
-            </Field>
-            <Field name="subscription.active_at" type="string">
-                The date when the subscription became active.
-            </Field>
-            <Field name="subscription.canceled_at" type="string">
-                The date when the subscription was canceled, if applicable.
-            </Field>
-            <Field name="subscription.cancel_reason" type="string">
-                The reason provided for the subscription's cancellation, if available.
-            </Field>
-        </Fields>
-    </Col>
-</Row>
-
-<Row>
-    <Col>
-        <Note>
-            To cancel subscriptions, use the `{{ subscription.id }}` like in the example below.
-        </Note>
-        ```html {{ title: 'Cancel Subscription' }}
-            <form action="/subscriptions/{{ subscription.id }}/cancel" method="post">
-                <button type="submit">
-                    Cancel Subscription
-                </button>
-            </form>
-        ```
-    </Col>
-</Row>
-
-## Customer Variables 
-
-<Row>
-    <Col>
-        <Fields>
-            <Field name="customer.id" type="string">
-                Unique identifier of the customer.
-            </Field>
-            <Field name="customer.steam.avatar_url" type="string">
-                URL of the customer's Steam avatar image.
-            </Field>
-            <Field name="customer.name" type="string">
-                Name of the customer.
-            </Field>
-            <Field name="customer.steam.name" type="string">
-                The customer's username on Steam.
-            </Field>
-            <Field name="customer.steam_id" type="string">
-                The customer's unique Steam ID.
-            </Field>
-        </Fields>
-    </Col>
-</Row>
-
-## Navlinks Variables
-
-<Row>
-    <Col>
-        <Fields>
-            <Field name="navlinks" type="array">
-                An array of navigation link objects, each containing data about a specific navigation link.
-            </Field>
-            <Field name="navlinks[].node_id" type="string">
-                Unique identifier of the navigation link.
-            </Field>
-            <Field name="navlinks[].name" type="string">
-                Name of the navigation link.
-            </Field>
-            <Field name="navlinks[].tag_id" type="string">
-                The unique identifier for the tag associated with the navigation link.
-            </Field>
-            <Field name="navlinks[].tag_query" type="array">
-                An array containing query parameters used to filter products or content associated with the navigation link. Each element in the array is a string.
-            </Field>
-            <Field name="navlinks[].tag_slug" type="string">
-                A URL-friendly slug derived from the navigation link's tag.
-            </Field>
-            <Field name="navlinks[].order" type="int">
-                An integer representing the order in which the navigation link appears relative to other navigation links.
-            </Field>
-            <Field name="navlinks[].parent_node_id" type="string" nullable="true">
-                The unique identifier of the parent navigation link, if any (null if the navigation link is top-level).
-            </Field>
-            <Field name="navlinks[].store_id" type="string">
-                The unique identifier of the store to which the navigation link belongs.
-            </Field>
-            <Field name="navlinks[].children" type="array">
-                An array of child navigation link objects, each structured the same as the parent navigation link object. This field is recursive and can contain its own `children` array.
-            </Field>
-        </Fields>
-    </Col>
-</Row>
-
-## Carts Variables
-
-<Row>
-    <Col>
-        <Fields>
-            <Field name="cart" type="object">
-                Represents a shopping cart, containing items chosen by a customer and other related information.
-            </Field>
-            <Field name="cart.store_id" type="string">
-                The unique identifier of the store to which the cart belongs.
-            </Field>
-            <Field name="cart.customer_id" type="string">
-                The unique identifier of the customer who owns the cart.
-            </Field>
-            <Field name="cart.currency" type="string">
-                The currency in which the cart's total is denoted. This field can be an empty string if the currency is not specified.
-            </Field>
-            <Field name="cart.total" type="int">
-                The total cost of all items in the cart.
-            </Field>
-            <Field name="cart.lines" type="array">
-                An array of items currently in the cart.
-            </Field>
-            <Field name="cart.lines[].product_id" type="string">
-                The unique identifier of the product.
-            </Field>
-            <Field name="cart.lines[].line_key" type="string">
-                A unique key for the line item in the cart.
-            </Field>
-            <Field name="cart.lines[].name" type="string">
-                The name of the product.
-            </Field>
-            <Field name="cart.lines[].price" type="int">
-                The price of the product.
-            </Field>
-            <Field name="cart.lines[].quantity" type="int">
-                The quantity of the product in the cart.
-            </Field>
-            <Field name="cart.lines[].slug" type="string">
-                A URL-friendly slug for the product.
-            </Field>
-            <Field name="cart.lines[].image_url" type="string" nullable="true">
-                The URL of the product's image. This field can be null if no image is available.
-            </Field>
-            <Field name="cart.lines[].selected_gameserver" type="string" nullable="true">
-                The selected game server for the product, if applicable. This field can be null if no server is selected.
-            </Field>
-            <Field name="cart.lines[].selected_gameserver_id" type="string" nullable="true">
-                The unique identifier of the selected game server, if applicable. This field can be null if no server is selected.
-            </Field>
-        </Fields>
-    </Col>
-</Row>
-
-## Active Game Servers
-
-<Row>
-    <Col>
-        <Fields>
-            <Field name="available_gameservers" type="array">
-                An array representing available game servers. Each element in the array is an object detailing information about a specific game server.
-            </Field>
-            <Field name="available_gameservers[].id" type="string">
+            <Field name="id" type="flake">
                 The unique identifier of the game server. This ID is typically used to reference the server in database queries or API calls.
             </Field>
-            <Field name="available_gameservers[].name" type="string">
+            <Field name="name" type="string">
                 The name of the game server. This name is used to represent the server to users, allowing them to select it from a list or identify it in the context of the application.
             </Field>
         </Fields>
     </Col>
 </Row>
 
-## Webstore Variables
+## Webstore object
 
 <Row>
     <Col>
         <Fields>
-            <Field name="webstore.id" type="string">
+            <Field name="id" type="string">
                 The unique identifier of the webstore.
             </Field>
-            <Field name="webstore.slug" type="string">
+            <Field name="slug" type="string">
                 A URL-friendly slug associated with the webstore.
             </Field>
-            <Field name="webstore.is_active" type="boolean">
+            <Field name="is_active" type="boolean">
                 Indicates whether the webstore is currently active (true) or not (false).
             </Field>
-            <Field name="webstore.custom_domain" type="string" nullable="true">
+            <Field name="custom_domain" type="string" nullable="true">
                 The custom domain set for the webstore, if any. This field can be null if no custom domain is set.
             </Field>
-            <Field name="webstore.custom_domain_verified" type="boolean">
+            <Field name="custom_domain_verified" type="boolean">
                 Indicates whether the custom domain has been verified (true) or not (false).
             </Field>
-            <Field name="webstore.current_template_id" type="string">
+            <Field name="current_template_id" type="string">
                 The unique identifier of the current template being used by the webstore.
             </Field>
-            <Field name="webstore.custom_templates" type="string" nullable="true">
+            <Field name="custom_templates" type="string" nullable="true">
                 Information about custom templates, if any, associated with the webstore. This field can be null if there are no custom templates.
             </Field>
         </Fields>
     </Col>
 </Row>
 
-## Tags Variables
+## Active Tag object
 
 <Row>
     <Col>
         <Fields>
-            <Field name="tags" type="array">
-                An array of tag objects, each providing details about a specific tag used to categorize or label content.
-            </Field>
-            <Field name="tags[].id" type="string">
-                The unique identifier for the tag.
-            </Field>
-            <Field name="tags[].name" type="string">
-                The name of the tag.
-            </Field>
-            <Field name="tags[].slug" type="string">
-                A URL-friendly slug associated with the tag. This is typically used in URLs to represent the tag.
-            </Field>
-            <Field name="tags[].description" type="string">
-                A brief description of the tag, which can include HTML content.
-            </Field>
-        </Fields>
-    </Col>
-</Row>
-
-## Active Tag Variables
-
-<Row>
-    <Col>
-        <Fields>
-            <Field name="activeTag" type="object">
-                Represents the currently active or selected tag, detailing its properties and contextual information.
-            </Field>
-            <Field name="activeTag.id" type="string">
+            <Field name="id" type="string">
                 The unique identifier for the active tag. This is typically used to reference the tag in database queries or API calls.
             </Field>
-            <Field name="activeTag.name" type="string">
+            <Field name="name" type="string">
                 The name of the active tag. This is displayed to users and used to represent the tag across the user interface.
             </Field>
-            <Field name="activeTag.slug" type="string">
+            <Field name="slug" type="string">
                 A URL-friendly slug for the active tag. Slugs are often used in URLs to represent the tag in a readable and SEO-friendly manner.
             </Field>
-            <Field name="activeTag.description" type="string">
+            <Field name="description" type="string">
                 The description of the active tag. This can include HTML content and provides more detailed information about the tag or its associated category.
             </Field>
         </Fields>
     </Col>
 </Row>
 
-## Store Variables
+## Checkout Complete object
 
 <Row>
     <Col>
         <Fields>
-            <Field name="store" type="object">
-                Represents the store, encompassing essential branding and operational details.
-            </Field>
-            <Field name="store.name" type="string">
-                The name of the store, used for branding and identification.
-            </Field>
-            <Field name="store.logo_url" type="string">
-                The URL of the store's logo image. This is used for branding purposes across the store's interface and communications.
-            </Field>
-            <Field name="store.currency" type="string">
-                The primary currency in which the store conducts transactions. This is used for all pricing and financial transactions within the store.
+            <Field name="text" type="string">
+                A text message or status indicating the completion of an action or process within the context it is used.
             </Field>
         </Fields>
     </Col>
 </Row>
 
-## Complete Text Variable
+## Notification object
 
 <Row>
     <Col>
         <Fields>
-            <Field name="complete.text" type="string">
-                A text message or status indicating the completion of an action or process within the context it is used.
+            <Field name="message" type="string">
+                The message of the notification.
+            </Field>
+            <Field name="type" type="string">
+                The type of the notification. Usually `error`.
+            </Field>
+        </Fields>
+    </Col>
+</Row>
+
+## Request details object
+
+<Row>
+    <Col>
+        <Fields>
+            <Field name="url" type="string">
+                The current full URL.
+            </Field>
+            <Field name="path" type="string">
+                The path of the URL.
+            </Field>
+            <Field name="query" type="map<string, string>">
+                Key-value pair of the query parameters.
+            </Field>
+            <Field name="country" type="string">
+                The country code of the IP address.
+            </Field>
+            <Field name="countryName" type="string">
+                The human-readable country name of the IP address.
+            </Field>
+            <Field name="region" type="string">
+                The region where the IP originates from.
+            </Field>
+            <Field name="city" type="string">
+                The city where the IP originates from.
+            </Field>
+            <Field name="isEUCountry" type="boolean">
+                Is the request coming from a EU country?
             </Field>
         </Fields>
     </Col>

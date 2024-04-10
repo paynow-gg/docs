@@ -1,0 +1,127 @@
+# Storefront Navlink
+
+<Row>
+	<Col>
+		The Navlinks structure is used to dynamically build a navigation header for your store.
+
+        You can hardcode the navigation header on your store, or you can use navlinks to update it dynamically.
+        Navlinks are also used to build navigation for hosted stores.
+
+        The navlinks structure is made up of nodes that represent [tags](api/tag).
+        Nodes can be nested and used to easily build a tag filter for querying [products](api/product).
+
+        Navlinks can be configured by going to the [Navlinks section on the dashboard](https://dashboard.paynow.gg/navlinks).
+	</Col>
+	<Col sticky>
+		<Endpoints>
+			<Endpoint method="GET" href="#get-navlinks" url="/store/navlinks" />
+		</Endpoints>
+
+		<Fields title={"Request Headers"}>
+			<Field name="x-paynow-store-id" type="flake" required>
+                the ID of your store
+            </Field>
+            <Field name="Authorization" type="customer auth" optional>
+                the token of your customer prefixed with `customer` if logged in, [more information here](/api/reference#providing-authentication)
+            </Field>
+		</Fields>
+	</Col>
+</Row>
+
+---
+
+## The NavLink object
+
+<Row>
+    <Col>
+        <Fields>
+            <Field name="node_id" type="string">
+                Unique identifier of the navigation link.
+            </Field>
+            <Field name="name" type="string">
+                Name of the navigation link.
+            </Field>
+            <Field name="tag_id" type="string">
+                The unique identifier for the tag associated with the navigation link.
+            </Field>
+            <Field name="tag_query" type="array">
+                An array containing query parameters used to filter products or content associated with the navigation link. Each element in the array is a string.
+            </Field>
+            <Field name="tag_slug" type="string">
+                A URL-friendly slug derived from the navigation link's tag.
+            </Field>
+            <Field name="order" type="int">
+                An integer representing the order in which the navigation link appears relative to other navigation links.
+            </Field>
+            <Field name="parent_node_id" type="string" nullable>
+                The unique identifier of the parent navigation link, if any (null if the navigation link is top-level).
+            </Field>
+            <Field name="store_id" type="string">
+                The unique identifier of the store to which the navigation link belongs.
+            </Field>
+            <Field name="children" type="array">
+                An array of child navigation link objects, each structured the same as the parent navigation link object. This field is recursive and can contain its own `children` array.
+            </Field>
+        </Fields>
+    </Col>
+    <Col sticky>
+        ```json {{ title: 'The NavLink object' }}
+        {
+            "node_id": "204714778151624704",
+            "parent_node_id": null,
+            "store_id": "193370732334419968",
+            "tag_id": "204698872017072128",
+            "tag_slug": "us-5x-no-bps",
+            "tag_query": [
+                "us-5x-no-bps"
+            ],
+            "name": "US 5x No BPs",
+            "order": 5,
+            "children": [
+                {
+                    "node_id": "204662115951194112",
+                    "parent_node_id": "204714778151624704",
+                    "store_id": "193370732334419968",
+                    "tag_id": "203183566882869248",
+                    "tag_slug": "us-5x-ranks-kits",
+                    "tag_query": [
+                        "us-5x-no-bps",
+                        "us-5x-ranks-kits"
+                    ],
+                    "name": "US 5x - Ranks & Kits",
+                    "order": 6,
+                    "children": []
+                },
+                {
+                    "node_id": "204662097705963520",
+                    "parent_node_id": "204714778151624704",
+                    "store_id": "193370732334419968",
+                    "tag_id": "203183556367761408",
+                    "tag_slug": "5x-supply-signals",
+                    "tag_query": [
+                        "us-5x-no-bps",
+                        "5x-supply-signals"
+                    ],
+                    "name": "5x - Supply Signals",
+                    "order": 7,
+                    "children": []
+                },
+                {
+                    "node_id": "204662088402997248",
+                    "parent_node_id": "204714778151624704",
+                    "store_id": "193370732334419968",
+                    "tag_id": "203183546028797952",
+                    "tag_slug": "5x-other",
+                    "tag_query": [
+                        "us-5x-no-bps",
+                        "5x-other"
+                    ],
+                    "name": "5x - Other",
+                    "order": 8,
+                    "children": []
+                }
+            ]
+        }
+        ```
+    </Col>
+</Row>

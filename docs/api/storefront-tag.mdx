@@ -1,0 +1,60 @@
+# Storefront Tag
+
+<Row>
+	<Col>
+		Tags are a way to group [products](api/product) for filtering on your store.
+        They can be used to limit which products a [coupon](api/coupon) or [sale](api/sale) applies to.
+
+        Tags have a name, description, and a url-safe slug for easy linking on your store.
+
+        Tags can be added to a product in the [product configuration](api/product#the-product-object).
+        Tags can also be used to dynamically build a navigation header for your store using [navlinks](api/navlinks).
+	</Col>
+	<Col sticky>
+		<Endpoints>
+			<Endpoint method="GET" href="#get-tags" url="/store/tags" />
+		</Endpoints>
+
+		<Fields title={"Request Headers"}>
+			<Field name="x-paynow-store-id" type="flake" required>
+                the ID of your store
+            </Field>
+            <Field name="Authorization" type="customer auth" optional>
+                the token of your customer prefixed with `customer` if logged in, [more information here](/api/reference#providing-authentication)
+            </Field>
+		</Fields>
+	</Col>
+</Row>
+
+---
+
+## The Tag object
+
+<Row>
+    <Col>
+        <Fields>
+            <Field name="id" type="integer">
+                id of the tag
+            </Field>
+            <Field name="slug" type="string">
+                A URL-safe version of the tag name
+            </Field>
+            <Field name="name" type="string">
+                name of the tag
+            </Field>
+            <Field name="description" type="string" nullable>
+                A description of what the tag represents
+            </Field>
+        </Fields>
+    </Col>
+    <Col sticky>
+        ```json {{ title: 'The Tag object' }}
+        {
+            "id": "203183556367761408",
+            "slug": "5x-supply-signals",
+            "name": "5x - Supply Signals",
+            "description": null
+        }
+        ```
+    </Col>
+</Row>

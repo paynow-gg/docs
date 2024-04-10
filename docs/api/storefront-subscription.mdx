@@ -1,0 +1,184 @@
+# Storefront Subscription
+
+<Row>
+	<Col>
+		The subscription object contains the information about the customer's active and expired subscriptions.
+
+		It also exposes an interface through which customers can cancel their subscriptions.
+
+		This resource is intended to be accessed directly by customers using a [customer token](api/customer#customer-tokens).
+	</Col>
+	<Col sticky>
+		<Endpoints>
+			<Endpoint method="GET" href="#get-subscriptions" url="/store/customer/subscriptions"/>
+			<Endpoint method="DELETE" href="#delete-subscription" url="/store/customer/subscriptions/{subscription.id}"/>
+		</Endpoints>
+
+		<Fields title={"Request Headers"}>
+			<Field name="Authorization" type="customer auth" required>
+				the token of your customer prefixed with `customer` if logged in, [more information here](/api/reference#providing-authentication)
+			</Field>
+		</Fields>
+	</Col>
+</Row>
+
+---
+
+## The Subscription object
+
+<Row>
+    <Col>
+        <Fields>
+            <Field name="id" type="int64">
+                id of the subscription
+            </Field>
+            <Field name="pretty_id" type="string">
+                human-readable id of the subscription
+            </Field>
+            <Field name="store_id" type="int64">
+                id of the store the subscription belongs to
+            </Field>
+            <Field name="customer" type="Customer" typeHref="/api/storefront-customer#the-customer-object">
+                the customer associated with this subscription
+            </Field>
+            <Field name="status" type="string">
+                status of the subscription (created, active, canceled)
+            </Field>
+            <Field name="checkout_id" type="int64">
+                id of the checkout session the subscription was created in
+            </Field>
+            <Field name="checkout_line_id" type="int64">
+                id of the checkout session line the subscription was created in
+            </Field>
+            <Field name="billing_name" type="string" nullable>
+                billing name associated with the subscription
+            </Field>
+            <Field name="billing_email" type="string" nullable>
+                billing email associated with the subscription
+            </Field>
+            <Field name="billing_country" type="string" nullable>
+                billing country associated with the subscription
+            </Field>
+            <Field name="gift" type="boolean">
+                whether the subscription is a gift
+            </Field>
+            <Field name="gift_to_customer" type="Customer" typeHref="/api/storefront-customer#the-customer-object" nullable>
+                the customer to whom the subscription is gifted
+            </Field>
+            <Field name="product_id" type="int64">
+                id of the product associated with the subscription
+            </Field>
+            <Field name="product_name" type="string">
+                name of the product associated with the subscription
+            </Field>
+            <Field name="product_image_url" type="string" nullable>
+                image URL of the product associated with the subscription
+            </Field>
+            <Field name="interval_value" type="int">
+                interval value indicating the frequency of the subscription
+            </Field>
+            <Field name="interval_scale" type="string">
+                interval scale indicating the unit of time for the subscription frequency (e.g., day, week, month)
+            </Field>
+            <Field name="currency" type="string">
+                currency of the subscription
+            </Field>
+            <Field name="tax_inclusive" type="boolean">
+                whether the subscription price is tax-inclusive
+            </Field>
+            <Field name="price" type="int64">
+                price of the subscription in zero-decimal format (where "$10.00" is 1000)
+            </Field>
+            <Field name="discount_amount" type="int64">
+                discount amount applied to the subscription
+            </Field>
+            <Field name="subtotal_amount" type="int64">
+                subtotal amount of the subscription
+            </Field>
+            <Field name="tax_amount" type="int64">
+                tax amount applied to the subscription
+            </Field>
+            <Field name="total_amount" type="int64">
+                total amount of the subscription
+            </Field>
+            <Field name="created_at" type="timestamp">
+                timestamp of when the subscription was created
+            </Field>
+            <Field name="updated_at" type="timestamp" nullable>
+                timestamp of when the subscription was last updated
+            </Field>
+            <Field name="active_at" type="timestamp" nullable>
+                timestamp of when the subscription became active
+            </Field>
+            <Field name="canceled_at" type="timestamp" nullable>
+                timestamp of when the subscription was canceled
+            </Field>
+            <Field name="cancel_reason" type="string" nullable>
+                reason for canceling the subscription
+            </Field>
+        </Fields>
+    </Col>
+    <Col sticky>
+        ```json {{title: 'The Subscription object'}}
+        {
+            "id": "241664040164667392",
+            "pretty_id": "pn-1u3ir3f1fgu8",
+            "store_id": "235075606381871104",
+            "customer": {
+                "id": "235075788733423616",
+                "steam_id": "76561198152492642",
+                "steam": {
+                    "id": "76561198152492642",
+                    "name": "m0uka",
+                    "avatar_url": "https://avatars.steamstatic.com/10ce9e8c27d973ec572e3401e531c07d717c4648_full.jpg"
+                },
+                "name": null
+            },
+            "status": "canceled",
+            "checkout_id": "241663964491034624",
+            "checkout_line_id": "241663964491034625",
+            "billing_name": "Bender Rodriguez",
+            "billing_email": "bender@ilovebender.com",
+            "billing_country": "US",
+            "gift": false,
+            "gift_to_customer": null,
+            "product_id": "235075696194502656",
+            "product_version_id": "238792616567640064",
+            "product_name": "Testing Product",
+            "product_image_url": null,
+            "interval_value": 1,
+            "interval_scale": "month",
+            "currency": "eur",
+            "tax_inclusive": false,
+            "price": 200,
+            "price_str": "€2.00",
+            "discount_amount": 0,
+            "discount_amount_str": "€0.00",
+            "subtotal_amount": 200,
+            "subtotal_amount_str": "€2.00",
+            "tax_amount": 42,
+            "tax_amount_str": "€0.42",
+            "total_amount": 242,
+            "total_amount_str": "€2.42",
+            "initial_discount_amount": 0,
+            "initial_discount_amount_str": "€0.00",
+            "initial_subtotal_amount": 200,
+            "initial_subtotal_amount_str": "€2.00",
+            "initial_giftcard_usage_amount": 200,
+            "initial_giftcard_usage_amount_str": "€2.00",
+            "initial_tax_amount": 0,
+            "initial_tax_amount_str": "€0.00",
+            "initial_total_amount": 0,
+            "initial_total_amount_str": "€0.00",
+            "current_period_start": "2023-12-21T19:09:01.356641Z",
+            "current_period_end": "2024-01-20T19:09:01.356641Z",
+            "billing_cycle_sequence": 1,
+            "created_at": "2023-12-21T19:09:00.326517Z",
+            "updated_at": null,
+            "active_at": "2023-12-21T19:09:01.354102Z",
+            "canceled_at": "2024-01-18T12:55:59.237002Z",
+            "cancel_reason": "customer"
+        }
+        ```
+    </Col>
+</Row>

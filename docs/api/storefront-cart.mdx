@@ -68,6 +68,12 @@
 			<Field name="quantity" type="integer">
 				the quantity (count) of products in this line
 			</Field>
+			<Field name="selected_gameserver" type="string" nullable>
+                the selected game server for the product, if applicable. This field can be null if no server is selected.
+            </Field>
+            <Field name="selected_gameserver_id" type="string" nullable>
+                the unique identifier of the selected game server, if applicable. This field can be null if no server is selected.
+            </Field>
 		</Fields>
 	</Col>
 
