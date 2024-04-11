@@ -9,8 +9,11 @@
 	<Col sticky>
 	    <Endpoints>
             <Endpoint method="FILE" href="#index-html" url="index.html" />
-            <Endpoint method="FILE" href="#category" url="category.html"/>
-            <Endpoint method="FILE" href="#product" url="product.html"/>
+            <Endpoint method="FILE" href="#category-html" url="category.html"/>
+            <Endpoint method="FILE" href="#product-html" url="product.html"/>
+            <Endpoint method="FILE" href="#cart-html" url="cart.html"/>
+            <Endpoint method="FILE" href="#complete-html" url="complete.html"/>
+            <Endpoint method="FILE" href="#subscriptions-html" url="subscriptions.html"/>
         </Endpoints>
 	</Col>
 </Row>
@@ -96,8 +99,14 @@ You can filter products here by using the `?tag` query parameter, and passing in
             <Field name="products" type="Product[]" typeHref="/api/storefront-product#the-product-object">
                 An array of all products matching the query parameters.
             </Field>
-            <Field name="activeTag" type="ActiveTag" typeHref="#active-tag-object">
-                The currently available tag.
+            <Field name="activeTag" type="Tag" typeHref="/api/storefront-tag#the-tag-object">
+                The currently active tag.
+            </Field>
+            <Field name="activeTags" type="Tag[]" typeHref="/api/storefront-tag#the-tag-object">
+                An array of the currently active tags.
+            </Field>
+            <Field name="activeNavlink" type="Navlink" typeHref="/api/storefront-navlink#the-nav-link-object">
+                The currently active navlink. This is the deepest navlink available (the navlink with the most parents).
             </Field>
         </Fields>
     </Col>
@@ -120,6 +129,37 @@ A product detail view page.
     </Col>
 </Row>
 
+## cart.html
+
+A page displaying the customer's cart. This page has no special variables.
+
+## complete.html
+
+A page informing the customer of a successful purchase.
+
+<Row>
+    <Col>
+        <Fields title="Available Variables">
+            <Field name="complete" type="CheckoutComplete" typeHref="#checkout-complete-object">
+                Information about the completed payment.
+            </Field>
+        </Fields>
+    </Col>
+</Row>
+
+## subscriptions.html
+
+A page displaying all active and canceled subscriptions of a customer.
+
+<Row>
+    <Col>
+        <Fields title="Available Variables">
+            <Field name="subscriptions" type="Subscription[]" typeHref="/api/storefront-subscription#the-subscription-object">
+                An array of subscriptions.
+            </Field>
+        </Fields>
+    </Col>
+</Row>
 
 ## Available Game Server object
 
@@ -150,7 +190,7 @@ A product detail view page.
             <Field name="is_active" type="boolean">
                 Indicates whether the webstore is currently active (true) or not (false).
             </Field>
-            <Field name="custom_domain" type="string" nullable="true">
+            <Field name="custom_domain" type="string" nullable>
                 The custom domain set for the webstore, if any. This field can be null if no custom domain is set.
             </Field>
             <Field name="custom_domain_verified" type="boolean">
@@ -159,29 +199,8 @@ A product detail view page.
             <Field name="current_template_id" type="string">
                 The unique identifier of the current template being used by the webstore.
             </Field>
-            <Field name="custom_templates" type="string" nullable="true">
+            <Field name="custom_templates" type="string" nullable>
                 Information about custom templates, if any, associated with the webstore. This field can be null if there are no custom templates.
-            </Field>
-        </Fields>
-    </Col>
-</Row>
-
-## Active Tag object
-
-<Row>
-    <Col>
-        <Fields>
-            <Field name="id" type="string">
-                The unique identifier for the active tag. This is typically used to reference the tag in database queries or API calls.
-            </Field>
-            <Field name="name" type="string">
-                The name of the active tag. This is displayed to users and used to represent the tag across the user interface.
-            </Field>
-            <Field name="slug" type="string">
-                A URL-friendly slug for the active tag. Slugs are often used in URLs to represent the tag in a readable and SEO-friendly manner.
-            </Field>
-            <Field name="description" type="string">
-                The description of the active tag. This can include HTML content and provides more detailed information about the tag or its associated category.
             </Field>
         </Fields>
     </Col>
