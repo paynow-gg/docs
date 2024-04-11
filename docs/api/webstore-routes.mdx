@@ -1,0 +1,362 @@
+# Webstore Routes
+
+<Row>
+	<Col>
+		A convenient list of all webstore HTTP routes.
+	</Col>
+
+	<Col sticky>
+    	    <Endpoints>
+                <Endpoint method="GET" href="#index" url="/" />
+                <Endpoint method="GET" href="#products" url="/products"/>
+                <Endpoint method="GET" href="#view-product" url="/products/{product.slug}"/>
+                <Endpoint method="POST" href="#checkout-product" url="/products/{product.slug}/checkout"/>
+                <Endpoint method="GET" href="#cart" url="/cart"/>
+                <Endpoint method="POST" href="#add-to-cart" url="/cart/add/{product.slug}"/>
+                <Endpoint method="POST" href="#set-cart-line" url="/cart/set/{product.slug}"/>
+                <Endpoint method="POST" href="#remove-from-cart" url="/cart/remove/{product.slug}"/>
+                <Endpoint method="POST" href="#empty-cart" url="/cart/empty"/>
+                <Endpoint method="POST" href="#checkout-cart" url="/cart/checkout"/>
+                <Endpoint method="POST" href="#sign-in" url="/auth/sign-in"/>
+                <Endpoint method="POST" href="#sign-out" url="/auth/sign-out"/>
+                <Endpoint method="GET" href="#subscriptions" url="/subscriptions"/>
+                <Endpoint method="POST" href="#cancel-subscription" url="/subscriptions/{subscription.id}/cancel"/>
+                <Endpoint method="GET" href="#complete-screen" url="/complete"/>
+                <Endpoint method="GET" href="#terms-of-service" url="/legal/terms-of-service" />
+                <Endpoint method="GET" href="#user-agreement" url="/legal/user-agreement" />
+                <Endpoint method="GET" href="#privacy-policy" url="/legal/privacy-policy" />
+            </Endpoints>
+    	</Col>
+</Row>
+
+---
+
+## Index {{ tag: 'GET' }}
+
+<Row>
+  <Col>
+    Renders the [`index.html`](/api/webstore-variables#index-html) template file.
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="GET" url="/" />
+    </Endpoints>
+  </Col>
+</Row>
+
+## Products {{ tag: 'GET' }}
+
+<Row>
+  <Col>
+    Renders the [`category.html`](/api/webstore-variables#category-html) template file.
+
+    <Fields query parameters>
+        <Field name="tags" type="string[]" optional>
+            A comma separated array of tag slugs to filter by
+        </Field>
+    </Fields>
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="GET" url="/products" />
+    </Endpoints>
+  </Col>
+</Row>
+
+###
+
+## View Product {{ tag: 'GET' }}
+
+<Row>
+  <Col>
+    Renders the [`product.html`](/api/webstore-variables#product-html) template file.
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="GET" url="/products/{product.slug}" />
+    </Endpoints>
+  </Col>
+</Row>
+
+## Checkout Product {{ tag: 'POST' }}
+
+<Row>
+  <Col>
+    Checks out the supplied product and redirects to checkout/cart.
+
+    <Fields query parameters>
+        <Field name="cart" type="boolean" optional>
+            Should the product be added to a cart instead of redirecting to checkout?
+
+            Only available for non-subscription products.
+        </Field>
+        <Field name="subscription" type="boolean" optional>
+            Should the product be added as a subscription? Use `true` or `false`.
+        </Field>
+        <Field name="quantity" type="int" optional>
+            The quantity of the product selected by the customer. Defaults to `1`.
+        </Field>
+        <Field name="gift_to" type="string" optional>
+            If gifting, then the external platform ID of the recipient.
+
+            If using the `steam` `gift_platform`, use the 64-bit Steam ID.
+        </Field>
+        <Field name="gift_platform" type="string" optional>
+            The external platform to use with `gift_to`. Currently only `steam` is supported.
+
+            Defaults to `steam`.
+        </Field>
+        <Field name="gameserver_id" type="string" optional>
+            If the product requires a game server selection, the ID of the selected gameserver.
+        </Field>
+    </Fields>
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="POST" url="/products/{product.slug}/checkout" />
+    </Endpoints>
+  </Col>
+</Row>
+
+###
+
+## Cart {{ tag: 'GET' }}
+
+<Row>
+  <Col>
+    Renders the [`cart.html`](/api/webstore-variables#cart-html) template file.
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="GET" url="/cart" />
+    </Endpoints>
+  </Col>
+</Row>
+
+## Add to Cart {{ tag: 'POST' }}
+
+<Row>
+  <Col>
+    Adds an item to the customer's cart.
+
+    <Fields query parameters>
+        <Field name="quantity" type="integer" optional>
+            The quantity of the product to add to cart. Defaults to `1`.
+        </Field>
+        <Field name="gameserver_id" type="string" optional>
+            If the product requires a game server selection, the ID of the selected gameserver.
+        </Field>
+    </Fields>
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="POST" url="/cart/add/{product.slug}" />
+    </Endpoints>
+  </Col>
+</Row>
+
+###
+
+## Set Cart Line {{ tag: 'POST' }}
+
+<Row>
+  <Col>
+    Updates a cart line.
+
+    <Fields query parameters>
+        <Field name="quantity" type="integer" optional>
+            The quantity of the product to set. Defaults to `1`.
+        </Field>
+        <Field name="gameserver_id" type="string" optional>
+            If the product requires a game server selection, the ID of the selected gameserver.
+        </Field>
+    </Fields>
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="POST" url="/cart/set/{product.slug}" />
+    </Endpoints>
+  </Col>
+</Row>
+
+###
+
+## Remove from Cart {{ tag: 'POST' }}
+
+<Row>
+  <Col>
+    Updates a cart line.
+
+    <Fields query parameters>
+        <Field name="quantity" type="integer" optional>
+            The quantity of the product to set. Defaults to `1`.
+        </Field>
+        <Field name="gameserver_id" type="string" optional>
+            If the product requires a game server selection, the ID of the selected gameserver.
+        </Field>
+    </Fields>
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="POST" url="/cart/set/{product.slug}" />
+    </Endpoints>
+  </Col>
+</Row>
+
+###
+
+## Empty Cart {{ tag: 'POST' }}
+
+<Row>
+  <Col>
+    Empties the entire cart.
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="POST" url="/cart/empty" />
+    </Endpoints>
+  </Col>
+</Row>
+
+## Checkout Cart {{ tag: 'POST' }}
+
+<Row>
+  <Col>
+    Creates a checkout session from the cart.
+
+    <Fields query parameters>
+        <Field name="return_url" type="string" optional>
+            The URL to return to after a successful checkout. Leave empty to redirect to `/complete`.
+        </Field>
+    </Fields>
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="POST" url="/cart/checkout" />
+    </Endpoints>
+  </Col>
+</Row>
+
+###
+
+## Sign In {{ tag: 'POST' }}
+
+<Row>
+  <Col>
+    Signs into the webstore with the preferred authentication platform.
+
+    <Fields query parameters>
+        <Field name="return_url" type="string" optional>
+            The URL to return to after a successful checkout.
+        </Field>
+    </Fields>
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="POST" url="/auth/sign-in" />
+    </Endpoints>
+  </Col>
+</Row>
+
+###
+
+## Sign Out {{ tag: 'POST' }}
+
+<Row>
+  <Col>
+    Signs out from the webstore.
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="POST" url="/auth/sign-out" />
+    </Endpoints>
+  </Col>
+</Row>
+
+## Subscriptions {{ tag: 'GET' }}
+
+<Row>
+  <Col>
+    Renders the [`subscriptions.html`](/api/webstore-variables#subscriptions-html) template file.
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="GET" url="/subscriptions" />
+    </Endpoints>
+  </Col>
+</Row>
+
+## Cancel Subscription {{ tag: 'POST' }}
+
+<Row>
+  <Col>
+    Cancels an active subscription by its ID.
+
+    We strongly recommend to implement this in your template to increase the trust of your customers, and assure them that there is an easy way to cancel their subscription.
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="POST" url="/subscriptions/{subscription.id}/cancel" />
+    </Endpoints>
+  </Col>
+</Row>
+
+###
+
+## Complete {{ tag: 'GET' }}
+
+<Row>
+  <Col>
+    Renders the [`complete.html`](/api/webstore-variables#complete-html) template file.
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="GET" url="/complete" />
+    </Endpoints>
+  </Col>
+</Row>
+
+## Terms of Service {{ tag: 'GET' }}
+
+<Row>
+  <Col>
+    Redirects to the terms of service of PayNow.
+
+    You are **required to include a link** to this in your template.
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="GET" url="/legal/terms-of-service" />
+    </Endpoints>
+  </Col>
+</Row>
+
+## User Agreement {{ tag: 'GET' }}
+
+<Row>
+  <Col>
+    Redirects to the user agreement of PayNow.
+
+    You are **required to include a link** to this in your template.
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="GET" url="/legal/user-agreement" />
+    </Endpoints>
+  </Col>
+</Row>
+
+## Privacy Policy {{ tag: 'GET' }}
+
+<Row>
+  <Col>
+    Redirects to the privacy policy of PayNow.
+
+    You are **required to include a link** to this in your template.
+  </Col>
+  <Col sticky>
+    <Endpoints request>
+        <Endpoint method="GET" url="/legal/privacy-policy" />
+    </Endpoints>
+  </Col>
+</Row>

@@ -20,6 +20,10 @@
         "href": "/api/webstore-variables"
       },
       {
+        "title": "Routes",
+        "href": "/api/webstore-routes"
+      },
+      {
         "title": "Modules",
         "href": "/api/webstore-modules"
       }
