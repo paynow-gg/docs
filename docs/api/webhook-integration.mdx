@@ -46,6 +46,17 @@ const PORT = process.env.PORT || 8080;
 const SIGNING_SECRET = process.env.SIGNING_SECRET;
 const TOLERANCE_PERIOD = 5 * 60 * 1000; // 5 minutes in milliseconds
 
+// Middleware to preserve raw body for signature verification
+function preserveRawBody(req, res, next) {
+    req.rawBody = '';
+    req.on('data', chunk => {
+        req.rawBody += chunk;
+    });
+    req.on('end', () => {
+        next();
+    });
+}
+
 // Function to calculate HMAC signature
 function calculateHMAC(payloadWithTimestamp) {
     const hmac = crypto.createHmac('sha256', SIGNING_SECRET);
@@ -73,7 +84,7 @@ function verifyWebhookSignature(req, res, next) {
         return res.status(401).send('Timestamp out of tolerance');
     }
 
-    const payloadWithTimestamp = `${timestamp}.${JSON.stringify(req.body)}`;
+    const payloadWithTimestamp = `${timestamp}.${req.rawBody}`;
     const expectedSignature = calculateHMAC(payloadWithTimestamp);
 
     const signatureValid = crypto.timingSafeEqual(Buffer.from(providedSignature, 'base64'), Buffer.from(expectedSignature, 'base64'));
@@ -86,7 +97,7 @@ function verifyWebhookSignature(req, res, next) {
 }
 
 app.use(express.json());
-
+app.use(preserveRawBody);
 app.post('/webhook', verifyWebhookSignature, (req, res) => {
     const eventType = req.body.event_type;
     switch (eventType) {
