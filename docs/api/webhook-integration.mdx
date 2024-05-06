@@ -101,16 +101,16 @@ app.use(preserveRawBody);
 app.post('/webhook', verifyWebhookSignature, (req, res) => {
     const eventType = req.body.event_type;
     switch (eventType) {
-        case 'OnDeliveryItemAdded':
+        case 'ON_DELIVERY_ITEM_ADDED':
             // handleOnDeliveryItemAdded(req.body);
             break;
-        case 'OnDeliveryItemActivated':
+        case 'ON_DELIVERY_ITEM_ACTIVATED':
             // handleOnDeliveryItemActivated(req.body);
             break;
-        case 'OnDeliveryItemUsed':
+        case 'ON_DELIVERY_ITEM_USED':
             // handleOnDeliveryItemUsed(req.body);
             break;
-        case 'OnDeliveryItemRevoked':
+        case 'ON_DELIVERY_ITEM_REVOKED':
             // handleOnDeliveryItemRevoked(req.body);
             break;
         default:
