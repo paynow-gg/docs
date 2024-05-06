@@ -13,6 +13,23 @@
     ]
   },
   {
+    "title": "Webhooks",
+    "links": [
+      {
+        "title": "Introduction",
+        "href": "/api/webhook-introduction"
+      },
+      {
+        "title": "Integration",
+        "href": "/api/webhook-integration"
+      },
+      {
+        "title": "Events",
+        "href": "/api/webhook-events"
+      }
+    ]
+  },
+  {
     "title": "Webstores",
     "links": [
       {

@@ -1,0 +1,31 @@
+# Webhooks Introduction
+
+Webhooks provide a powerful way for your application to receive real-time updates from our API. Instead of continuously polling our servers for new data, you can register a URL endpoint with us,
+and we will send HTTP POST requests to that endpoint whenever certain events occur.
+
+## How Webhooks Work
+When you subscribe to a webhook event, you provide us with a URL that we will call whenever the event occurs. We will send a POST request to that URL with relevant data in the request body.
+Your server then processes this data and performs any necessary actions.
+
+## Setting Up Webhooks
+To start getting webhook notifications, users can easily set up their webhook subscription using either our user-friendly dashboard or directly through our API.
+It's a straightforward process: just provide the required details, like the events you're interested in and the URL endpoint where you want notifications to be sent.
+
+## Webhook Types
+Webhooks have multiple types, at the time of writing there are two:
+- JSON (v1)
+- Discord (v1)
+
+These types dictate the format of the responses. The [Webhook Integration](/api/webhook-integration) only describes the JSON integration types.
+
+Discord integration should be fairly straightforward: just create a Discord webhook,
+create a PayNow webhook with the Discord webhook URL, select an event to listen for, customize your embed template, and you should be ready to go!
+
+## Event Types
+For a list of all PayNow API events that you can subscribe to, see [Webhook Events](/api/webhook-events)
+
+## Handling Webhook Notifications
+When your server receives a webhook notification, it should respond with an HTTP status code indicating whether the notification was successfully received and processed.
+If your server responds with a non-successful status code (>299), we will automatically retry the webhook notification using an exponential backoff algorithm.
+
+For detailed integration instructions, see [Webhook Integration](/api/webhook-integration)

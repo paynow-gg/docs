@@ -1,0 +1,213 @@
+# Webhooks Integration
+
+When you receive webhook notifications from our API, it's crucial to verify the authenticity of the messages to ensure data integrity and prevent unauthorized access.
+We use HMAC (Hash-based Message Authentication Code) to generate a signature for each webhook payload, which you can verify using a shared secret and timestamp provided in the request headers.
+
+## Verifying the HMAC Signature
+To verify the HMAC signature included in the webhook payload, follow these steps:
+
+1. Retrieve the `PayNow-Signature` header from the webhook request, containing the HMAC of the entire payload body and the timestamp.
+2. Extract the Unix millisecond timestamp from the `PayNow-Timestamp` header.
+3. Create a string by combining the timestamp from the header, followed by a dot (".") and then the actual payload string from the webhook request.
+Then create an HMAC signature using the resulting string and your signing secret.
+4. Compare the calculated signature with the signature provided in the `PayNow-Signature` header.
+
+<Note>
+    When comparing HMAC signatures, avoid using simple string comparison methods, as they may be susceptible to timing attacks.
+    Instead, use constant-time comparison techniques to compare the calculated signature with the provided signature, ensuring that the comparison takes the same amount of time regardless of the comparison result.
+</Note>
+
+## Preventing Replay Attacks
+To prevent replay attacks, ensure that you check the timestamp included in the request and ignore webhook notifications with older timestamps. Here's how to do it:
+
+Compare the timestamp provided in the `PayNow-Timestamp` header with the current time.
+If the timestamp is significantly older than the current time (e.g., more than a few seconds or minutes), consider the request invalid and discard it.
+
+<Note>
+    We recommend ignoring webhook requests older than 5 minutes. Use Network Time Protocol ([NTP](https://en.wikipedia.org/wiki/Network_Time_Protocol)) to make sure that your server's clock is accurate.
+</Note>
+
+**You may also store the `event_id` in your database and ignore any duplicate requests with the same ID.**
+This is useful for ensuring that your server does not handle the same webhook twice.
+
+## Integration Implementation Examples
+
+
+<CodeGroup>
+
+```js {{ language: 'js' }}
+const express = require('express');
+const crypto = require('crypto');
+require('dotenv').config();
+
+const app = express();
+const PORT = process.env.PORT || 8080;
+
+const SIGNING_SECRET = process.env.SIGNING_SECRET;
+const TOLERANCE_PERIOD = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+// Function to calculate HMAC signature
+function calculateHMAC(payloadWithTimestamp) {
+    const hmac = crypto.createHmac('sha256', SIGNING_SECRET);
+    hmac.update(payloadWithTimestamp);
+    return hmac.digest('base64');
+}
+
+// Middleware to verify webhook signature and prevent replay attacks
+function verifyWebhookSignature(req, res, next) {
+    const timestamp = req.headers['paynow-timestamp'];
+    const providedSignature = req.headers['paynow-signature'];
+
+    if (!timestamp || !providedSignature) {
+        return res.status(400).send('Missing required headers');
+    }
+
+    const timestampInt = parseInt(timestamp, 10);
+    if (isNaN(timestampInt)) {
+        return res.status(400).send('Invalid timestamp format');
+    }
+
+    const timestampTime = new Date(timestampInt);
+    const currentTime = new Date();
+    if (currentTime - timestampTime > TOLERANCE_PERIOD) {
+        return res.status(401).send('Timestamp out of tolerance');
+    }
+
+    const payloadWithTimestamp = `${timestamp}.${JSON.stringify(req.body)}`;
+    const expectedSignature = calculateHMAC(payloadWithTimestamp);
+
+    const signatureValid = crypto.timingSafeEqual(Buffer.from(providedSignature, 'base64'), Buffer.from(expectedSignature, 'base64'));
+
+    if (!signatureValid) {
+        return res.status(401).send('Invalid signature');
+    }
+
+    next();
+}
+
+app.use(express.json());
+
+app.post('/webhook', verifyWebhookSignature, (req, res) => {
+    const eventType = req.body.event_type;
+    switch (eventType) {
+        case 'OnDeliveryItemAdded':
+            // handleOnDeliveryItemAdded(req.body);
+            break;
+        case 'OnDeliveryItemActivated':
+            // handleOnDeliveryItemActivated(req.body);
+            break;
+        case 'OnDeliveryItemUsed':
+            // handleOnDeliveryItemUsed(req.body);
+            break;
+        case 'OnDeliveryItemRevoked':
+            // handleOnDeliveryItemRevoked(req.body);
+            break;
+        default:
+            console.log(`Received unknown event type: ${eventType}`);
+    }
+    res.status(200).send('Webhook processed');
+});
+
+app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}/`);
+});
+```
+
+```go {{ language: 'go' }}
+package main
+
+import (
+    "crypto/hmac"
+    "crypto/sha256"
+    "encoding/base64"
+    "encoding/json"
+    "fmt"
+    "io/ioutil"
+    "log"
+    "net/http"
+    "os"
+    "strconv"
+    "time"
+)
+
+const tolerancePeriod = 5 * time.Minute
+
+func getSigningSecret() []byte {
+    return []byte(os.Getenv("SIGNING_SECRET"))
+}
+
+func calculateHMAC(payloadWithTimestamp string) string {
+    h := hmac.New(sha256.New, getSigningSecret())
+    h.Write([]byte(payloadWithTimestamp))
+    return base64.StdEncoding.EncodeToString(h.Sum(nil))
+}
+
+func verifyWebhookSignature(next http.HandlerFunc) http.HandlerFunc {
+    return func(w http.ResponseWriter, r *http.Request) {
+        timestamp := r.Header.Get("paynow-timestamp")
+        providedSignature := r.Header.Get("paynow-signature")
+
+        if timestamp == "" || providedSignature == "" {
+            http.Error(w, "Missing required headers", http.StatusBadRequest)
+            return
+        }
+
+        timestampInt, err := strconv.ParseInt(timestamp, 10, 64)
+        if err != nil {
+            http.Error(w, "Invalid timestamp format", http.StatusBadRequest)
+            return
+        }
+
+        timestampTime := time.Unix(timestampInt/1000, (timestampInt%1000)*int64(time.Millisecond))
+        currentTime := time.Now()
+
+        if currentTime.Sub(timestampTime) > tolerancePeriod {
+            http.Error(w, "Timestamp out of tolerance", http.StatusUnauthorized)
+            return
+        }
+
+        body, err := ioutil.ReadAll(r.Body)
+        if err != nil {
+            http.Error(w, "Failed to read request body", http.StatusInternalServerError)
+            return
+        }
+        defer r.Body.Close()
+
+        payloadWithTimestamp := fmt.Sprintf("%d.%s", timestampInt, body)
+        expectedSignature := calculateHMAC(payloadWithTimestamp)
+
+        if !hmac.Equal([]byte(providedSignature), []byte(expectedSignature)) {
+            http.Error(w, "Invalid signature", http.StatusUnauthorized)
+            return
+        }
+
+        next(w, r)
+    }
+}
+
+func handleWebhook(w http.ResponseWriter, r *http.Request) {
+    var data struct {
+        EventType string `json:"event_type"`
+    }
+    if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
+        http.Error(w, "Error decoding JSON", http.StatusBadRequest)
+        return
+    }
+
+    fmt.Printf("Received event type: %s\n", data.EventType)
+    // Process event based on data.EventType here
+    fmt.Fprintln(w, "Webhook processed")
+}
+
+func main() {
+    http.HandleFunc("/webhook", verifyWebhookSignature(handleWebhook))
+    port := os.Getenv("PORT")
+    if port == "" {
+        port = "8080"
+    }
+    log.Printf("Server running at http://localhost:%s/\n", port)
+    log.Fatal(http.ListenAndServe(":"+port, nil))
+}
+```
+
+</CodeGroup>

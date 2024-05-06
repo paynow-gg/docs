@@ -1,0 +1,73 @@
+# Webhook Events
+
+
+
+<Row>
+  <Col>
+
+    <Properties>
+      <Property name="OnOrderCompleted">
+        Executed when an order has been completed.
+      </Property>
+      <Property name="OnRefund">
+        Executed when a customer was refunded.
+      </Property>
+      <Property name="OnChargeback">
+        Executed when a chargeback was initiated by a customer.
+      </Property>
+      <Property name="OnDeliveryItemAdded">
+        Executed when an inventory (delivery) item was added to a customer.
+
+        You should the other `OnDeliveryItem*` events to control access to customers.
+      </Property>
+      <Property name="OnDeliveryItemActivated">
+        Executed when an EXPIRABLE inventory (delivery) item was activated for a customer.
+      </Property>
+      <Property name="OnDeliveryItemUsed">
+        Executed when a CONSUMABLE (ONE-TIME) inventory (delivery) item was used for a customer.
+      </Property>
+      <Property name="OnDeliveryItemRevoked">
+        Executed when an inventory (delivery) item was removed from a customer for any reason.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    ```json {{ 'title': 'Example payload' }}
+    {
+        "event_type": "ON_DELIVERY_ITEM_USED",
+        "event_id": "291252569328594944",
+        "body": {
+            "id": "219583037346680832",
+            "store_id": "200303848391192576",
+            "customer": {
+                "id": "204676374949007360",
+                "name": "m0uka",
+                "steam": {
+                    "id": "76561198152492642",
+                    "name": "m0uka",
+                    "avatar_url": "https://avatars.steamstatic.com/10ce9e8c27d973ec572e3401e531c07d717c4648_full.jpg"
+                }
+            },
+            "order_customer_id": "204676374949007360",
+            "checkout_id": null,
+            "order_id": "219583036499443712",
+            "order_line_id": "219583036499443713",
+            "subscription_id": null,
+            "execute_on_gameserver_id": null,
+            "product_id": "215146083163058176",
+            "product_version_id": "217392771642695680",
+            "state": "used",
+            "added_at": "2023-10-21T20:46:57.766222Z",
+            "active_at": "2024-04-06T15:15:30.926575Z",
+            "expires_at": "2024-05-06T15:15:30.926575Z",
+            "removed_at": "2024-05-06T15:16:01.861676Z",
+            "revoked_at": null,
+            "revoke_reason": null
+        }
+    }
+    ```
+
+  </Col>
+</Row>
