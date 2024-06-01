@@ -104,7 +104,7 @@
       <Field name="billing_cycle_sequence" type="int64" nullable>
         number of billing cycle sequence
       </Field>
-      <Field name="lines" type="[]line" typehref="#order-line-object-structure">
+      <Field name="lines" type="[]line" typeHref="#order-line-object-structure">
         list of items associated with the order
       </Field>
       <Field name="created_at" type="timestamp">
@@ -122,10 +122,10 @@
 
     <Fields>
       <Field name="id" type="flake">
-        id of the line
+        id of the order line
       </Field>
       <Field name="checkout_line_id" type="flake">
-        id of the checkout line this line belongs to 
+        id of the checkout line this line belongs to
       </Field>
       <Field name="product_id" type="flake">
         id of the associated product
@@ -144,16 +144,21 @@
       </Field>
       <Field name="subscription_interval_scale" type="enum">
         the interval scale at which this product will renew when subscribed.
-        Can be one of `day`, `week`, `month`, `year`
+        <Enums>
+          <Enum value="day"/>
+          <Enum value="week"/>
+          <Enum value="month"/>
+          <Enum value="year"/>
+        </Enums>
       </Field>
       <Field name="gift" type="boolean">
         whether the line is a gift
       </Field>
-      <Field name="gift_to_customer" type="flake" nullable>
-        the id of customer this line is gift to
-      </Field>
+      <Field name="gift_to_customer" type="Customer" typeHref="customer#the-customer-object" nullable>
+        the customer that is receiving this gift
+       </Field>
       <Field name="selected_gameserver_id" type="flake" nullable>
-        the unique identifier of the selected game server, if applicable. 
+        the unique identifier of the selected game server, if applicable.
       </Field>
       <Field name="price" type="integer">
         the price of this line in zero-decimal format (where "$10.00" is 1000)
@@ -194,30 +199,76 @@
 	<Col sticky>
 		```json {{ title: 'The Order object' }}
 		{
-			"id": "150580776499843072",
-			"pretty_id": "pn-1234abc",
-			"store_id": "94688451781206016",
-			"customer": {
-				"id": "11084680073842688",
-				"first_name": "Example",
-				"last_name": "Customer"
-			},
-			"status": "completed",
-			"checkout_id": null,
-			"subscription_id": null,
-			"is_subscription": false,
-			"billing_name": "Example Customer",
-			"billing_email": "example@customer.com",
-			"currency": "usd",
-			"tax_inclusive": true,
-			"discount_amount": 0,
-			"subtotal_amount": 1000,
-			"tax_amount": 100,
-			"total_amount": 1100,
-			"created_at": "2023-04-11T16:42:58.197319Z",
-			"completed_at": "2023-04-11T17:42:58.197319Z",
-			"canceled_at": null
-		}
+            "id": "272138292865024000",
+            "pretty_id": "pn-22fkz1u9c0sg",
+            "store_id": "235075606381871104",
+            "customer": {
+                "id": "235075788733423616",
+                "store_id": "235075606381871104",
+                "steam_id": "76561198152492642",
+                "steam": {
+                    "id": "76561198152492642",
+                    "name": "m0uka",
+                    "avatar_url": "https://avatars.steamstatic.com/10ce9e8c27d973ec572e3401e531c07d717c4648_full.jpg"
+                },
+                "name": null,
+                "metadata": null,
+                "created_at": "2023-12-03T14:49:37.534869Z",
+                "updated_at": null
+            },
+            "status": "completed",
+            "checkout_id": "272138250204753920",
+            "subscription_id": null,
+            "is_subscription": false,
+            "coupon_id": null,
+            "giftcard_id": "239791093430890496",
+            "billing_name": "John Doe",
+            "billing_email": "john@doe.com",
+            "billing_country": "US",
+            "customer_ip": "123.123.123.123/32",
+            "currency": "eur",
+            "tax_inclusive": false,
+            "discount_amount": 0,
+            "discount_amount_str": "€0.00",
+            "subtotal_amount": 200,
+            "subtotal_amount_str": "€2.00",
+            "tax_amount": 0,
+            "tax_amount_str": "€0.00",
+            "giftcard_usage_amount": 200,
+            "giftcard_usage_amount_str": "€2.00",
+            "total_amount": 0,
+            "total_amount_str": "€0.00",
+            "billing_cycle_sequence": null,
+            "lines": [
+                {
+                    "id": "272138292865024001",
+                    "checkout_line_id": "272138250204753921",
+                    "product_id": "235075696194502656",
+                    "product_version_id": "272137490456920064",
+                    "product_name": "Testing Product",
+                    "product_image_url": null,
+                    "subscription_interval_value": null,
+                    "subscription_interval_scale": null,
+                    "gift": false,
+                    "gift_to_customer": null,
+                    "selected_gameserver_id": null,
+                    "price": 200,
+                    "price_str": "€2.00",
+                    "quantity": 1,
+                    "discount_amount": 0,
+                    "discount_amount_str": "€0.00",
+                    "subtotal_amount": 200,
+                    "subtotal_amount_str": "€2.00",
+                    "tax_amount": 0,
+                    "tax_amount_str": "€0.00",
+                    "total_amount": 200,
+                    "total_amount_str": "€2.00"
+                }
+            ],
+            "created_at": "2024-03-14T21:22:47.118899Z",
+            "completed_at": "2024-03-14T21:22:47.167958Z",
+            "canceled_at": null
+        }
 		```
 	</Col>
 </Row>
