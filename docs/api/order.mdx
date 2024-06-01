@@ -32,7 +32,7 @@
 			<Field name="store_id" type="int64">
 				id of the store the order belongs to
 			</Field>
-			<Field name="customer" type="Customer">
+			<Field name="customer" type="Customer" typeHref="customer#the-customer-object">
 				the customer associated with this order
 			</Field>
 			<Field name="status" type="string">
@@ -47,12 +47,24 @@
 			<Field name="is_subscription" type="boolean">
 				whether the order is a subscription
 			</Field>
+      <Field name="coupon_id" type="int64" nullable>
+        id of the coupon applied to the order
+      </Field>
+      <Field name="giftcard_id" type="int64" nullable>
+        id of the giftcard applied to the order
+      </Field>
 			<Field name="billing_name" type="string" nullable>
 				billing name associated with the order
 			</Field>
 			<Field name="billing_email" type="string" nullable>
 				billing email associated with the order
 			</Field>
+      <Field name="billing_country" type="string" nullable>
+        billing country associated with the order
+      </Field>
+      <Field name="customer_ip" type="string" nullable>
+        ip address of the customer associated with the order
+      </Field>
 			<Field name="currency" type="string">
 				currency of the order
 			</Field>
@@ -62,15 +74,39 @@
 			<Field name="discount_amount" type="int64">
 				discount amount applied to the order
 			</Field>
+			<Field name="discount_amount_str" type="string">
+				formatted discount amount as string with currency symbol
+			</Field>
 			<Field name="subtotal_amount" type="int64">
 				subtotal amount of the order
+			</Field>
+			<Field name="subtotal_amount_str" type="string">
+				formatted subtotal amount as string with currency symbol
 			</Field>
 			<Field name="tax_amount" type="int64">
 				tax amount applied to the order
 			</Field>
+			<Field name="tax_amount_str" type="string">
+				formatted tax amount as string with currency symbol
+			</Field>
+      <Field name="giftcard_usage_amount" type="int64">
+        giftcard usage amount applied to the order
+      </Field>
+      <Field name="giftcard_usage_amount_str" type="string">
+        formatted giftcard usage amount as string with currency symbol
+      </Field>
 			<Field name="total_amount" type="int64">
 				total amount of the order
 			</Field>
+			<Field name="total_amount_str" type="string">
+				formatted total amount as string with currency symbol
+			</Field>
+      <Field name="billing_cycle_sequence" type="string" nullable>
+        Missing information
+      </Field>
+      <Field name="lines" type="" typehref="">
+        list of items associated with the order
+      </Field>
 			<Field name="created_at" type="timestamp">
 				timestamp of when the order was created
 			</Field>
