@@ -22,102 +22,175 @@
 
 <Row>
 	<Col>
-		<Fields>
-			<Field name="id" type="int64">
-				id of the order
-			</Field>
-			<Field name="pretty_id" type="string">
-				human-readable id of the order
-			</Field>
-			<Field name="store_id" type="int64">
-				id of the store the order belongs to
-			</Field>
-			<Field name="customer" type="Customer" typeHref="customer#the-customer-object">
-				the customer associated with this order
-			</Field>
-			<Field name="status" type="string">
-				status of the order (created, completed, canceled, refunded)
-			</Field>
-			<Field name="checkout_id" type="int64" nullable>
-				id of the checkout associated with the order
-			</Field>
-			<Field name="subscription_id" type="int64" nullable>
-				id of the subscription associated with the order
-			</Field>
-			<Field name="is_subscription" type="boolean">
-				whether the order is a subscription
-			</Field>
+    <Fields>
+      <Field name="id" type="int64">
+        id of the order
+      </Field>
+      <Field name="pretty_id" type="string">
+        human-readable id of the order
+      </Field>
+      <Field name="store_id" type="int64">
+        id of the store the order belongs to
+      </Field>
+      <Field name="customer" type="Customer" typeHref="customer#the-customer-object">
+        the customer associated with this order
+      </Field>
+      <Field name="status" type="string">
+        status of the order (created, completed, canceled, refunded)
+      </Field>
+      <Field name="checkout_id" type="int64" nullable>
+        id of the checkout associated with the order
+      </Field>
+      <Field name="subscription_id" type="int64" nullable>
+        id of the subscription associated with the order
+      </Field>
+      <Field name="is_subscription" type="boolean">
+        whether the order is a subscription
+      </Field>
       <Field name="coupon_id" type="int64" nullable>
         id of the coupon applied to the order
       </Field>
       <Field name="giftcard_id" type="int64" nullable>
         id of the giftcard applied to the order
       </Field>
-			<Field name="billing_name" type="string" nullable>
-				billing name associated with the order
-			</Field>
-			<Field name="billing_email" type="string" nullable>
-				billing email associated with the order
-			</Field>
+      <Field name="billing_name" type="string" nullable>
+        billing name associated with the order
+      </Field>
+      <Field name="billing_email" type="string" nullable>
+        billing email associated with the order
+      </Field>
       <Field name="billing_country" type="string" nullable>
         billing country associated with the order
       </Field>
       <Field name="customer_ip" type="string" nullable>
-        ip address of the customer associated with the order
+        the ip address of the customer associated with the order
       </Field>
-			<Field name="currency" type="string">
-				currency of the order
-			</Field>
-			<Field name="tax_inclusive" type="boolean">
-				whether the order price is tax-inclusive
-			</Field>
-			<Field name="discount_amount" type="int64">
-				discount amount applied to the order
-			</Field>
-			<Field name="discount_amount_str" type="string">
-				formatted discount amount as string with currency symbol
-			</Field>
-			<Field name="subtotal_amount" type="int64">
-				subtotal amount of the order
-			</Field>
-			<Field name="subtotal_amount_str" type="string">
-				formatted subtotal amount as string with currency symbol
-			</Field>
-			<Field name="tax_amount" type="int64">
-				tax amount applied to the order
-			</Field>
-			<Field name="tax_amount_str" type="string">
-				formatted tax amount as string with currency symbol
-			</Field>
+      <Field name="currency" type="string">
+        currency of the order
+      </Field>
+      <Field name="tax_inclusive" type="boolean">
+        whether the order price is tax-inclusive
+      </Field>
+      <Field name="discount_amount" type="integer">
+        discount amount applied to the product in zero-decimal format (where "$10.00" is 1000)
+      </Field>
+      <Field name="discount_amount_str" type="string">
+        the discount amount in string format
+      </Field>
+      <Field name="subtotal_amount" type="integer">
+        subtotal amount of the line in zero-decimal format (where "$10.00" is 1000)
+      </Field>
+      <Field name="subtotal_amount_str" type="string">
+        subtotal amount of the line in string format
+      </Field>
+      <Field name="tax_amount" type="integer">
+        tax amount of the line in zero-decimal format (where "$10.00" is 1000)
+      </Field>
+      <Field name="tax_amount_str" type="string">
+        tax amount of the line in string format
+      </Field>
       <Field name="giftcard_usage_amount" type="int64">
-        giftcard usage amount applied to the order
+        giftcard usage amount applied to the order in zero-decimal format (where "$10.00" is 1000)
       </Field>
       <Field name="giftcard_usage_amount_str" type="string">
-        formatted giftcard usage amount as string with currency symbol
+        giftcard usage amount applied to the order in string format
       </Field>
-			<Field name="total_amount" type="int64">
-				total amount of the order
-			</Field>
-			<Field name="total_amount_str" type="string">
-				formatted total amount as string with currency symbol
-			</Field>
-      <Field name="billing_cycle_sequence" type="string" nullable>
-        Missing information
+      <Field name="total_amount" type="integer">
+        tax amount of the order in zero-decimal format (where "$10.00" is 1000)
       </Field>
-      <Field name="lines" type="" typehref="">
+      <Field name="total_amount_str" type="string">
+        tax amount of the line in string format
+      </Field>
+      <Field name="billing_cycle_sequence" type="int64" nullable>
+        number of billing cycle sequence
+      </Field>
+      <Field name="lines" type="[]line" typehref="#order-line-object-structure">
         list of items associated with the order
       </Field>
-			<Field name="created_at" type="timestamp">
-				timestamp of when the order was created
-			</Field>
-			<Field name="completed_at" type="timestamp" nullable>
-				timestamp of when the order was completed
-			</Field>
-			<Field name="canceled_at" type="timestamp" nullable>
-				timestamp of when the order was canceled
-			</Field>
-		</Fields>
+      <Field name="created_at" type="timestamp">
+        timestamp of when the order was created
+      </Field>
+      <Field name="completed_at" type="timestamp" nullable>
+        timestamp of when the order was completed
+      </Field>
+      <Field name="canceled_at" type="timestamp" nullable>
+        timestamp of when the order was canceled
+      </Field>
+    </Fields>
+
+    ## Order Line object structure
+
+    <Fields>
+      <Field name="id" type="flake">
+        id of the line
+      </Field>
+      <Field name="checkout_line_id" type="flake">
+        id of the checkout line this line belongs to 
+      </Field>
+      <Field name="product_id" type="flake">
+        id of the associated product
+      </Field>
+      <Field name="product_version_id" type="flake">
+        version id of the associated product
+      </Field>
+      <Field name="product_name" type="string">
+        name of the product
+      </Field>
+      <Field name="product_image_url" type="string" nullable>
+        url of product image
+      </Field>
+      <Field name="subscription_interval_value" type="integer">
+        the interval value at which this product will renew when subscribed
+      </Field>
+      <Field name="subscription_interval_scale" type="enum">
+        the interval scale at which this product will renew when subscribed.
+        Can be one of `day`, `week`, `month`, `year`
+      </Field>
+      <Field name="gift" type="boolean">
+        whether the line is a gift
+      </Field>
+      <Field name="gift_to_customer" type="flake" nullable>
+        the id of customer this line is gift to
+      </Field>
+      <Field name="selected_gameserver_id" type="flake" nullable>
+        the unique identifier of the selected game server, if applicable. 
+      </Field>
+      <Field name="price" type="integer">
+        the price of this line in zero-decimal format (where "$10.00" is 1000)
+      </Field>
+      <Field name="price_str" type="string">
+        the price of this line in string format
+      </Field>
+      <Field name="quantity" type="integer">
+        the quantity (count) of products in this line
+      </Field>
+      <Field name="discount_amount" type="integer">
+        discount amount applied to the product in zero-decimal format (where "$10.00" is 1000)
+      </Field>
+      <Field name="discount_amount_str" type="string">
+        the discount amount in string format
+      </Field>
+      <Field name="subtotal_amount" type="integer">
+        subtotal amount of the line in zero-decimal format (where "$10.00" is 1000)
+      </Field>
+      <Field name="subtotal_amount_str" type="string">
+        subtotal amount of the line in string format
+      </Field>
+      <Field name="subtotal_amount" type="int64">
+        subtotal amount of the order
+      </Field>
+      <Field name="subtotal_amount_str" type="string">
+        formatted subtotal amount as string with currency symbol
+      </Field>
+      <Field name="total_amount" type="integer">
+        tax amount of the order in zero-decimal format (where "$10.00" is 1000)
+      </Field>
+      <Field name="total_amount_str" type="string">
+        tax amount of the line in string format
+      </Field>
+    </Fields>
 	</Col>
+
 	<Col sticky>
 		```json {{ title: 'The Order object' }}
 		{
