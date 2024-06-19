@@ -22,93 +22,253 @@
 
 <Row>
 	<Col>
-		<Fields>
-			<Field name="id" type="int64">
-				id of the order
-			</Field>
-			<Field name="pretty_id" type="string">
-				human-readable id of the order
-			</Field>
-			<Field name="store_id" type="int64">
-				id of the store the order belongs to
-			</Field>
-			<Field name="customer" type="Customer">
-				the customer associated with this order
-			</Field>
-			<Field name="status" type="string">
-				status of the order (created, completed, canceled, refunded)
-			</Field>
-			<Field name="checkout_id" type="int64" nullable>
-				id of the checkout associated with the order
-			</Field>
-			<Field name="subscription_id" type="int64" nullable>
-				id of the subscription associated with the order
-			</Field>
-			<Field name="is_subscription" type="boolean">
-				whether the order is a subscription
-			</Field>
-			<Field name="billing_name" type="string" nullable>
-				billing name associated with the order
-			</Field>
-			<Field name="billing_email" type="string" nullable>
-				billing email associated with the order
-			</Field>
-			<Field name="currency" type="string">
-				currency of the order
-			</Field>
-			<Field name="tax_inclusive" type="boolean">
-				whether the order price is tax-inclusive
-			</Field>
-			<Field name="discount_amount" type="int64">
-				discount amount applied to the order
-			</Field>
-			<Field name="subtotal_amount" type="int64">
-				subtotal amount of the order
-			</Field>
-			<Field name="tax_amount" type="int64">
-				tax amount applied to the order
-			</Field>
-			<Field name="total_amount" type="int64">
-				total amount of the order
-			</Field>
-			<Field name="created_at" type="timestamp">
-				timestamp of when the order was created
-			</Field>
-			<Field name="completed_at" type="timestamp" nullable>
-				timestamp of when the order was completed
-			</Field>
-			<Field name="canceled_at" type="timestamp" nullable>
-				timestamp of when the order was canceled
-			</Field>
-		</Fields>
+    <Fields>
+      <Field name="id" type="int64">
+        id of the order
+      </Field>
+      <Field name="pretty_id" type="string">
+        human-readable id of the order
+      </Field>
+      <Field name="store_id" type="int64">
+        id of the store the order belongs to
+      </Field>
+      <Field name="customer" type="Customer" typeHref="customer#the-customer-object">
+        the customer associated with this order
+      </Field>
+      <Field name="status" type="string">
+        status of the order (created, completed, canceled, refunded)
+      </Field>
+      <Field name="checkout_id" type="int64" nullable>
+        id of the checkout associated with the order
+      </Field>
+      <Field name="subscription_id" type="int64" nullable>
+        id of the subscription associated with the order
+      </Field>
+      <Field name="is_subscription" type="boolean">
+        whether the order is a subscription
+      </Field>
+      <Field name="coupon_id" type="int64" nullable>
+        id of the coupon applied to the order
+      </Field>
+      <Field name="giftcard_id" type="int64" nullable>
+        id of the giftcard applied to the order
+      </Field>
+      <Field name="billing_name" type="string" nullable>
+        billing name associated with the order
+      </Field>
+      <Field name="billing_email" type="string" nullable>
+        billing email associated with the order
+      </Field>
+      <Field name="billing_country" type="string" nullable>
+        billing country associated with the order
+      </Field>
+      <Field name="customer_ip" type="string" nullable>
+        the ip address of the customer associated with the order
+      </Field>
+      <Field name="currency" type="string">
+        currency of the order
+      </Field>
+      <Field name="tax_inclusive" type="boolean">
+        whether the order price is tax-inclusive
+      </Field>
+      <Field name="discount_amount" type="integer">
+        discount amount applied to the product in zero-decimal format (where "$10.00" is 1000)
+      </Field>
+      <Field name="discount_amount_str" type="string">
+        the discount amount in string format
+      </Field>
+      <Field name="subtotal_amount" type="integer">
+        subtotal amount of the line in zero-decimal format (where "$10.00" is 1000)
+      </Field>
+      <Field name="subtotal_amount_str" type="string">
+        subtotal amount of the line in string format
+      </Field>
+      <Field name="tax_amount" type="integer">
+        tax amount of the line in zero-decimal format (where "$10.00" is 1000)
+      </Field>
+      <Field name="tax_amount_str" type="string">
+        tax amount of the line in string format
+      </Field>
+      <Field name="giftcard_usage_amount" type="int64">
+        giftcard usage amount applied to the order in zero-decimal format (where "$10.00" is 1000)
+      </Field>
+      <Field name="giftcard_usage_amount_str" type="string">
+        giftcard usage amount applied to the order in string format
+      </Field>
+      <Field name="total_amount" type="integer">
+        tax amount of the order in zero-decimal format (where "$10.00" is 1000)
+      </Field>
+      <Field name="total_amount_str" type="string">
+        tax amount of the line in string format
+      </Field>
+      <Field name="billing_cycle_sequence" type="int64" nullable>
+        number of billing cycle sequence
+      </Field>
+      <Field name="lines" type="[]line" typeHref="#order-line-object-structure">
+        list of items associated with the order
+      </Field>
+      <Field name="created_at" type="timestamp">
+        timestamp of when the order was created
+      </Field>
+      <Field name="completed_at" type="timestamp" nullable>
+        timestamp of when the order was completed
+      </Field>
+      <Field name="canceled_at" type="timestamp" nullable>
+        timestamp of when the order was canceled
+      </Field>
+    </Fields>
+
+    ## Order Line object structure
+
+    <Fields>
+      <Field name="id" type="flake">
+        id of the order line
+      </Field>
+      <Field name="checkout_line_id" type="flake">
+        id of the checkout line this line belongs to
+      </Field>
+      <Field name="product_id" type="flake">
+        id of the associated product
+      </Field>
+      <Field name="product_version_id" type="flake">
+        version id of the associated product
+      </Field>
+      <Field name="product_name" type="string">
+        name of the product
+      </Field>
+      <Field name="product_image_url" type="string" nullable>
+        url of product image
+      </Field>
+      <Field name="subscription_interval_value" type="integer">
+        the interval value at which this product will renew when subscribed
+      </Field>
+      <Field name="subscription_interval_scale" type="enum">
+        the interval scale at which this product will renew when subscribed.
+        <Enums>
+          <Enum value="day"/>
+          <Enum value="week"/>
+          <Enum value="month"/>
+          <Enum value="year"/>
+        </Enums>
+      </Field>
+      <Field name="gift" type="boolean">
+        whether the line is a gift
+      </Field>
+      <Field name="gift_to_customer" type="Customer" typeHref="customer#the-customer-object" nullable>
+        the customer that is receiving this gift
+       </Field>
+      <Field name="selected_gameserver_id" type="flake" nullable>
+        the unique identifier of the selected game server, if applicable.
+      </Field>
+      <Field name="price" type="integer">
+        the price of this line in zero-decimal format (where "$10.00" is 1000)
+      </Field>
+      <Field name="price_str" type="string">
+        the price of this line in string format
+      </Field>
+      <Field name="quantity" type="integer">
+        the quantity (count) of products in this line
+      </Field>
+      <Field name="discount_amount" type="integer">
+        discount amount applied to the product in zero-decimal format (where "$10.00" is 1000)
+      </Field>
+      <Field name="discount_amount_str" type="string">
+        the discount amount in string format
+      </Field>
+      <Field name="subtotal_amount" type="integer">
+        subtotal amount of the line in zero-decimal format (where "$10.00" is 1000)
+      </Field>
+      <Field name="subtotal_amount_str" type="string">
+        subtotal amount of the line in string format
+      </Field>
+      <Field name="subtotal_amount" type="int64">
+        subtotal amount of the order
+      </Field>
+      <Field name="subtotal_amount_str" type="string">
+        formatted subtotal amount as string with currency symbol
+      </Field>
+      <Field name="total_amount" type="integer">
+        tax amount of the order in zero-decimal format (where "$10.00" is 1000)
+      </Field>
+      <Field name="total_amount_str" type="string">
+        tax amount of the line in string format
+      </Field>
+    </Fields>
 	</Col>
+
 	<Col sticky>
 		```json {{ title: 'The Order object' }}
 		{
-			"id": "150580776499843072",
-			"pretty_id": "pn-1234abc",
-			"store_id": "94688451781206016",
-			"customer": {
-				"id": "11084680073842688",
-				"first_name": "Example",
-				"last_name": "Customer"
-			},
-			"status": "completed",
-			"checkout_id": null,
-			"subscription_id": null,
-			"is_subscription": false,
-			"billing_name": "Example Customer",
-			"billing_email": "example@customer.com",
-			"currency": "usd",
-			"tax_inclusive": true,
-			"discount_amount": 0,
-			"subtotal_amount": 1000,
-			"tax_amount": 100,
-			"total_amount": 1100,
-			"created_at": "2023-04-11T16:42:58.197319Z",
-			"completed_at": "2023-04-11T17:42:58.197319Z",
-			"canceled_at": null
-		}
+            "id": "272138292865024000",
+            "pretty_id": "pn-22fkz1u9c0sg",
+            "store_id": "235075606381871104",
+            "customer": {
+                "id": "235075788733423616",
+                "store_id": "235075606381871104",
+                "steam_id": "76561198152492642",
+                "steam": {
+                    "id": "76561198152492642",
+                    "name": "m0uka",
+                    "avatar_url": "https://avatars.steamstatic.com/10ce9e8c27d973ec572e3401e531c07d717c4648_full.jpg"
+                },
+                "name": null,
+                "metadata": null,
+                "created_at": "2023-12-03T14:49:37.534869Z",
+                "updated_at": null
+            },
+            "status": "completed",
+            "checkout_id": "272138250204753920",
+            "subscription_id": null,
+            "is_subscription": false,
+            "coupon_id": null,
+            "giftcard_id": "239791093430890496",
+            "billing_name": "John Doe",
+            "billing_email": "john@doe.com",
+            "billing_country": "US",
+            "customer_ip": "123.123.123.123/32",
+            "currency": "eur",
+            "tax_inclusive": false,
+            "discount_amount": 0,
+            "discount_amount_str": "€0.00",
+            "subtotal_amount": 200,
+            "subtotal_amount_str": "€2.00",
+            "tax_amount": 0,
+            "tax_amount_str": "€0.00",
+            "giftcard_usage_amount": 200,
+            "giftcard_usage_amount_str": "€2.00",
+            "total_amount": 0,
+            "total_amount_str": "€0.00",
+            "billing_cycle_sequence": null,
+            "lines": [
+                {
+                    "id": "272138292865024001",
+                    "checkout_line_id": "272138250204753921",
+                    "product_id": "235075696194502656",
+                    "product_version_id": "272137490456920064",
+                    "product_name": "Testing Product",
+                    "product_image_url": null,
+                    "subscription_interval_value": null,
+                    "subscription_interval_scale": null,
+                    "gift": false,
+                    "gift_to_customer": null,
+                    "selected_gameserver_id": null,
+                    "price": 200,
+                    "price_str": "€2.00",
+                    "quantity": 1,
+                    "discount_amount": 0,
+                    "discount_amount_str": "€0.00",
+                    "subtotal_amount": 200,
+                    "subtotal_amount_str": "€2.00",
+                    "tax_amount": 0,
+                    "tax_amount_str": "€0.00",
+                    "total_amount": 200,
+                    "total_amount_str": "€2.00"
+                }
+            ],
+            "created_at": "2024-03-14T21:22:47.118899Z",
+            "completed_at": "2024-03-14T21:22:47.167958Z",
+            "canceled_at": null
+        }
 		```
 	</Col>
 </Row>
