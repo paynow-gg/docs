@@ -35,8 +35,14 @@
       <Field name="customer" type="Customer" typeHref="customer#the-customer-object">
         the customer associated with this order
       </Field>
-      <Field name="status" type="string">
-        status of the order (created, completed, canceled, refunded)
+      <Field name="status" type="enum">
+        status of the order
+        <Enums>
+          <Enum value="created" />
+          <Enum value="completed" />
+          <Enum value="canceled" />
+          <Enum value="refunded" />
+        </Enums>
       </Field>
       <Field name="checkout_id" type="int64" nullable>
         id of the checkout associated with the order
@@ -180,12 +186,6 @@
       </Field>
       <Field name="subtotal_amount_str" type="string">
         subtotal amount of the line in string format
-      </Field>
-      <Field name="subtotal_amount" type="int64">
-        subtotal amount of the order
-      </Field>
-      <Field name="subtotal_amount_str" type="string">
-        formatted subtotal amount as string with currency symbol
       </Field>
       <Field name="total_amount" type="integer">
         tax amount of the order in zero-decimal format (where "$10.00" is 1000)
