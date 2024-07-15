@@ -33,11 +33,20 @@
       <Field name="store_id" type="flake">
         id of the store this customer belongs to
       </Field>
+      <Field name="profile" type="generic profile" typeHref="#generic-profile-structure" nullable>
+        the generic profile information for this customer
+      </Field>
       <Field name="steam_id" type="string" nullable>
         the SteamID64 of this customer
       </Field>
+      <Field name="minecraft_uuid" type="string" nullable>
+        the Minecraft UUID of this customer
+      </Field>
       <Field name="steam" type="steam profile" typeHref="#steam-profile-structure" nullable>
         the basic Steam profile information for this customer
+      </Field>
+      <Field name="minecraft" type="minecraft profile" typeHref="#minecraft-profile-structure" nullable>
+        the basic Minecraft profile information for this customer
       </Field>
       <Field name="name" type="string" nullable>
         the name of the customer
@@ -55,6 +64,42 @@
     <Fields>
       <Field name="id" type="string">
         the profile's SteamID64
+      </Field>
+      <Field name="name" type="string" nullable>
+        the profile's display name
+      </Field>
+      <Field name="avatar_url" type="string" nullable>
+        the profile's avatar url
+      </Field>
+    </Fields>
+
+    ## Minecraft Profile Structure
+
+    <Fields>
+      <Field name="id" type="string">
+        the profile's UUID
+      </Field>
+      <Field name="name" type="string" nullable>
+        the profile's display name
+      </Field>
+      <Field name="avatar_url" type="string" nullable>
+        the profile's Minecraft head avatar url
+      </Field>
+    </Fields>
+
+    ## Generic Profile Structure
+
+    <Fields>
+      <Field name="id" type="string">
+        the profile's unique identifier
+      </Field>
+      <Field name="platform" type="enum">
+        the profile provider platform
+        <Enums>
+          <Enum value="steam" />
+          <Enum value="minecraft" />
+          <Enum value="minecraft_offline" />
+        </Enums>
       </Field>
       <Field name="name" type="string" nullable>
         the profile's display name
