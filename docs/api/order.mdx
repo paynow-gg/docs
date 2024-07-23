@@ -110,6 +110,9 @@
       <Field name="billing_cycle_sequence" type="int64" nullable>
         number of billing cycle sequence
       </Field>
+      <Field name="last_payment_error" type="LastPaymentError" typeHref="#last-payment-error-object" nullable>
+        shows the failure reason of the latest associated payment
+      </Field>
       <Field name="lines" type="[]line" typeHref="#order-line-object-structure">
         list of items associated with the order
       </Field>
@@ -195,6 +198,52 @@
       </Field>
     </Fields>
 	</Col>
+
+	## Last Payment Error object
+	<Fields>
+      <Field name="decline_code" type="enum">
+        the decline reason code
+        <Enums vertical>
+            <Enum value="unknown">An unknown error occurred during payment processing.</Enum>
+            <Enum value="generic_decline">The payment was declined for an unspecified reason.</Enum>
+            <Enum value="call_issuer">The payment provider requires the customer to contact them.</Enum>
+            <Enum value="authentication_required">Additional authentication is needed to complete the transaction.</Enum>
+            <Enum value="currency_not_supported">The chosen currency is not supported by this payment method.</Enum>
+            <Enum value="duplicate_transaction">An identical transaction was recently processed.</Enum>
+            <Enum value="expired_card">The payment method has passed its expiration date.</Enum>
+            <Enum value="fraudulent">The payment was flagged as potentially fraudulent.</Enum>
+            <Enum value="incorrect_number">The provided payment number is invalid.</Enum>
+            <Enum value="incorrect_cvc">The security code for the payment method is incorrect.</Enum>
+            <Enum value="incorrect_pin">The entered PIN is not valid.</Enum>
+            <Enum value="incorrect_zip">The provided billing postal code is incorrect.</Enum>
+            <Enum value="insufficient_funds">The payment method lacks sufficient funds for the transaction.</Enum>
+            <Enum value="invalid_account">The payment method or associated account is not valid.</Enum>
+            <Enum value="invalid_amount">The transaction amount is not allowed or is invalid.</Enum>
+            <Enum value="invalid_expiry_month">The expiration month for the payment method is invalid.</Enum>
+            <Enum value="invalid_expiry_year">The expiration year for the payment method is invalid.</Enum>
+            <Enum value="issuer_not_available">The payment provider's systems are currently unavailable.</Enum>
+            <Enum value="lost_card">The payment method has been reported as lost.</Enum>
+            <Enum value="merchant_blacklist">The transaction was blocked by PayNow's security measures.</Enum>
+            <Enum value="new_account_information_available">Updated information is available for the payment method.</Enum>
+            <Enum value="no_action_taken">The payment provider took no action on this transaction.</Enum>
+            <Enum value="pickup_card">The payment method has been flagged and cannot be used.</Enum>
+            <Enum value="pin_try_exceeded">Too many incorrect PIN attempts have been made.</Enum>
+            <Enum value="restricted_card">The payment method has restrictions preventing its use.</Enum>
+            <Enum value="stolen_card">The payment method has been reported as stolen.</Enum>
+            <Enum value="testmode_decline">A test payment method was used in a live environment.</Enum>
+            <Enum value="try_again_later">A temporary issue prevented the transaction from completing.</Enum>
+            <Enum value="security_violation">A security issue occurred during the transaction.</Enum>
+            <Enum value="card_velocity_exceeded">The payment method has exceeded its usage limits.</Enum>
+            <Enum value="do_not_honor">The payment provider has chosen not to process this transaction.</Enum>
+            <Enum value="processing_error">An error occurred while processing the payment.</Enum>
+            <Enum value="card_not_supported">This payment method doesn't support this type of transaction.</Enum>
+            <Enum value="transaction_not_allowed">This specific transaction is not permitted for this payment method.</Enum>
+        </Enums>
+      </Field>
+      <Field name="message" type="string">
+        human-readable decline reason message
+      </Field>
+    </Fields>
 
 	<Col sticky>
 		```json {{ title: 'The Order object' }}
