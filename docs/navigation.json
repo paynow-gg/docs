@@ -9,6 +9,10 @@
       {
         "title": "Reference",
         "href": "/api/reference"
+      },
+      {
+        "title": "API SDKs",
+        "href": "/api/sdks"
       }
     ]
   },
