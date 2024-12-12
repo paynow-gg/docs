@@ -41,10 +41,13 @@ This endpoint creates a new checkout.
                 id of the product
             </Field>
             <Field name="gift_to" type="CustomerPlatformAccount" optional typeHref="#checkout-gift">
-                gift using a platform, currently only steam is supported
+                gift using a platform
             </Field>
             <Field name="gift_to_customer_id" type="flake" optional>
                 id of the customer to gift to
+            </Field>
+            <Field name="selected_gameserver_id" type="flake" optional>
+                id of the selected gameserver if product has `single_game_server_only` set to true
             </Field>
             <Field name="quantity" type="integer">
                 the quantity (count) of products in this line
@@ -57,6 +60,7 @@ This endpoint creates a new checkout.
                 platform used to gift
                 <Enums vertical>
                     <Enum value="steam">Steam platform</Enum>
+                    <Enum value="paynow_name">PayNow name - used for Minecraft or games that only require the nick</Enum>
                 </Enums>
             </Field>
             <Field name="id" type="integer">
@@ -81,6 +85,14 @@ This endpoint creates a new checkout.
                   "quantity": 2
               }
           ]
+        }
+        ```
+
+        ```json {{ title: 'Create Checkout Response' }}
+        {
+        	"id": "367465872819765248",
+        	"token": "7olvnbg2nu9clh6h4bf29s8mez24",
+        	"url": "https://checkout.paynow.gg/?t=7olvnbg2nu9clh6h4bf29s8mez24"
         }
         ```
 
