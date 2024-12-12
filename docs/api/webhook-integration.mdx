@@ -47,14 +47,10 @@ const SIGNING_SECRET = process.env.SIGNING_SECRET;
 const TOLERANCE_PERIOD = 5 * 60 * 1000; // 5 minutes in milliseconds
 
 // Middleware to preserve raw body for signature verification
-function preserveRawBody(req, res, next) {
-    req.rawBody = '';
-    req.on('data', chunk => {
-        req.rawBody += chunk;
-    });
-    req.on('end', () => {
-        next();
-    });
+const rawBodySaver = function (req, res, buf, encoding) {
+    if (buf && buf.length) {
+        req.rawBody = buf.toString(encoding || 'utf8');
+    }
 }
 
 // Function to calculate HMAC signature
@@ -96,8 +92,8 @@ function verifyWebhookSignature(req, res, next) {
     next();
 }
 
-app.use(express.json());
-app.use(preserveRawBody);
+app.use(express.json({ verify: rawBodySaver }));
+
 app.post('/webhook', verifyWebhookSignature, (req, res) => {
     const eventType = req.body.event_type;
     switch (eventType) {
