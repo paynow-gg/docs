@@ -24,6 +24,8 @@
         <Endpoint method="GET" href="#get-customer-inventory" url="/stores/{store.id}/customers/{customer.id}/command_delivery" />
         <Endpoint method="POST" href="#assign-inventory-item" url="/stores/{store.id}/customers/{customer.id}/command_delivery" />
         <Endpoint method="DELETE" href="#revoke-inventory-item" url="/stores/{store.id}/customers/{customer.id}/command_delivery/{item.id}" />
+
+        <Endpoint method="POST" href="#bulk-assign-inventory-items" url="/stores/{store.id}/customers/bulk/command_delivery" />
     </Endpoints>
   </Col>
 </Row>
@@ -932,6 +934,59 @@ See the `state` field below for more details.
 
     ```json {{ title: 'Response' }}
     HTTP 204
+    ```
+  </Col>
+</Row>
+
+---
+
+## Bulk Assign Inventory Items {{ tag: 'POST' }}
+
+<Row>
+  <Col>
+    Assigns up to 250 items to multiple customers using a single API call.
+
+    <Fields parameters>
+      <Field name="customer_id" type="flake">
+        the id of the customer to assign the item to.
+      </Field>
+      <Field name="product_version_id" type="flake">
+        the id of the product version to assign.
+      </Field>
+      <Field name="execute_on_gameserver_id" type="flake" optional>
+        the ID of the game server to execute this on.
+
+        Required if `single_game_server_only` on the product is true.
+      </Field>
+      <Field name="quantity" type="integer" optional>
+        the quantity to assign. Defaults to 1
+      </Field>
+    </Fields>
+
+    ### Returns
+    Returns `HTTP 201`
+  </Col>
+  <Col sticky>
+    <Endpoints request perms={[ {id: 'customer_inventory_manage'} ]}>
+        <Endpoint method="POST" url="/stores/{store.id}/customers/bulk/command_delivery" />
+    </Endpoints>
+
+     ```json {{ title: 'Bulk Assign Inventory Items Request' }}
+    [
+        {
+            "customer_id": "124249183568797696",
+            "product_version_id": "150580776499843072",
+            "quantity": 2
+        },
+        {
+            "customer_id": "3288949183568797696",
+            "product_version_id": "150580776499843072"
+        }
+    ]
+    ```
+
+    ```json {{ title: 'Response' }}
+    HTTP 201
     ```
   </Col>
 </Row>
